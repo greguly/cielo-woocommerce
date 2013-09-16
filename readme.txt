@@ -1,5 +1,5 @@
 === Cielo WooCommerce ===
-Contributors: Gabriel Reguly
+Contributors: Gabriel Reguly, claudiosanches
 Donate link: http://omniwp.com.br/donate/
 Tags: WooCommerce, Payment Gateway, Cielo
 Requires at least:3.5 & WooCommerce 2.0
