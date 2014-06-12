@@ -65,9 +65,19 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$this->installments         = $this->get_option( 'installments' );
 		$this->interest             = $this->get_option( 'interest' );
 		$this->installment_type     = $this->get_option( 'installment_type' );
+		$this->debug                = $this->get_option( 'debug' );
 
 		// Actions.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+
+		// Active logs.
+		if ( 'yes' == $this->debug ) {
+			if ( class_exists( 'WC_Logger' ) ) {
+				$this->log = new WC_Logger();
+			} else {
+				$this->log = $woocommerce->logger();
+			}
+		}
 	}
 
 	/**
@@ -239,6 +249,18 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 					'store'   => __( 'Store' ),
 					'company' => __( 'Credit card company' )
 				)
+			),
+			'testing' => array(
+				'title'       => __( 'Gateway Testing', 'woocommerce-cielo' ),
+				'type'        => 'title',
+				'description' => ''
+			),
+			'debug' => array(
+				'title'       => __( 'Debug Log', 'woocommerce-cielo' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'Enable logging', 'woocommerce-cielo' ),
+				'default'     => 'no',
+				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside %s', 'woocommerce-cielo' ), '<code>woocommerce/logs/' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.txt</code>' )
 			)
 		);
 	}
