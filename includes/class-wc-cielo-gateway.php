@@ -7,6 +7,13 @@
 class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 	/**
+	 * Cielo WooCommerce API.
+	 *
+	 * @var WC_Cielo_API
+	 */
+	protected $api = null;
+
+	/**
 	 * Constructor for the gateway.
 	 *
 	 * @return void
@@ -28,21 +35,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			'elo'        => __( 'Elo', 'woocommerce-cielo' ),
 			'amex'       => __( 'American Express', 'woocommerce-cielo' )
 		);
-
-		// credito a vista
-		$this->meios_credito = array( 'visa', 'mastercard', 'diners', 'discover', 'elo', 'amex' );
-
-		// credito parcelado loja
-		$this->meios_credito_loja = array( 'visa', 'mastercard', 'diners', 'elo', 'amex' );
-
-		// credito parcelado cartao
-		$this->meios_credito_cartao = array( 'visa', 'mastercard', 'diners', 'elo', 'amex' );
-
-		// debito a vista
-		$this->meios_debito = array( 'visa' );
-
-		// valor minimo da cielo para aceitar as parcelas
-		$this->valor_minimo_cielo_parcela = 5;
 
 		// Load the form fields.
 		$this->init_form_fields();
@@ -67,9 +59,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$this->installment_type     = $this->get_option( 'installment_type' );
 		$this->debug                = $this->get_option( 'debug' );
 
-		// Actions.
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-
 		// Active logs.
 		if ( 'yes' == $this->debug ) {
 			if ( class_exists( 'WC_Logger' ) ) {
@@ -78,6 +67,12 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				$this->log = $woocommerce->logger();
 			}
 		}
+
+		// Set the API.
+		$this->api = new WC_Cielo_API( $this );
+
+		// Actions.
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 	}
 
 	/**
@@ -150,7 +145,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'description' => __( 'Select the credit card brands that will be accepted as payment. Press the Ctrl key to select more than one brand.', 'woocommerce-cielo' ),
 				'desc_tip'    => true,
 				'default'     => array( 'visa' ),
-				'options'     => $this->descricao_meios
+				'options'     => WC_Cielo_API::get_payment_methods()
 			),
 			'capture' => array(
 				'title'       => __( 'Capture automatically?', 'woocommerce-cielo' ),
