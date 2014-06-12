@@ -109,8 +109,20 @@ function cielo_woocommerce_init() {
 			wp_register_script( 'jquery-cookie', plugins_url( '/js/jquery.cookie.js',  __FILE__ ), array( 'jquery' ) );
 			wp_enqueue_script( 'jquery-ui-tabs' );
 			wp_enqueue_script( 'jquery-cookie' );
+		}
 
-			$this->enabled = ( 'yes' == $this->settings['enabled'] )  && $this->testa_dados_cielo() && ! empty( $this->meios );
+		/**
+		 * Returns a value indicating the the Gateway is available or not. It's called
+		 * automatically by WooCommerce before allowing customers to use the gateway
+		 * for payment.
+		 *
+		 * @return bool
+		 */
+		public function is_available() {
+			// Test if is valid for use.
+			$available = parent::is_available() && 'yes' == $this->get_option( 'enabled' ) && $this->testa_dados_cielo() && ! empty( $this->meios );
+
+			return $available;
 		}
 
 		/**
@@ -466,18 +478,25 @@ jQuery( document ).ready( function() {
 			}
 			return $valid;
 		}
+
 		/**
 		 * Process the payment and return the result
 		 **/
 		function process_payment( $order_id ) {
-			global $woocommerce;
 			$order = new WC_Order( $order_id );
-			return array(
-				'result' 	=> 'success',
-				'redirect'	=> add_query_arg( 'formaPagamento', $this->get_request('formaPagamento'),
-							   add_query_arg( 'order', $order->id,
-							   add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id('pay') ))))
-			);
+
+			// Redirect to pay page.
+			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+				return array(
+					'result'   => 'success',
+					'redirect' => add_query_arg( array( 'formaPagamento' => $this->get_request( 'formaPagamento' ) ), $order->get_checkout_payment_url( true ) )
+				);
+			} else {
+				return array(
+					'result'   => 'success',
+					'redirect' => add_query_arg( array( 'key' => $order->order_key, 'order' => $order->id, 'formaPagamento' => $this->get_request( 'formaPagamento' ) ), get_permalink( woocommerce_get_page_id( 'pay' ) ) )
+				);
+			}
 		}
 
 		/**
@@ -534,7 +553,13 @@ jQuery( document ).ready( function() {
 
 			$Pedido->dadosPedidoNumero =  $order->id;
 			$Pedido->dadosPedidoValor  = str_replace( array( ',', '.'), '', $order->order_total );
-			$Pedido->urlRetorno = urlencode( htmlentities( add_query_arg('wc-api', 'wc_cielo', add_query_arg( 'retorno_cielo', 1, add_query_arg( 'order', $order->id, 	add_query_arg( 'key', $order->order_key, get_permalink(  woocommerce_get_page_id( 'thanks' ) ) ) ) ) ), ENT_QUOTES  ));
+			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+				$return_url = add_query_arg( array( 'retorno_cielo' => 1 ), $this->get_return_url( $order ) );
+			} else {
+				$return_url = add_query_arg( array( 'key' => $order->order_key, 'order' => $order->id, 'retorno_cielo' => 1 ), get_permalink( woocommerce_get_page_id( 'thanks' ) ) );
+			}
+
+			$Pedido->urlRetorno = urlencode( htmlentities( $return_url, ENT_QUOTES  ) );
 
 			echo '<p>Forma de pagamento selecionada:<br />
 				 ' . $descricao . '<br />
@@ -714,26 +739,19 @@ jQuery( document ).ready( function() {
 	 */
 	function cielo_woocommerce_plugin_action_links( $links, $file ) {
 		if ( $file == 'cielo-woocommerce/woocommerce-cielo-gateway.php' ) {
-			$settings_link = '<a href="' . admin_url( '?page=woocommerce&tab=payment_gateways&section=wc_cielo') . '">Configuração</a>';
-//			$settings_link .= '<a href="http://omniwp.com.br/">Suporte Comercial</a>';
+
+			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+				$settings_link = '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo') . '">Configuração</a>';
+			} else {
+				$settings_link = '<a href="' . admin_url( 'admin.php?page=woocommerce&tab=payment_gateways&section=wc_cielo') . '">Configuração</a>';
+			}
+
 			array_unshift( $links, $settings_link ); // before other links
 		}
 		return $links;
 	}
 
-	/**
-	 * Add a notice if configuration is due
-	 */
-	function cielo_woocommerce_plugin_notice( $plugin ) {
-		if ( $plugin == 'cielo-woocommerce/woocommerce-cielo-gateway.php' ) {
-			echo '<td colspan="5" class="plugin-update"><a href="' . admin_url( '?page=woocommerce&tab=payment_gateways&section=wc_cielo') . '">Você precisa configurar o Cielo WooCommerce.</a></td>';
-		}
-	}
-
-
 	add_filter( 'woocommerce_payment_gateways', 'cielo_woocommerce_add_cielo_gateway' );
 	add_filter( 'plugin_action_links',          'cielo_woocommerce_plugin_action_links', 10, 2 );
-	add_action( 'after_plugin_row', 'cielo_woocommerce_plugin_notice' );
 
 }
-?>
