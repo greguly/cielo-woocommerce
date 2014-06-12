@@ -595,9 +595,16 @@ jQuery( document ).ready( function() {
 			} else {
 				set_transient( $transientName, $savedPedido, 518400 );
 			}
+
+			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+				$checkout_url = get_permalink( wc_get_page_id( 'checkout' ) );
+			} else {
+				$checkout_url = get_permalink( woocommerce_get_page_id( 'checkout' ) );
+			}
+
 			echo '
 				<a class="button pay"    href="' . esc_url( $objResposta->$urlAutenticacao ) . '">'. 'Pagar' . '</a>
-				<a class="button order"  href="' . get_permalink( woocommerce_get_page_id( 'checkout' ) ) . '">'. 'Checkout' . '</a>
+				<a class="button order"  href="' . $checkout_url . '">'. 'Checkout' . '</a>
 				<a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ).'">'  . 'Cancelar o pedido.' . '</a>';
 		}
 
@@ -635,7 +642,7 @@ jQuery( document ).ready( function() {
 							// Order paid
 							$order->add_order_note( $Pedido->getStatus() . ' TID:' . $Pedido->tid );
 							// Reduce stock levels
-							$order->reduce_order_stock();
+							// $order->reduce_order_stock();
 							$order->payment_complete();
 						}
 						if ( is_multisite() ) {
@@ -682,15 +689,19 @@ jQuery( document ).ready( function() {
 			global $woocommerce;
 
 			$order = new WC_Order( $order_id );
+			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+				$order_url = $order->get_view_order_url();
+			} else {
+				$order_url = add_query_arg( 'order', $order_id, get_permalink( woocommerce_get_page_id( 'woocommerce_view_order' ) ) );
+			}
+
 			//check again the status of the order
 			if ( $order->status == 'processing' || $order->status == 'completed' ) {
                 //display additional success message
-				echo '<p>Seu pagamento para ' . woocommerce_price( $order->order_total ) . ' foi recebido com sucesso. O código de autorização foi gerado, <a href="' .  add_query_arg('order', $order_id, get_permalink( woocommerce_get_page_id( 'woocommerce_view_order' ) ) ) . '">Clique aqui para ver seu pedido</a></p>';
-				do_action( 'woocommerce_thankyou_' . $order->payment_method, $order->id );
-				do_action( 'woocommerce_thankyou', $order->id );
+				echo '<p>Seu pagamento para ' . woocommerce_price( $order->order_total ) . ' foi recebido com sucesso. O código de autorização foi gerado, <a href="' . $order_url . '">Clique aqui para ver seu pedido</a></p>';
 			} else {
 				//display additional failed message
-				echo '<p>Para maiores informações ou dúvidas quanto ao seu pedido, <a href="'. add_query_arg('order', $order_id, get_permalink( woocommerce_get_page_id( 'woocommerce_view_order' ) ) ) . '">Clique aqui para ver seu pedido</a> .</p>';
+				echo '<p>Para maiores informações ou dúvidas quanto ao seu pedido, <a href="' . $order_url . '">Clique aqui para ver seu pedido</a> .</p>';
 			}
 		}
 		/**
