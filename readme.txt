@@ -4,7 +4,7 @@ Donate link: http://omniwp.com.br/donate/
 Tags: WooCommerce, Payment Gateway, Cielo
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 2.0.8
+Stable tag: 2.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,6 +39,10 @@ Suporta as versões 2.0.x e 2.1.x do WooCommerce.
 
 
 == Changelog ==
+
+= 2.0.9 - 12/06/2014 =[
+
+* Correção dos valores padrões das opções.
 
 = 2.0.8 - 12/06/2014 =
 
@@ -80,6 +84,8 @@ Suporta as versões 2.0.x e 2.1.x do WooCommerce.
 
 == Upgrade Notice ==
 
-= 2.0.7 =
+= 2.0.9 =
 
 * Suporte inicial para as versões 2.1.x do WooCommerce.
+* Correção dos valores padrões das opçõe
+* Correção do retorno do pagamento para as versões 2.1.x do WooCommerce.
