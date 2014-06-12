@@ -79,7 +79,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 */
 	public function is_available() {
 		// Test if is valid for use.
-		$available = parent::is_available() && 'yes' == $this->get_option( 'enabled' ) && $this->testa_dados_cielo() && ! empty( $this->meios );
+		$available = parent::is_available() && 'yes' == $this->get_option( 'enabled' );
 
 		return $available;
 	}
