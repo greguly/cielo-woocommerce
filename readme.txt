@@ -76,6 +76,6 @@ Suporta as versões 2.0.x e 2.1.x do WooCommerce.
 
 == Upgrade Notice ==
 
-= 2.0.4 =
+= 2.0.7 =
 
-* Melhoria no controle de estoque.
+* Suporte inicial para as versões 2.1.x do WooCommerce.
