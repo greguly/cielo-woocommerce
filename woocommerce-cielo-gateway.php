@@ -5,7 +5,7 @@
  * Description: Adiciona a opção de pagamento pela Cielo ao WooCommerce - Compatível com o XML versão 1.2.0, lançado em janeiro de 2012
  * Author: Gabriel Reguly, omniWP, claudiosanches
  * Author URI: http://omniwp.com.br
- * Version: 2.0.8
+ * Version: 2.0.9
  * License: GPLv2 or later
  * Text Domain: woocommerce-pagarme
  * Domain Path: /languages/
@@ -187,7 +187,7 @@ function cielo_woocommerce_init() {
                                 'type' => 'multiselect',
 								'description' => 'Selecione as bandeiras que serão aceitas como forma de pagamento.<br />Pressione a tecla Ctrl para selecionar mais de uma bandeira.',
                                 'options' => $this->descricao_meios,
-								'default' => 'visa',
+								'default' => array( 'visa' ),
 							),
  				'captura'  => array(
 								'title' => 'Capturar automaticamente?',
