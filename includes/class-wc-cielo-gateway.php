@@ -15,7 +15,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		global $woocommerce;
 
 		$this->id			= 'cielo';
-		$this->icon 		= plugins_url( 'assets/images/cielo.jpg' , __FILE__ );
+		$this->icon 		= apply_filters( 'wc_cielo_icon', plugins_url( 'assets/images/cielo.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields   = true;
 		$this->method_title = __( 'Cielo', 'woocommerce-cielo' );
 
