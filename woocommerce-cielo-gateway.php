@@ -30,7 +30,7 @@ function cielo_woocommerce_init() {
 
 	        $this->id			= 'cielo';
 	        $this->method_title = 'Cielo';
-			$this->icon 		= plugins_url( 'i/cielo.jpg' , __FILE__ );
+			$this->icon 		= plugins_url( 'assets/images/cielo.jpg' , __FILE__ );
             $this->has_fields   = true;
 
 
