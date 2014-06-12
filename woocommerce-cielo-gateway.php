@@ -5,7 +5,7 @@
  * Description: Adiciona a opção de pagamento pela Cielo ao WooCommerce - Compatível com o XML versão 1.2.0, lançado em janeiro de 2012
  * Author: Gabriel Reguly, omniWP, claudiosanches
  * Author URI: http://omniwp.com.br
- * Version: 2.0.6
+ * Version: 2.0.7
  * License: GPLv2 or later
  * Text Domain: woocommerce-pagarme
  * Domain Path: /languages/
