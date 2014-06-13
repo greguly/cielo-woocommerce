@@ -88,7 +88,7 @@ class WC_Cielo {
 	 * @return void
 	 */
 	private function includes() {
-		include_once( 'includes/class-wc-cielo-simplexml.php' );
+		include_once( 'includes/class-wc-cielo-xml.php' );
 		include_once( 'includes/class-wc-cielo-api.php' );
 		include_once( 'includes/class-wc-cielo-gateway.php' );
 	}

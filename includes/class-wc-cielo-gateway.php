@@ -260,6 +260,22 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		);
 	}
 
+	/**
+	 * Process the payment and return the result.
+	 *
+	 * @param int    $order_id Order ID.
+	 *
+	 * @return array           Redirect.
+	 */
+	public function process_payment( $order_id ) {
+		$order = new WC_Order( $order_id );
 
+		error_log( print_r( $this->api->do_transaction( $order, time() ), true ) );
+
+		return array(
+			'result'   => 'fail',
+			'redirect' => ''
+		);
+	}
 
 }
