@@ -242,7 +242,7 @@ class WC_Cielo_API {
 		$xml->add_payment_data( 'visa', '1', '1' );
 		$xml->add_return_url( 'testando' );
 		$xml->add_authorize( '3' );
-		$xml->add_capture( 'false' );
+		$xml->add_capture( $this->capture );
 		$xml->add_token_generation( 'false' );
 		$data = 'mensagem=' . $xml->render();
 
