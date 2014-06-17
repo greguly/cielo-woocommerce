@@ -40,6 +40,9 @@ Suporta as versões 2.0.x e 2.1.x do WooCommerce.
 
 == Changelog ==
 
+= 2.0.9.1 - 2014/06/17 =
+
+* Corrigido erro depois do pagamento,  ocorria apenas nas versões anteriores a 2.1 do WooCommerce
 = 2.0.7 - 11/06/2014 =
 
 * Suporte inicial para as versões 2.1.x do WooCommerce.
@@ -75,6 +78,10 @@ Suporta as versões 2.0.x e 2.1.x do WooCommerce.
 * Initial plugin release.
 
 == Upgrade Notice ==
+
+= 2.0.9.1 =
+
+* Corrigido erro para as versões anteriores a 2.1 do WooCommerce.
 
 = 2.0.7 =
 
