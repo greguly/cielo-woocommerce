@@ -237,12 +237,12 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			'installment_type' => array(
 				'title'        => __( 'Installment Type', 'cielo-woocommerce' ),
 				'type'         => 'select',
-				'description'  => __( 'Store adds interest installments on the order total.', 'cielo-woocommerce' ),
+				'description'  => __( 'Client adds interest installments on the order total.', 'cielo-woocommerce' ),
 				'desc_tip'     => true,
-				'default'      => 'store',
+				'default'      => 'client',
 				'options'     => array(
-					'store'   => __( 'Store' ),
-					'company' => __( 'Credit card company' )
+					'client' => __( 'Client', 'cielo-woocommerce' ),
+					'store'  => __( 'Store', 'cielo-woocommerce' )
 				)
 			),
 			'testing' => array(
@@ -258,6 +258,29 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside %s', 'cielo-woocommerce' ), '<code>woocommerce/logs/' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.txt</code>' )
 			)
 		);
+	}
+
+	/**
+	 * Payment fields.
+	 *
+	 * @return string
+	 */
+	public function payment_fields() {
+		global $woocommerce;
+
+		wp_enqueue_script( 'wc-credit-card-form' );
+
+		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+			$cart_total = (float) WC()->cart->total;
+		} else {
+			$cart_total = (float) $woocommerce->cart->total;
+		}
+
+		if ( $description = $this->get_description() ) {
+			echo wpautop( wptexturize( $description ) );
+		}
+
+		include_once( 'views/html-payment-form.php' );
 	}
 
 	/**
