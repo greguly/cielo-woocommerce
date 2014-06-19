@@ -7,7 +7,7 @@
  * Author URI: http://omniwp.com.br
  * Version: 3.0.0
  * License: GPLv2 or later
- * Text Domain: woocommerce-cielo
+ * Text Domain: cielo-woocommerce
  * Domain Path: /languages/
  * Copyright: © 2012, 2013, 2014 omniWP
  * License: GNU General Public License v2.0
@@ -76,10 +76,10 @@ class WC_Cielo {
 	 * @return void
 	 */
 	public function load_plugin_textdomain() {
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-cielo' );
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'cielo-woocommerce' );
 
-		load_textdomain( 'woocommerce-cielo', trailingslashit( WP_LANG_DIR ) . 'woocommerce-cielo/woocommerce-cielo-' . $locale . '.mo' );
-		load_plugin_textdomain( 'woocommerce-cielo', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		load_textdomain( 'cielo-woocommerce', trailingslashit( WP_LANG_DIR ) . 'cielo-woocommerce/cielo-woocommerce-' . $locale . '.mo' );
+		load_plugin_textdomain( 'cielo-woocommerce', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class WC_Cielo {
 	 * @return  string
 	 */
 	public function woocommerce_missing_notice() {
-		echo '<div class="error"><p>' . sprintf( __( 'WooCommerce Cielo Gateway depends on the last version of the %s to work!', 'woocommerce-cielo' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">' . __( 'WooCommerce', 'woocommerce-cielo' ) . '</a>' ) . '</p></div>';
+		echo '<div class="error"><p>' . sprintf( __( 'WooCommerce Cielo Gateway depends on the last version of the %s to work!', 'cielo-woocommerce' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">' . __( 'WooCommerce', 'cielo-woocommerce' ) . '</a>' ) . '</p></div>';
 	}
 }
 

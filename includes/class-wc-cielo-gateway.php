@@ -24,16 +24,16 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$this->id			= 'cielo';
 		$this->icon 		= apply_filters( 'wc_cielo_icon', plugins_url( 'assets/images/cielo.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields   = true;
-		$this->method_title = __( 'Cielo', 'woocommerce-cielo' );
+		$this->method_title = __( 'Cielo', 'cielo-woocommerce' );
 
 		// Payment methods and products.
 		$this->descricao_meios = array(
-			'visa'       => __( 'Visa', 'woocommerce-cielo' ),
-			'mastercard' => __( 'MasterCard', 'woocommerce-cielo' ),
-			'diners'     => __( 'Diners', 'woocommerce-cielo' ),
-			'discover'   => __( 'Discover', 'woocommerce-cielo' ),
-			'elo'        => __( 'Elo', 'woocommerce-cielo' ),
-			'amex'       => __( 'American Express', 'woocommerce-cielo' )
+			'visa'       => __( 'Visa', 'cielo-woocommerce' ),
+			'mastercard' => __( 'MasterCard', 'cielo-woocommerce' ),
+			'diners'     => __( 'Diners', 'cielo-woocommerce' ),
+			'discover'   => __( 'Discover', 'cielo-woocommerce' ),
+			'elo'        => __( 'Elo', 'cielo-woocommerce' ),
+			'amex'       => __( 'American Express', 'cielo-woocommerce' )
 		);
 
 		// Load the form fields.
@@ -95,107 +95,107 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	function init_form_fields() {
 		$this->form_fields = array(
 			'enabled' => array(
-				'title'   => __( 'Enable/Disable', 'woocommerce-cielo' ),
+				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Enable Cielo', 'woocommerce-cielo' ),
+				'label'   => __( 'Enable Cielo', 'cielo-woocommerce' ),
 				'default' => 'yes'
 			),
 			'title' => array(
-				'title'       => __( 'Title', 'woocommerce-cielo' ),
+				'title'       => __( 'Title', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce-cielo' ),
+				'description' => __( 'This controls the title which the user sees during checkout.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => __( 'Cielo', 'woocommerce-cielo' )
+				'default'     => __( 'Cielo', 'cielo-woocommerce' )
 			),
 			'description' => array(
-				'title'       => __( 'Description', 'woocommerce-cielo' ),
+				'title'       => __( 'Description', 'cielo-woocommerce' ),
 				'type'        => 'textarea',
-				'description' => __( 'This controls the description which the user sees during checkout.', 'woocommerce-cielo' ),
+				'description' => __( 'This controls the description which the user sees during checkout.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => __( 'Pay using the secure method of Cielo', 'woocommerce-cielo' )
+				'default'     => __( 'Pay using the secure method of Cielo', 'cielo-woocommerce' )
 			),
 			'environment' => array(
-				'title'       => __( 'Environment', 'woocommerce-cielo' ),
+				'title'       => __( 'Environment', 'cielo-woocommerce' ),
 				'type'        => 'select',
-				'description' => __( 'Select the environment type (test or production).', 'woocommerce-cielo' ),
+				'description' => __( 'Select the environment type (test or production).', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => 'test',
 				'options'     => array(
-					'test'       => __( 'Test', 'woocommerce-cielo' ),
-					'production' => __( 'Production', 'woocommerce-cielo' )
+					'test'       => __( 'Test', 'cielo-woocommerce' ),
+					'production' => __( 'Production', 'cielo-woocommerce' )
 				)
 			),
 			'number' => array(
-				'title'       => __( 'Affiliation Number', 'woocommerce-cielo' ),
+				'title'       => __( 'Affiliation Number', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Store affiliation number with Cielo.', 'woocommerce-cielo' ),
+				'description' => __( 'Store affiliation number with Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => ''
 			),
 			'key' => array(
-				'title'       => __( 'Affiliation Key', 'woocommerce-cielo' ),
+				'title'       => __( 'Affiliation Key', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Store access key assigned by Cielo.', 'woocommerce-cielo' ),
+				'description' => __( 'Store access key assigned by Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => ''
 			),
 			'methods' => array(
-				'title'       => __( 'Credit Card Accepted Brands', 'woocommerce-cielo' ),
+				'title'       => __( 'Credit Card Accepted Brands', 'cielo-woocommerce' ),
 				'type'        => 'multiselect',
-				'description' => __( 'Select the credit card brands that will be accepted as payment. Press the Ctrl key to select more than one brand.', 'woocommerce-cielo' ),
+				'description' => __( 'Select the credit card brands that will be accepted as payment. Press the Ctrl key to select more than one brand.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => array( 'visa' ),
 				'options'     => WC_Cielo_API::get_payment_methods()
 			),
 			'capture' => array(
-				'title'       => __( 'Capture automatically?', 'woocommerce-cielo' ),
+				'title'       => __( 'Capture automatically?', 'cielo-woocommerce' ),
 				'type'        => 'select',
-				'description' => __( 'Select the capture type.', 'woocommerce-cielo' ),
+				'description' => __( 'Select the capture type.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => 'true',
 				'options'     => array(
-					'true'  => __( 'Yes', 'woocommerce-cielo' ),
-					'false' => __( 'No', 'woocommerce-cielo' )
+					'true'  => __( 'Yes', 'cielo-woocommerce' ),
+					'false' => __( 'No', 'cielo-woocommerce' )
 				)
 			),
 			'authorization' => array(
-				'title'       => __( 'Automatic Authorization (Visa only)', 'woocommerce-cielo' ),
+				'title'       => __( 'Automatic Authorization (Visa only)', 'cielo-woocommerce' ),
 				'type'        => 'select',
-				'description' => __( 'Select the authorization type.', 'woocommerce-cielo' ),
+				'description' => __( 'Select the authorization type.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '2',
 				'options'     => array(
-					'3' => __( 'Direct authorization (does not work for debit)', 'woocommerce-cielo' ),
-					'2' => __( 'Allow authorization for authenticated transaction and non-authenticated', 'woocommerce-cielo' ),
-					'1' => __( 'Authorization transaction only if is authenticated', 'woocommerce-cielo' ),
-					'0' => __( 'Only authenticate the transaction', 'woocommerce-cielo' )
+					'3' => __( 'Direct authorization (does not work for debit)', 'cielo-woocommerce' ),
+					'2' => __( 'Allow authorization for authenticated transaction and non-authenticated', 'cielo-woocommerce' ),
+					'1' => __( 'Authorization transaction only if is authenticated', 'cielo-woocommerce' ),
+					'0' => __( 'Only authenticate the transaction', 'cielo-woocommerce' )
 				)
 			),
 			'smallest_installment' => array(
-				'title'       => __( 'Smallest Installment', 'woocommerce-cielo' ),
+				'title'       => __( 'Smallest Installment', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Smallest value of each installment, cannot be less than 5', 'woocommerce-cielo' ),
+				'description' => __( 'Smallest value of each installment, cannot be less than 5', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '5'
 			),
 			'interest_rate' => array(
-				'title'       => __( 'Interest Rate (%)', 'woocommerce-cielo' ),
+				'title'       => __( 'Interest Rate (%)', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Percentage of interest that will be charged to the customer in the installment where there is interest rate to be charged.', 'woocommerce-cielo' ),
+				'description' => __( 'Percentage of interest that will be charged to the customer in the installment where there is interest rate to be charged.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '2'
 			),
 			'debit_discount' => array(
-				'title'       => __( 'Debit Discount (%)', 'woocommerce-cielo' ),
+				'title'       => __( 'Debit Discount (%)', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Percentage discount for payments made ​​by debit card.', 'woocommerce-cielo' ),
+				'description' => __( 'Percentage discount for payments made ​​by debit card.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '0'
 			),
 			'installments' => array(
-				'title'       => __( 'Installment Within', 'woocommerce-cielo' ),
+				'title'       => __( 'Installment Within', 'cielo-woocommerce' ),
 				'type'        => 'select',
-				'description' => __( 'Maximum number of installments for orders in your store', 'woocommerce-cielo' ),
+				'description' => __( 'Maximum number of installments for orders in your store', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '1',
 				'options'     => array(
@@ -214,9 +214,9 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				)
 			),
 			'interest' => array(
-				'title'       => __( 'Without Interest Until', 'woocommerce-cielo' ),
+				'title'       => __( 'Without Interest Until', 'cielo-woocommerce' ),
 				'type'        => 'select',
-				'description' => __( 'Number of installments on which no interest will be charged from the customer.', 'woocommerce-cielo' ),
+				'description' => __( 'Number of installments on which no interest will be charged from the customer.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '6',
 				'options'     => array(
@@ -235,9 +235,9 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				)
 			),
 			'installment_type' => array(
-				'title'        => __( 'Installment Type', 'woocommerce-cielo' ),
+				'title'        => __( 'Installment Type', 'cielo-woocommerce' ),
 				'type'         => 'select',
-				'description'  => __( 'Store adds interest installments on the order total.', 'woocommerce-cielo' ),
+				'description'  => __( 'Store adds interest installments on the order total.', 'cielo-woocommerce' ),
 				'desc_tip'     => true,
 				'default'      => 'store',
 				'options'     => array(
@@ -246,16 +246,16 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				)
 			),
 			'testing' => array(
-				'title'       => __( 'Gateway Testing', 'woocommerce-cielo' ),
+				'title'       => __( 'Gateway Testing', 'cielo-woocommerce' ),
 				'type'        => 'title',
 				'description' => ''
 			),
 			'debug' => array(
-				'title'       => __( 'Debug Log', 'woocommerce-cielo' ),
+				'title'       => __( 'Debug Log', 'cielo-woocommerce' ),
 				'type'        => 'checkbox',
-				'label'       => __( 'Enable logging', 'woocommerce-cielo' ),
+				'label'       => __( 'Enable logging', 'cielo-woocommerce' ),
 				'default'     => 'no',
-				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside %s', 'woocommerce-cielo' ), '<code>woocommerce/logs/' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.txt</code>' )
+				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside %s', 'cielo-woocommerce' ), '<code>woocommerce/logs/' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.txt</code>' )
 			)
 		);
 	}

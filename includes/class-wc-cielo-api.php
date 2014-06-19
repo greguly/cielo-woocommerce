@@ -99,12 +99,12 @@ class WC_Cielo_API {
 	 */
 	public static function get_payment_methods() {
 		return array(
-			'visa'       => __( 'Visa', 'woocommerce-cielo' ),
-			'mastercard' => __( 'MasterCard', 'woocommerce-cielo' ),
-			'diners'     => __( 'Diners', 'woocommerce-cielo' ),
-			'discover'   => __( 'Discover', 'woocommerce-cielo' ),
-			'elo'        => __( 'Elo', 'woocommerce-cielo' ),
-			'amex'       => __( 'American Express', 'woocommerce-cielo' )
+			'visa'       => __( 'Visa', 'cielo-woocommerce' ),
+			'mastercard' => __( 'MasterCard', 'cielo-woocommerce' ),
+			'diners'     => __( 'Diners', 'cielo-woocommerce' ),
+			'discover'   => __( 'Discover', 'cielo-woocommerce' ),
+			'elo'        => __( 'Elo', 'cielo-woocommerce' ),
+			'amex'       => __( 'American Express', 'cielo-woocommerce' )
 		);
 	}
 
@@ -242,7 +242,7 @@ class WC_Cielo_API {
 		$xml->add_payment_data( 'visa', '1', '1' );
 		$xml->add_return_url( 'testando' );
 		$xml->add_authorize( '3' );
-		$xml->add_capture( $this->capture );
+		$xml->add_capture( $this->gateway->capture );
 		$xml->add_token_generation( 'false' );
 		$data = 'mensagem=' . $xml->render();
 
