@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <fieldset id="<?php echo esc_attr( $this->id ); ?>-payment-form">
 	<p class="form-row form-row-first">
 		<label for="<?php echo esc_attr( $this->id ); ?>-card-brand"><?php _e( 'Card', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
-		<select id="<?php echo esc_attr( $this->id ); ?>-card-brand" name="<?php echo esc_attr( $this->id ); ?>_card_brand" style="font-size: 1.5em; padding: 4px; width: 100%;">
+		<select id="<?php echo esc_attr( $this->id ); ?>-card-brand" name="<?php echo esc_attr( $this->id ); ?>_card" style="font-size: 1.5em; padding: 4px; width: 100%;">
 			<?php foreach ( $this->methods as $method ): ?>
 				<option value="<?php echo esc_attr( $method ); ?>"><?php echo esc_attr( WC_Cielo_API::get_payment_method_name( $method ) ); ?></option>
 			<?php endforeach ?>
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</p>
 	<p class="form-row form-row-last">
 		<label for="<?php echo esc_attr( $this->id ); ?>-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
-		<select id="<?php echo esc_attr( $this->id ); ?>-installments" name="<?php echo esc_attr( $this->id ); ?>_card_brand" style="font-size: 1.5em; padding: 4px; width: 100%;">
+		<select id="<?php echo esc_attr( $this->id ); ?>-installments" name="<?php echo esc_attr( $this->id ); ?>_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">
 			<?php if ( ! empty( array_intersect( WC_Cielo_API::get_debit_methods(), $this->methods ) ) ) :
 					$debit_total    = $cart_total * ( ( 100 - $this->debit_discount ) / 100 );
 					$debit_discount = ( $cart_total > $debit_total ) ? ' (' . $this->debit_discount . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						}
 					}
 
-					if ( $credit_total <= $this->smallest_installment ) {
+					if ( $credit_total < $this->smallest_installment ) {
 						continue;
 					}
 				?>
