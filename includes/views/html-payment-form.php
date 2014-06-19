@@ -14,34 +14,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</select>
 	</p>
 	<p class="form-row form-row-last">
-		<label><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
-		<?php if ( ! empty( array_intersect( WC_Cielo_API::get_debit_methods(), $this->methods ) ) ) :
-				$debit_total    = $cart_total * ( ( 100 - $this->debit_discount ) / 100 );
-				$debit_discount = ( $cart_total > $debit_total ) ? ' (' . $this->debit_discount . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
-			?>
-			<label><input type="radio" name="<?php echo esc_attr( $this->id ); ?>_installments" data-available="<?php echo implode( ',', WC_Cielo_API::get_debit_methods() ); ?>" value="0"> <?php echo sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), woocommerce_price( $debit_total ), $debit_discount ); ?></label>
-		<?php endif; ?>
-		<?php for ( $i = 1; $i <= $this->installments; $i++ ) :
-				$credit_total    = $cart_total / $i;
-				$credit_interest = __( '(no interest)', 'cielo-woocommerce' );
+		<label for="<?php echo esc_attr( $this->id ); ?>-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
+		<select id="<?php echo esc_attr( $this->id ); ?>-installments" name="<?php echo esc_attr( $this->id ); ?>_card_brand" style="font-size: 1.5em; padding: 4px; width: 100%;">
+			<?php if ( ! empty( array_intersect( WC_Cielo_API::get_debit_methods(), $this->methods ) ) ) :
+					$debit_total    = $cart_total * ( ( 100 - $this->debit_discount ) / 100 );
+					$debit_discount = ( $cart_total > $debit_total ) ? ' (' . $this->debit_discount . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
+				?>
 
-				if ( 'client' == $this->installment_type && $i > $this->interest ) {
-					$interest_total = $credit_total * ( ( 100 + $this->interest_rate ) / 100 );
+				<option value="0" data-available="<?php echo implode( ',', WC_Cielo_API::get_debit_methods() ); ?>"><?php echo sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), woocommerce_price( $debit_total ), $debit_discount ); ?></option>
 
-					if ( $credit_total < $interest_total ) {
-						$credit_total    = $interest_total;
-						$credit_interest = __( '(with interest)', 'cielo-woocommerce' );
+			<?php endif; ?>
+			<?php for ( $i = 1; $i <= $this->installments; $i++ ) :
+					$credit_total    = $cart_total / $i;
+					$credit_interest = __( '(no interest)', 'cielo-woocommerce' );
+
+					if ( 'client' == $this->installment_type && $i > $this->interest ) {
+						$interest_total = $credit_total * ( ( 100 + $this->interest_rate ) / 100 );
+
+						if ( $credit_total < $interest_total ) {
+							$credit_total    = $interest_total;
+							$credit_interest = __( '(with interest)', 'cielo-woocommerce' );
+						}
 					}
-				}
 
-				if ( $credit_total <= $this->smallest_installment ) {
-					continue;
-				}
-			?>
+					if ( $credit_total <= $this->smallest_installment ) {
+						continue;
+					}
+				?>
 
-			<label><input type="radio" name="<?php echo esc_attr( $this->id ); ?>_installments" value="<?php echo $i; ?>"> <?php echo sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, woocommerce_price( $credit_total ), $credit_interest ); ?></label>
+				<option value="<?php echo $i; ?>"><?php echo sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, woocommerce_price( $credit_total ), $credit_interest ); ?></option>
 
-		<?php endfor; ?>
+			<?php endfor; ?>
+		</select>
 	</p>
 	<div class="clear"></div>
 </fieldset>
