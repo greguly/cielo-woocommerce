@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					$credit_interest = __( '(no interest)', 'cielo-woocommerce' );
 					$smallest_value  = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 
-					if ( 'client' == $this->installment_type && $i > $this->interest ) {
+					if ( 'client' == $this->installment_type && $i >= $this->interest ) {
 						$interest_total = $credit_total * ( ( 100 + $this->interest_rate ) / 100 );
 
 						if ( $credit_total < $interest_total ) {

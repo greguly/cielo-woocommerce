@@ -214,9 +214,9 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				)
 			),
 			'interest' => array(
-				'title'       => __( 'Without Interest Until', 'cielo-woocommerce' ),
+				'title'       => __( 'Charge Interest Since', 'cielo-woocommerce' ),
 				'type'        => 'select',
-				'description' => __( 'Number of installments on which no interest will be charged from the customer.', 'cielo-woocommerce' ),
+				'description' => __( 'Indicate from which installment should be charged interest.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '6',
 				'options'     => array(
@@ -313,38 +313,64 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$order        = new WC_Order( $order_id );
 		$card         = isset( $_POST['cielo_card'] ) ? sanitize_text_field( $_POST['cielo_card'] ) : '';
 		$installments = isset( $_POST['cielo_installments'] ) ? absint( $_POST['cielo_installments'] ) : '';
-		$valid        = false;
+		$valid        = true;
+		$payment_url  = '';
 
 		// Validate the card brand.
 		if ( ! in_array( $card, $this->methods ) ) {
 			$this->add_error( __( 'please select a card.', 'cielo-woocommerce' ) );
+			$valid = false;
 		}
 
 		// Validate the installments field.
 		if ( '' === $installments ) {
 			$this->add_error( __( 'please select a number of installments.', 'cielo-woocommerce' ) );
+			$valid = false;
 		}
 
 		// Validate if debit is available.
-		if ( ! in_array( $card, WC_Cielo_API::get_debit_methods() ) ) {
+		if ( ! in_array( $card, WC_Cielo_API::get_debit_methods() ) && 0 == $installments ) {
 			$this->add_error( sprintf( __( '%s does not accept payment by debit.', 'cielo-woocommerce' ), WC_Cielo_API::get_payment_method_name( $card ) ) );
+			$valid = false;
 		}
 
 		// Validate the installments amount.
 		$installment_total = $order->order_total / $installments;
-		if ( 'client' == $this->installment_type && $installments > $this->interest ) {
+		if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
 			$interest_total    = $installment_total * ( ( 100 + $this->interest_rate ) / 100 );
 			$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
 		}
 		$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 		if ( $installments > $this->installments || $installment_total < $smallest_value ) {
 			$this->add_error( __( 'invalid number of installments!', 'cielo-woocommerce' ) );
+			$valid = false;
 		}
 
-		// error_log( print_r( $this->api->do_transaction( $order, time() ), true ) );
+		if ( $valid ) {
+			$response = $this->api->do_transaction( $order, time(), $card, $installments );
+
+			// Set the error alert.
+			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+				$this->add_error( (string) $response->mensagem );
+				$valid = false;
+			}
+
+			// Save the tid.
+			if ( isset( $response->tid ) && ! empty( $response->tid ) ) {
+				update_post_meta( $order->id, '_wc_cielo_transaction_tid', (string) $response->tid );
+			}
+
+			// Set the transaction URL.
+			if ( isset( $response->{'url-autenticacao'} ) && ! empty( $response->{'url-autenticacao'} ) ) {
+				$payment_url = (string) $response->{'url-autenticacao'};
+			}
+		}
 
 		if ( $valid ) {
-
+			return array(
+				'result'   => 'success',
+				'redirect' => $payment_url
+			);
 		} else {
 			return array(
 				'result'   => 'fail',
