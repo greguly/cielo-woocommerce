@@ -73,6 +73,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 		// Actions.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ), 999 );
 	}
 
 	/**
@@ -258,6 +259,19 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside %s', 'cielo-woocommerce' ), '<code>woocommerce/logs/' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.txt</code>' )
 			)
 		);
+	}
+
+	/**
+	 * Checkout scripts.
+	 *
+	 * @return void
+	 */
+	public function checkout_scripts() {
+		if ( is_checkout() ) {
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+			wp_enqueue_script( 'wc-cielo-checkout', plugins_url( 'assets/js/checkout' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+		}
 	}
 
 	/**
