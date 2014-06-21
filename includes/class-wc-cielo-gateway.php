@@ -144,7 +144,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'type'        => 'multiselect',
 				'description' => __( 'Select the credit card brands that will be accepted as payment. Press the Ctrl key to select more than one brand.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => array( 'visa' ),
+				'default'     => array( 'visa', 'mastercard' ),
 				'options'     => WC_Cielo_API::get_payment_methods()
 			),
 			'capture' => array(
@@ -159,7 +159,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				)
 			),
 			'authorization' => array(
-				'title'       => __( 'Automatic Authorization (Visa only)', 'cielo-woocommerce' ),
+				'title'       => __( 'Automatic Authorization (MasterCard and Visa only)', 'cielo-woocommerce' ),
 				'type'        => 'select',
 				'description' => __( 'Select the authorization type.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
@@ -334,16 +334,18 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			$valid = false;
 		}
 
-		// Validate the installments amount.
-		$installment_total = $order->order_total / $installments;
-		if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
-			$interest_total    = $installment_total * ( ( 100 + $this->interest_rate ) / 100 );
-			$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
-		}
-		$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
-		if ( $installments > $this->installments || $installment_total < $smallest_value ) {
-			$this->add_error( __( 'invalid number of installments!', 'cielo-woocommerce' ) );
-			$valid = false;
+		if ( 0 != $installments ) {
+			// Validate the installments amount.
+			$installment_total = $order->order_total / $installments;
+			if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
+				$interest_total    = $installment_total * ( ( 100 + $this->interest_rate ) / 100 );
+				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
+			}
+			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
+			if ( $installments > $this->installments || $installment_total < $smallest_value ) {
+				$this->add_error( __( 'invalid number of installments!', 'cielo-woocommerce' ) );
+				$valid = false;
+			}
 		}
 
 		if ( $valid ) {

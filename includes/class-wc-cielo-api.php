@@ -92,7 +92,9 @@ class WC_Cielo_API {
 			'diners'     => __( 'Diners', 'cielo-woocommerce' ),
 			'discover'   => __( 'Discover', 'cielo-woocommerce' ),
 			'elo'        => __( 'Elo', 'cielo-woocommerce' ),
-			'amex'       => __( 'American Express', 'cielo-woocommerce' )
+			'amex'       => __( 'American Express', 'cielo-woocommerce' ),
+			'jcb'        => __( 'JCB', 'cielo-woocommerce' ),
+			'aura'       => __( 'Aura', 'cielo-woocommerce' ),
 		);
 	}
 
@@ -113,25 +115,22 @@ class WC_Cielo_API {
 		return '';
 	}
 
-	public static function get_credit_methods() {
-		return array( 'visa', 'mastercard', 'diners', 'discover', 'elo', 'amex' );
-	}
-
-	public static function get_store_credit_methods() {
-		return array( 'visa', 'mastercard', 'diners', 'elo', 'amex' );
-	}
-
-	public static function get_credit_cards() {
-		return array( 'visa', 'mastercard', 'diners', 'elo', 'amex' );
-	}
-
 	/**
 	 * Get debit methods.
 	 *
 	 * @return array
 	 */
 	public static function get_debit_methods() {
-		return array( 'visa' );
+		return array( 'visa', 'mastercard' );
+	}
+
+	/**
+	 * Get methods who accepts authorization.
+	 *
+	 * @return array
+	 */
+	public static function get_accept_authorization() {
+		return array( 'visa', 'mastercard' );
 	}
 
 	/**
@@ -300,7 +299,7 @@ class WC_Cielo_API {
 		$authorization   = $this->gateway->authorization;
 
 		// Set the authorization.
-		if ( 'visa' != $card_brand && 3 != $authorization ) {
+		if ( in_array( $card_brand, self::get_accept_authorization() ) && 3 != $authorization ) {
 			$authorization = 3;
 		}
 
