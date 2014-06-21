@@ -1,0 +1,112 @@
+#cielo-card-brand:before,
+#cielo-card-brand:after {
+    content: " ";
+    display: table;
+}
+
+#cielo-card-brand:after {
+    clear: both;
+}
+
+#cielo-card-brand {
+	border-bottom: 1px solid #ccc;
+	margin: 0 0 10px;
+	padding: 0;
+	list-style: none;
+	float: none;
+	width: 100%;
+    *zoom: 1;
+}
+
+#cielo-card-brand li {
+	display: block;
+	float: left;
+	list-style: none;
+	margin: 0 30px 5px 0 !important;
+}
+
+#cielo-card-brand li:last-child {
+	margin-right: 0 !important;
+}
+
+/*#cielo-card-brand input,*/
+#cielo-card-brand span {
+	display: none;
+}
+
+#cielo-card-brand input {
+	display: inline;
+	margin: 0 !important;
+}
+
+#cielo-card-brand label {
+	display: block;
+	text-align: center;
+}
+
+#cielo-card-brand i {
+	background-image: url("../images/cards.png");
+	background-repeat: no-repeat;
+	cursor: pointer;
+	display: block;
+	height: 19px;
+}
+
+#cielo-icon-visa {
+	width: 60px;
+}
+
+#cielo-icon-mastercard {
+	background-position: -60px 0;
+	width: 31px;
+}
+
+#cielo-icon-diners {
+	background-position: -91px 0;
+	width: 31px;
+}
+
+#cielo-icon-amex {
+	background-position: -122px 0;
+	width: 35px;
+}
+
+#cielo-icon-discover {
+	background-position: -157px 0;
+	width: 29px;
+}
+
+#cielo-icon-jcb {
+	background-position: -186px 0;
+	width: 26px;
+}
+
+#cielo-icon-elo {
+	background-position: -212px 0;
+	width: 19px;
+}
+
+#cielo-icon-aura {
+	background-position: -231px 0;
+	width: 31px;
+}
+
+#cielo-select-name {
+	font-size: 1.3em;
+	margin: 0 0 5px;
+}
+
+#cielo-select-name strong {
+	font-weight: 700;
+}
+
+@media screen and (max-width: 550px)  {
+	#cielo-payment-form .form-row-first,
+	#cielo-payment-form .form-row-last {
+		float: none !important;
+		margin-bottom: 0 !important;
+		padding-bottom: 0 !important;
+		padding-top: 0 !important;
+		width: 100% !important;
+	}
+}

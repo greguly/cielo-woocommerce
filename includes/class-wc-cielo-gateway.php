@@ -46,6 +46,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$this->installments         = $this->get_option( 'installments' );
 		$this->interest             = $this->get_option( 'interest' );
 		$this->installment_type     = $this->get_option( 'installment_type' );
+		$this->design               = $this->get_option( 'design' );
 		$this->debug                = $this->get_option( 'debug' );
 
 		// Active logs.
@@ -222,9 +223,23 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'description'  => __( 'Client adds interest installments on the order total.', 'cielo-woocommerce' ),
 				'desc_tip'     => true,
 				'default'      => 'client',
-				'options'     => array(
+				'options'      => array(
 					'client' => __( 'Client', 'cielo-woocommerce' ),
 					'store'  => __( 'Store', 'cielo-woocommerce' )
+				)
+			),
+			'design_options' => array(
+				'title'       => __( 'Design', 'cielo-woocommerce' ),
+				'type'        => 'title',
+				'description' => ''
+			),
+			'design' => array(
+				'title'   => __( 'Payment Form Design', 'cielo-woocommerce' ),
+				'type'    => 'select',
+				'default' => 'default',
+				'options' => array(
+					'default' => __( 'Default', 'cielo-woocommerce' ),
+					'icons'   => __( 'With card icons', 'cielo-woocommerce' )
 				)
 			),
 			'testing' => array(
@@ -251,7 +266,12 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		if ( is_checkout() ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-			wp_enqueue_script( 'wc-cielo-checkout', plugins_url( 'assets/js/checkout' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+			if ( 'icons' == $this->design ) {
+				wp_enqueue_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
+				wp_enqueue_script( 'wc-cielo-checkout-icons', plugins_url( 'assets/js/checkout-icons' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+			} else {
+				wp_enqueue_script( 'wc-cielo-checkout-default', plugins_url( 'assets/js/checkout-default' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+			}
 		}
 	}
 
@@ -301,7 +321,8 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			echo wpautop( wptexturize( $description ) );
 		}
 
-		include_once( 'views/html-payment-form.php' );
+		$model = ( 'icons' == $this->design ) ? 'icons' : 'default';
+		include_once( 'views/html-payment-form-' . $model . '.php' );
 	}
 
 	/**

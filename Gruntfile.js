@@ -24,7 +24,7 @@ module.exports = function( grunt ) {
 			]
 		},
 
-		// Minify .js files.
+		// Minify .js files
 		uglify: {
 			options: {
 				preserveComments: 'some'
@@ -43,6 +43,20 @@ module.exports = function( grunt ) {
 			}
 		},
 
+		// Compress the css files
+		cssmin: {
+			dist: {
+				expand: true,
+				cwd: '<%= dirs.css %>/',
+				src: [
+					'*.css',
+					'!*.min.css'
+				],
+				dest: '<%= dirs.css %>/',
+				ext: '.min.css'
+			}
+		},
+
 		// Watch changes for assets
 		watch: {
 			js: {
@@ -51,6 +65,13 @@ module.exports = function( grunt ) {
 					'!<%= dirs.js %>/*.min.js'
 				],
 				tasks: ['jshint', 'uglify']
+			},
+			css: {
+				files: [
+					'<%= dirs.css %>/*.css',
+					'!<%= dirs.css %>/*.min.css'
+				],
+				tasks: ['cssmin']
 			}
 		},
 
@@ -75,10 +96,12 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
+	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
 	grunt.loadNpmTasks( 'grunt-contrib-imagemin' );
 
 	// Register tasks
 	grunt.registerTask( 'default', [
+		'cssmin',
 		'jshint',
 		'uglify'
 	]);

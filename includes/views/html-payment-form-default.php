@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					$debit_discount = ( $cart_total > $debit_total ) ? ' (' . $this->debit_discount . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
 				?>
 
-				<option value="0" class="cielo-debit"><?php echo sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), woocommerce_price( $debit_total ), $debit_discount ); ?></option>
+				<option value="0" class="cielo-debit"><?php echo sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $debit_total ) ), $debit_discount ); ?></option>
 
 			<?php endif; ?>
 			<?php for ( $i = 1; $i <= $this->installments; $i++ ) :
@@ -43,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					}
 				?>
 
-				<option value="<?php echo $i; ?>" class="<?php echo ( 1 == $i ) ? 'cielo-at-sight' : ''; ?>"><?php echo sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, woocommerce_price( $credit_total ), $credit_interest ); ?></option>
+				<option value="<?php echo $i; ?>" class="<?php echo ( 1 == $i ) ? 'cielo-at-sight' : ''; ?>"><?php echo sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest ); ?></option>
 
 			<?php endfor; ?>
 		</select>
