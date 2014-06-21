@@ -26,16 +26,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$this->has_fields   = true;
 		$this->method_title = __( 'Cielo', 'cielo-woocommerce' );
 
-		// Payment methods and products.
-		$this->descricao_meios = array(
-			'visa'       => __( 'Visa', 'cielo-woocommerce' ),
-			'mastercard' => __( 'MasterCard', 'cielo-woocommerce' ),
-			'diners'     => __( 'Diners', 'cielo-woocommerce' ),
-			'discover'   => __( 'Discover', 'cielo-woocommerce' ),
-			'elo'        => __( 'Elo', 'cielo-woocommerce' ),
-			'amex'       => __( 'American Express', 'cielo-woocommerce' )
-		);
-
 		// Load the form fields.
 		$this->init_form_fields();
 
@@ -49,7 +39,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$this->number               = $this->get_option( 'number' );
 		$this->key                  = $this->get_option( 'key' );
 		$this->methods              = $this->get_option( 'methods' );
-		$this->capture              = $this->get_option( 'capture' );
 		$this->authorization        = $this->get_option( 'authorization' );
 		$this->smallest_installment = $this->get_option( 'smallest_installment' );
 		$this->interest_rate        = $this->get_option( 'interest_rate' );
@@ -149,17 +138,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'desc_tip'    => true,
 				'default'     => array( 'visa', 'mastercard' ),
 				'options'     => WC_Cielo_API::get_payment_methods()
-			),
-			'capture' => array(
-				'title'       => __( 'Capture automatically?', 'cielo-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'Select the capture type.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => 'true',
-				'options'     => array(
-					'true'  => __( 'Yes', 'cielo-woocommerce' ),
-					'false' => __( 'No', 'cielo-woocommerce' )
-				)
 			),
 			'authorization' => array(
 				'title'       => __( 'Automatic Authorization (MasterCard and Visa only)', 'cielo-woocommerce' ),

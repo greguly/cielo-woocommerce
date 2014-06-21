@@ -359,7 +359,7 @@ class WC_Cielo_API {
 		$xml->add_payment_data( $card_brand, $payment_product, $installments );
 		$xml->add_return_url( $this->get_return_url( $order ) );
 		$xml->add_authorize( $authorization );
-		$xml->add_capture( $this->gateway->capture );
+		$xml->add_capture( 'true' );
 		$xml->add_token_generation( 'false' );
 
 		// Render the XML.
