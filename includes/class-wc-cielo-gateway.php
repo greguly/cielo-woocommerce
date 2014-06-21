@@ -458,7 +458,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 			// Order cancelled.
 			if ( 9 == $status ) {
-				$message = __( 'Order canceled successfully.' );
+				$message = __( 'Order canceled successfully.', 'cielo-woocommerce' );
 				if ( function_exists( 'wc_add_notice' ) ) {
 					wc_add_notice( $message );
 				} else {
