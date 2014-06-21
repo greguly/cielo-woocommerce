@@ -21,8 +21,8 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	public function __construct() {
 		global $woocommerce;
 
-		$this->id			= 'cielo';
-		$this->icon 		= apply_filters( 'wc_cielo_icon', plugins_url( 'assets/images/cielo.png', plugin_dir_path( __FILE__ ) ) );
+		$this->id           = 'cielo';
+		$this->icon         = apply_filters( 'wc_cielo_icon', plugins_url( 'assets/images/cielo.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields   = true;
 		$this->method_title = __( 'Cielo', 'cielo-woocommerce' );
 
@@ -48,7 +48,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$this->environment          = $this->get_option( 'environment' );
 		$this->number               = $this->get_option( 'number' );
 		$this->key                  = $this->get_option( 'key' );
-		$this->methods    	        = $this->get_option( 'methods' );
+		$this->methods              = $this->get_option( 'methods' );
 		$this->capture              = $this->get_option( 'capture' );
 		$this->authorization        = $this->get_option( 'authorization' );
 		$this->smallest_installment = $this->get_option( 'smallest_installment' );
