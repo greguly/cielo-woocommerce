@@ -434,6 +434,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 * @return void
 	 */
 	public function return_handler( $order ) {
+		global $woocommerce;
 
 		$tid = get_post_meta( $order->id, '_wc_cielo_transaction_tid', true );
 
@@ -453,6 +454,18 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				$thankpage_url = $this->get_return_url( $order );
 			} else {
 				$thankpage_url = add_query_arg( 'order', $order->id, add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
+			}
+
+			// Order cancelled.
+			if ( 9 == $status ) {
+				$message = __( 'Order canceled successfully.' );
+				if ( function_exists( 'wc_add_notice' ) ) {
+					wc_add_notice( $message );
+				} else {
+					$woocommerce->add_message( $message);
+				}
+
+				$thankpage_url = home_url( '/' );
 			}
 
 			wp_redirect( $thankpage_url );
@@ -481,11 +494,16 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	public function process_order_status( $order, $status, $tid ) {
 		$note = __( 'Cielo', 'cielo-woocommerce' ) . ': ' . WC_Cielo_API::get_status_name( $status );
 
+		// Order cancelled.
+		if ( 9 == $status ) {
+			$order->update_status( 'cancelled', $note );
+
 		// Order failed.
-		if ( ( 4 != $status && 6 != $status ) || -1 == $status ) {
+		} elseif ( ( 4 != $status && 6 != $status ) || -1 == $status ) {
 			$order->update_status( 'failed', $note );
+
+		// Order paid.
 		} else {
-			// Order paid.
 			$order->add_order_note( $note . ' TID: ' . $tid . '.' );
 
 			// Complete the payment and reduce stock levels.
