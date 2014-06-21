@@ -64,6 +64,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'woocommerce_api_wc_cielo_gateway', array( $this, 'check_return' ) );
 		add_action( 'woocommerce_cielo_return', array( $this, 'return_handler' ) );
+		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ), 999 );
 	}
 
@@ -486,6 +487,28 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 			// Complete the payment and reduce stock levels.
 			$order->payment_complete();
+		}
+	}
+
+	/**
+	 * Thank you page message.
+	 *
+	 * @return string
+	 */
+	public function thankyou_page( $order_id ) {
+		global $woocommerce;
+
+		$order = new WC_Order( $order_id );
+		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+			$order_url = $order->get_view_order_url();
+		} else {
+			$order_url = add_query_arg( 'order', $order_id, get_permalink( woocommerce_get_page_id( 'woocommerce_view_order' ) ) );
+		}
+
+		if ( $order->status == 'processing' || $order->status == 'completed' ) {
+			echo '<div class="woocommerce-message"><a href="' . $order_url . '" class="button" style="display: block !important; visibility: visible !important;">' . __( 'View order details', 'cielo-woocommerce' ) . '</a>' . sprintf( __( 'Your payment worth %s was received successfully.', 'cielo-woocommerce' ), woocommerce_price( $order->order_total ) ) . '<br />' . __( 'The authorization code was generated.', 'cielo-woocommerce' ) . '</div>';
+		} else {
+			echo '<div class="woocommerce-info">' . sprintf( __( 'For more information or questions regarding your order, go to the %s.', 'cielo-woocommerce' ), '<a href="' . $order_url . '">' . __( 'order details page', 'cielo-woocommerce' ) . '</a>' ) . '</div>';
 		}
 	}
 
