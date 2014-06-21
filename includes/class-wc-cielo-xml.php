@@ -98,6 +98,15 @@ class WC_Cielo_XML extends SimpleXMLElement {
 	}
 
 	/**
+	 * Add TID.
+	 *
+	 * @param string $tid Transaction TID.
+	 */
+	public function add_tid( $tid ) {
+		$this->addChild( 'tid', $tid );
+	}
+
+	/**
 	 * Render the formated XML.
 	 *
 	 * @return string

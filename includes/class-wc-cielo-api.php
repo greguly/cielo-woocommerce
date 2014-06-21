@@ -190,19 +190,23 @@ class WC_Cielo_API {
 	}
 
 	/**
-	 * Get the return URL.
+	 * Get the order return URL.
+	 *
+	 * @param  WC_Order $order Order data.
 	 *
 	 * @return string
 	 */
-	protected function get_return_url() {
+	protected function get_return_url( $order ) {
 		global $woocommerce;
 
 		// Backwards compatibility with WooCommerce version prior to 2.1.
 		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
-			return WC()->api_request_url( 'WC_Cielo_Gateway' );
+			$url = WC()->api_request_url( 'WC_Cielo_Gateway' );
 		} else {
-			return $woocommerce->api_request_url( 'WC_Cielo_Gateway' );
+			$url = $woocommerce->api_request_url( 'WC_Cielo_Gateway' );
 		}
+
+		return urlencode( htmlentities( add_query_arg( array( 'key' => $order->order_key, 'order' => $order->id ), $url ), ENT_QUOTES ) );
 	}
 
 	/**
@@ -246,6 +250,34 @@ class WC_Cielo_API {
 	}
 
 	/**
+	 * Get the status name.
+	 *
+	 * @param  int $id Status ID.
+	 *
+	 * @return string
+	 */
+	public static function get_status_name( $id ) {
+		$status = array(
+			0  => _x( 'Transaction created', 'Transaction Status', 'cielo-woocommerce' ),
+			1  => _x( 'Transaction ongoing', 'Transaction Status', 'cielo-woocommerce' ),
+			2  => _x( 'Transaction authenticated', 'Transaction Status', 'cielo-woocommerce' ),
+			3  => _x( 'Transaction not authenticated', 'Transaction Status', 'cielo-woocommerce' ),
+			4  => _x( 'Transaction authorized', 'Transaction Status', 'cielo-woocommerce' ),
+			5  => _x( 'Transaction not authorized', 'Transaction Status', 'cielo-woocommerce' ),
+			6  => _x( 'Transaction captured', 'Transaction Status', 'cielo-woocommerce' ),
+			9  => _x( 'Transaction cancelled', 'Transaction Status', 'cielo-woocommerce' ),
+			10 => _x( 'Transaction in authentication', 'Transaction Status', 'cielo-woocommerce' ),
+			12 => _x( 'Transaction in cancellation', 'Transaction Status', 'cielo-woocommerce' ),
+		);
+
+		if ( isset( $status[ $id ] ) ) {
+			return $status[ $id ];
+		}
+
+		return _x( 'Transaction failed', 'Transaction Status', 'cielo-woocommerce' );
+	}
+
+	/**
 	 * Get default error message.
 	 *
 	 * @return StdClass
@@ -266,7 +298,7 @@ class WC_Cielo_API {
 	 */
 	protected function do_request( $data ) {
 		$params = array(
-			'body'            => $data,
+			'body'            => 'mensagem=' . $data,
 			'sslverify'       => true,
 			'timeout'         => 40,
 			'sslcertificates' => $this->get_certificate(),
@@ -286,13 +318,13 @@ class WC_Cielo_API {
 	 * Do transaction.
 	 *
 	 * @param  WC_Order $order          Order data.
-	 * @param  string   $transaction_id Transaction ID.
+	 * @param  string   $id             Request ID.
 	 * @param  string   $card_brand     Card brand slug.
 	 * @param  int      $installments   Number of installments (use 0 for debit).
 	 *
-	 * @return array                    Transaction data.
+	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
-	public function do_transaction( $order, $transaction_id, $card_brand, $installments ) {
+	public function do_transaction( $order, $id, $card_brand, $installments ) {
 		$account_data    = $this->get_account_data();
 		$payment_product = '1';
 		$order_total     = $order->order_total;
@@ -321,11 +353,11 @@ class WC_Cielo_API {
 			$payment_product = '2';
 		}
 
-		$xml = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-transacao id="' . $transaction_id . '" versao="' . self::VERSION . '"></requisicao-transacao>' );
+		$xml = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-transacao id="' . $id . '" versao="' . self::VERSION . '"></requisicao-transacao>' );
 		$xml->add_account_data( $account_data['number'], $account_data['key'] );
 		$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language() );
 		$xml->add_payment_data( $card_brand, $payment_product, $installments );
-		$xml->add_return_url( $this->get_return_url() );
+		$xml->add_return_url( $this->get_return_url( $order ) );
 		$xml->add_authorize( $authorization );
 		$xml->add_capture( $this->gateway->capture );
 		$xml->add_token_generation( 'false' );
@@ -338,7 +370,7 @@ class WC_Cielo_API {
 		}
 
 		// Do the transaction request.
-		$response = $this->do_request( 'mensagem=' . $data );
+		$response = $this->do_request( $data );
 
 		// Request error.
 		if ( is_wp_error( $response ) || ( isset( $response['response'] ) && 200 != $response['response']['code'] ) ) {
@@ -367,6 +399,61 @@ class WC_Cielo_API {
 
 		if ( 'yes' == $this->gateway->debug ) {
 			$this->gateway->log->add( $this->gateway->id, 'Transaction successfully created for the order ' . $order->get_order_number() );
+		}
+
+		return $body;
+	}
+
+	/**
+	 * Get transaction data.
+	 *
+	 * @param  WC_Order $order Order data.
+	 * @param  string $tid     Transaction ID.
+	 * @param  string $id      Request ID.
+	 *
+	 * @return SimpleXmlElement|StdClass Transaction data.
+	 */
+	public function get_transaction_data( $order, $tid, $id ) {
+		$account_data = $this->get_account_data();
+		$xml          = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-consulta id="' . $id . '" versao="' . self::VERSION . '"></requisicao-consulta>' );
+		$xml->add_tid( $tid );
+		$xml->add_account_data( $account_data['number'], $account_data['key'] );
+
+		// Render the XML.
+		$data = $xml->render();
+
+		if ( 'yes' == $this->gateway->debug ) {
+			$this->gateway->log->add( $this->gateway->id, 'Checking the transaction status for order ' . $order->get_order_number() . '...' );
+		}
+
+		// Do the transaction request.
+		$response = $this->do_request( $data );
+		if ( is_wp_error( $response ) || ( isset( $response['response'] ) && 200 != $response['response']['code'] ) ) {
+			if ( 'yes' == $this->gateway->debug ) {
+				$this->gateway->log->add( $this->gateway->id, 'An error occurred while checking the transaction status: ' . print_r( $response, true ) );
+			}
+
+			return $this->get_default_error_message();
+		}
+
+		// Get the transaction response data.
+		try {
+			$body = @new SimpleXmlElement( $response['body'], LIBXML_NOCDATA );
+		} catch ( Exception $e ) {
+			$body = '';
+
+			if ( 'yes' == $this->gateway->debug ) {
+				$this->gateway->log->add( $this->gateway->id, 'Error while parsing the Cielo response: ' . print_r( $e->getMessage(), true ) );
+			}
+		}
+
+		// Error when getting the transaction response data.
+		if ( empty( $body ) ) {
+			return $this->get_default_error_message();
+		}
+
+		if ( 'yes' == $this->gateway->debug ) {
+			$this->gateway->log->add( $this->gateway->id, 'Recovered the order ' . $order->get_order_number() . ' data successfully' );
 		}
 
 		return $body;

@@ -73,6 +73,8 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 		// Actions.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_api_wc_cielo_gateway', array( $this, 'check_return' ) );
+		add_action( 'woocommerce_cielo_return', array( $this, 'return_handler' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ), 999 );
 	}
 
@@ -303,9 +305,16 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 		wp_enqueue_script( 'wc-credit-card-form' );
 
-		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
-			$cart_total = (float) WC()->cart->total;
-		} else {
+		$cart_total = 0;
+		$order_id   = absint( get_query_var( 'order-pay' ) );
+
+		// Gets order total from "pay for order" page.
+		if ( 0 < $order_id ) {
+			$order      = new WC_Order( $order_id );
+			$cart_total = (float) $order->get_total();
+
+		// Gets order total from cart/checkout.
+		} elseif ( 0 < $woocommerce->cart->total ) {
 			$cart_total = (float) $woocommerce->cart->total;
 		}
 
@@ -363,7 +372,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		}
 
 		if ( $valid ) {
-			$response = $this->api->do_transaction( $order, time(), $card, $installments );
+			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card, $installments );
 
 			// Set the error alert.
 			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
@@ -392,6 +401,95 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'result'   => 'fail',
 				'redirect' => ''
 			);
+		}
+	}
+
+	/**
+	 * Check return.
+	 *
+	 * @return void
+	 */
+	public function check_return() {
+		@ob_clean();
+
+		if ( isset( $_GET['key'] ) && isset( $_GET['order'] ) ) {
+			header( 'HTTP/1.1 200 OK' );
+
+			$order_id = absint( $_GET['order'] );
+			$order    = new WC_Order( $order_id );
+
+			if ( $order->order_key == $_GET['key'] ) {
+				do_action( 'woocommerce_cielo_return', $order );
+			}
+		}
+
+		wp_die( __( 'Invalid request', 'cielo-woocommerce' ) );
+	}
+
+	/**
+	 * Return handler.
+	 *
+	 * @param  WC_Order $order Order data.
+	 *
+	 * @return void
+	 */
+	public function return_handler( $order ) {
+
+		$tid = get_post_meta( $order->id, '_wc_cielo_transaction_tid', true );
+
+		if ( '' != $tid ) {
+			$response = $this->api->get_transaction_data( $order, $tid, $order->id . '-' . time() );
+
+			// Set the error alert.
+			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+				$this->add_error( (string) $response->mensagem );
+			}
+
+			// Update the order status.
+			$status = ( isset( $response->status ) && ! empty( $response->status ) ) ? (string) $response->status : -1;
+			$this->process_order_status( $order, $status, $tid );
+
+			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+				$thankpage_url = $this->get_return_url( $order );
+			} else {
+				$thankpage_url = add_query_arg( 'order', $order->id, add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
+			}
+
+			wp_redirect( $thankpage_url );
+			exit;
+		} else {
+			if ( function_exists( 'wc_get_page_id' ) ) {
+				$cart_url = get_permalink( wc_get_page_id( 'cart' ) );
+			} else {
+				$cart_url = get_permalink( woocommerce_get_page_id( 'cart' ) );
+			}
+
+			wp_redirect( $cart_url );
+			exit;
+		}
+	}
+
+	/**
+	 * Process the order status.
+	 *
+	 * @param  WC_Order $Order  Order data.
+	 * @param  int      $status Status ID.
+	 * @param  string   $tid    Transaction ID.
+	 *
+	 * @return void
+	 */
+	public function process_order_status( $order, $status, $tid ) {
+		$note = __( 'Cielo', 'cielo-woocommerce' ) . ': ' . WC_Cielo_API::get_status_name( $status );
+
+		// Order failed.
+		if ( ( 4 != $status && 6 != $status ) || -1 == $status ) {
+			$order->update_status( 'failed', $note );
+		} else {
+			// Order paid.
+			$order->add_order_note( $note . ' TID: ' . $tid . '.' );
+
+			// Complete the payment and reduce stock levels.
+			$order->payment_complete();
 		}
 	}
 
