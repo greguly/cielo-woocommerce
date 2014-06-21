@@ -31,18 +31,21 @@ class WC_Cielo_XML extends SimpleXMLElement {
 	/**
 	 * Add order data.
 	 *
-	 * @param WC_Order $order    WooCommerce order data.
-	 * @param float    $total    Order total.
-	 * @param int      $currency Order currency.
-	 * @param string   $language Data language.
+	 * @param WC_Order $order       WooCommerce order data.
+	 * @param float    $total       Order total.
+	 * @param int      $currency    Order currency.
+	 * @param string   $language    Data language.
+	 * @param string   $description Description.
 	 */
-	public function add_order_data( $order, $total, $currency, $language ) {
+	public function add_order_data( $order, $total, $currency, $language, $description = '' ) {
 		$order_data = $this->addChild( 'dados-pedido' );
 		$order_data->addChild( 'numero', $order->id );
 		$order_data->addChild( 'valor', number_format( $total, 2, '', '' ) );
 		$order_data->addChild( 'moeda', $currency );
 		$order_data->addChild( 'data-hora', str_replace( ' ', 'T', $order->order_date ) );
-		$order_data->addChild( 'descricao', $order->order_date ); // TODO: need improvements!
+		if ( '' != $description ) {
+			$order_data->addChild( 'descricao', $description );
+		}
 		$order_data->addChild( 'idioma', $language );
 		$order_data->addChild( 'soft-descriptor', '' );
 	}

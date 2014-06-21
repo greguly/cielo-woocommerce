@@ -392,7 +392,6 @@ class WC_Cielo_API {
 			}
 		}
 
-
 		// Error when getting the transaction response data.
 		if ( empty( $body ) ) {
 			return $this->get_default_error_message();
