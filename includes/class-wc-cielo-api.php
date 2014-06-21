@@ -7,7 +7,7 @@ class WC_Cielo_API {
 	/**
 	 * API version.
 	 */
-	const VERSION = '1.4.0';
+	const VERSION = '1.3.0';
 
 	/**
 	 * Currency.
@@ -391,6 +391,7 @@ class WC_Cielo_API {
 				$this->gateway->log->add( $this->gateway->id, 'Error while parsing the Cielo response: ' . print_r( $e->getMessage(), true ) );
 			}
 		}
+
 
 		// Error when getting the transaction response data.
 		if ( empty( $body ) ) {
