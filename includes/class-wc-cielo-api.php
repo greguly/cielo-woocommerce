@@ -218,7 +218,7 @@ class WC_Cielo_API {
 		$language = 'EN';
 
 		if ( defined( 'WPLANG' ) && '' != WPLANG ) {
-			$language = strtoupper( substr( 'pt_BR', 0, 2 ) );
+			$language = strtoupper( substr( WPLANG, 0, 2 ) );
 
 			if ( ! in_array( $language, array( 'PT', 'EN', 'ES' ) ) ) {
 				$language = 'EN';
