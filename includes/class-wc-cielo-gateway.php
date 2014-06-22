@@ -422,7 +422,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			// Validate the installments amount.
 			$installment_total = $order->order_total / $installments;
 			if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
-				$interest_total    = $installment_total * ( ( 100 + absint( $this->interest_rate ) ) / 100 );
+				$interest_total    = $installment_total * ( ( 100 + WC_Cielo_API::get_valid_value( $this->interest_rate ) ) / 100 );
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
 			}
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;

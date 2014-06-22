@@ -250,6 +250,21 @@ class WC_Cielo_API {
 	}
 
 	/**
+	 * Get valid value.
+	 * Prevents users from making shit!
+	 *
+	 * @param  string|int|float $value
+	 *
+	 * @return int|float
+	 */
+	public static function get_valid_value( $value ) {
+		$value = str_replace( '%', '', $value );
+		$value = str_replace( ',', '.', $value );
+
+		return $value;
+	}
+
+	/**
 	 * Get the status name.
 	 *
 	 * @param  int $id Status ID.
@@ -337,12 +352,12 @@ class WC_Cielo_API {
 
 		// Set the order total with interest.
 		if ( 'client' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
-			$order_total = $order->order_total * ( ( 100 + $this->gateway->interest_rate ) / 100 );
+			$order_total = $order->order_total * ( ( 100 + self::get_valid_value( $this->gateway->interest_rate ) ) / 100 );
 		}
 
 		// Set the debit values.
 		if ( in_array( $card_brand, self::get_debit_methods() ) && 0 == $installments ) {
-			$order_total     = $order->order_total * ( ( 100 - $this->gateway->debit_discount ) / 100 );
+			$order_total     = $order->order_total * ( ( 100 - self::get_valid_value( $this->gateway->debit_discount ) ) / 100 );
 			$payment_product = 'A';
 			$installments    = '1';
 			$authorization   = ( 3 == $authorization ) ? 2 : $authorization;

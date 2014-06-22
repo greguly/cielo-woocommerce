@@ -17,8 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<label for="cielo-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
 		<select id="cielo-installments" name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">
 			<?php if ( ! empty( array_intersect( WC_Cielo_API::get_debit_methods(), $this->methods ) ) ) :
-					$debit_total    = $cart_total * ( ( 100 - $this->debit_discount ) / 100 );
-					$debit_discount = ( $cart_total > $debit_total ) ? ' (' . $this->debit_discount . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
+					$debit_total    = $cart_total * ( ( 100 - WC_Cielo_API::get_valid_value( $this->debit_discount ) ) / 100 );
+					$debit_discount = ( $cart_total > $debit_total ) ? ' (' . WC_Cielo_API::get_valid_value( $this->debit_discount ) . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
 				?>
 
 				<option value="0" class="cielo-debit"><?php echo sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $debit_total ) ), $debit_discount ); ?></option>
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					$smallest_value  = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 
 					if ( 'client' == $this->installment_type && $i >= $this->interest ) {
-						$interest_total = $credit_total * ( ( 100 + $this->interest_rate ) / 100 );
+						$interest_total = $credit_total * ( ( 100 + WC_Cielo_API::get_valid_value( $this->interest_rate ) ) / 100 );
 
 						if ( $credit_total < $interest_total ) {
 							$credit_total    = $interest_total;
