@@ -5,7 +5,7 @@
  * Description: Adiciona a opção de pagamento pela Cielo ao WooCommerce
  * Author: Gabriel Reguly, claudiosanches
  * Author URI: http://omniwp.com.br
- * Version: 3.0.1
+ * Version: 3.0.2
  * License: GPLv2 or later
  * Text Domain: cielo-woocommerce
  * Domain Path: /languages/
@@ -30,7 +30,7 @@ class WC_Cielo {
 	 *
 	 * @var string
 	 */
-	const VERSION = '3.0.1';
+	const VERSION = '3.0.2';
 
 	/**
 	 * Instance of this class.
@@ -160,56 +160,28 @@ class WC_Cielo {
 
 			if ( version_compare( $version, WC_Cielo::VERSION, '<' ) ) {
 
-				// Upgrade from 2.0.x.
-				$options = get_option( 'woocommerce_cielo_settings' );
+				$options     = get_option( 'woocommerce_cielo_settings' );
 				$new_options = array();
-				if ( isset( $options['enabled'] ) ) {
-					$new_options['enabled'] = $options['enabled'];
-				}
-				if ( isset( $options['title'] ) ) {
-					$new_options['title'] = $options['title'];
-				}
-				if ( isset( $options['description'] ) ) {
-					$new_options['description'] = $options['description'];
-				}
-				if ( isset( $options['description'] ) ) {
-					$new_options['description'] = $options['description'];
-				}
+
+				// Upgrade from 2.0.x.
 				if ( isset( $options['mode'] ) ) {
+					$new_options['enabled'] = $options['enabled'];
+					$new_options['title'] = $options['title'];
+					$new_options['description'] = $options['description'];
 					$new_options['environment'] = $options['mode'];
-				}
-				if ( isset( $options['numero'] ) ) {
 					$new_options['number'] = $options['numero'];
-				}
-				if ( isset( $options['chave'] ) ) {
 					$new_options['key'] = $options['chave'];
-				}
-				if ( isset( $options['meios'] ) ) {
 					$new_options['methods'] = $options['meios'];
-				}
-				if ( isset( $options['autorizar'] ) ) {
 					$new_options['authorization'] = $options['autorizar'];
-				}
-				if ( isset( $options['parcela_minima'] ) ) {
 					$new_options['smallest_installment'] = $options['parcela_minima'];
-				}
-				if ( isset( $options['taxa_juros'] ) ) {
 					$new_options['interest_rate'] = $options['taxa_juros'];
-				}
-				if ( isset( $options['debit_discount'] ) ) {
 					$new_options['interest_rate'] = $options['debit_discount'];
-				}
-				if ( isset( $options['parcelas'] ) ) {
 					$new_options['installments'] = $options['parcelas'];
-				}
-				if ( isset( $options['juros'] ) ) {
 					$new_options['interest'] = $options['juros'];
-				}
-				if ( isset( $options['parcelamento'] ) ) {
 					$new_options['installment_type'] = ( '2' == $options['parcelamento'] ) ? 'client' : 'store';
-				}
-				if ( ! isset( $options['design'] ) ) {
 					$new_options['design'] = 'default';
+				} else {
+					$new_options = $options;
 				}
 
 				update_option( 'woocommerce_cielo_settings', $new_options );
