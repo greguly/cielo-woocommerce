@@ -366,7 +366,11 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		wp_enqueue_script( 'wc-credit-card-form' );
 
 		$cart_total = 0;
-		$order_id   = absint( get_query_var( 'order-pay' ) );
+		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+			$order_id = absint( get_query_var( 'order-pay' ) );
+		} else {
+			$order_id = isset( $_GET['order_id'] ) ? absint( $_GET['order_id'] ) : 0;
+		}
 
 		// Gets order total from "pay for order" page.
 		if ( 0 < $order_id ) {
