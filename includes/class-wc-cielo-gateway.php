@@ -518,10 +518,11 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 			// Update the order status.
 			$status = ( isset( $response->status ) && ! empty( $response->status ) ) ? (string) $response->status : -1;
-			$order_note = 'TID: ' . $tid . '.';
+			$order_note = "\n" . 'TID: ' . $tid . '.';
 			if ( isset( $response->{'forma-pagamento'} ) ) {
 				$payment_method = $response->{'forma-pagamento'};
 
+				$order_note .= "\n";
 				$order_note .= __( 'Paid with', 'cielo-woocommerce' );
 				$order_note .= ' ';
 				$order_note .= WC_Cielo_API::get_payment_method_name( (string) $payment_method->bandeira );
