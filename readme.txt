@@ -218,7 +218,9 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 
 == Screenshots ==
 
-1. screenshot-1.png
+1. Configurações do plugin.
+2. Checkout com o formulário padrão.
+2. Checkout com o formulário utilizando ícones dos cartões.
 
 == Changelog ==
 
