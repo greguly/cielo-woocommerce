@@ -67,6 +67,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		add_action( 'woocommerce_cielo_return', array( $this, 'return_handler' ) );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ), 999 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 
 		// Display admin notices.
 		$this->admin_notices();
@@ -317,6 +318,21 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			} else {
 				wp_enqueue_script( 'wc-cielo-checkout-default', plugins_url( 'assets/js/checkout-default' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
 			}
+		}
+	}
+
+	/**
+	 * Admin scripts.
+	 *
+	 * @param  string $hook Page slug.
+	 *
+	 * @return void
+	 */
+	public function admin_scripts( $hook ) {
+		if ( in_array( $hook, array( 'woocommerce_page_wc-settings', 'woocommerce_page_woocommerce_settings' ) ) && ( isset( $_GET['section'] ) && 'wc_cielo_gateway' == $_GET['section'] ) ) {
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+			wp_enqueue_script( 'wc-cielo-admin', plugins_url( 'assets/js/admin' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
 		}
 	}
 
