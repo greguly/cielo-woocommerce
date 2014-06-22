@@ -163,6 +163,21 @@ Na BuyPage Loja a digitação dos dados do cartão será no ambiente da Loja. Ou
 
 Este modelo de BuyPage não esta disponível ainda no plugin, iremos implementar em breve e contamos com a sua ajuda, tanto para a melhoria do código e implementação desta feature como também para doações (desta forma você ajuda os desenvolvedores deste plugin a ter mais tempo livre para implementar esta funcionalidade).
 
+= Ao pagar o pedido fica com o status "processando", isto esta certo ? =
+
+Sim, esta certo e significa que o plugin esta trabalhando como deveria.
+
+Todo gateway de pagamentos no WooCommerce deve mudar o status do pedido para "processando" no momento que é confirmado o pagamento e nunca deve ser alterado sozinho para "concluído", pois o pedido deve ir apenas para o status "concluído" após ele ter sido entregue.
+
+Para produtos baixáveis a configuração padrão do WooCommerce é permitir o acesso apenas quando o pedido tem o status "concluído", entretanto nas configurações do WooCommerce na aba *Produtos* é possível ativar a opção **"Conceder acesso para download do produto após o pagamento"** e assim liberar o download quando o status do pedido esta como "processando".
+
+= É possível cancelar o pagamento/devolver o dinheiro do cliente pelo plugin? =
+
+Sim, isto é possível mudando o status do pedido para "reembolsado", desta forma é enviado um sinal para a Cielo dizendo que a transação deve ser cancelada.
+
+* Nota 1: Apenas pagamentos feitos em menos de 90 dias podem ser reembolsados.
+* Nota 2: Isto irá funcionar apenas para pagamentos feitos depois de instalada a versão 3.0.0 deste plugin.
+
 = Aconteceu um erro, o que eu faço? =
 
 Sempre que ocorrer um erro você deve ativar a opção de log do plugin e tentar simular o erro novamente, desta forma o erro será gravado no arquivo de log e você poderá saber o que aconteceu.
@@ -177,13 +192,37 @@ Não é um problema caso você não consiga entender o arquivo de log, pois voc�
 
 Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas para fazer a conexão com a Cielo. Mas é possível saber com certeza o que aconteceu de errado utilizando a opção de log do plugin como descrito na sessão acima.
 
+== For Developers ==
+
+= Criando um template personalizado para o formulário do checkout =
+
+É possível alterar formulário e adicionar um customizado utilizando o filtro `wc_cielo_form_path`.
+
+Exemplo de uso do filtro em um tema:
+
+	function custom_wc_cielo_form_path( $path ) {
+		return get_template_directory() . '/cielo-html-form.php';
+	}
+	add_filter( 'wc_cielo_form_path', 'custom_wc_cielo_form_path' );
+
+Depois basta criar o arquivo `cielo-html-form.php` dentro do seu tema e escrever o HTML dele como você julgar melhor (utilize os modelos prontos no plugin dentro de `includes/views` para ter uma ideia de como deve ser os elementos e as variáveis que você pode utilizar).
+
+Ao criar um formulário customizado pode ser boa ideia remover os scripts adicionados pelo plugin e você pode fazer da seguinte forma:
+
+	function remove_wc_cielo_scripts() {
+		wp_dequeue_style( 'wc-cielo-checkout-icons' );
+		wp_dequeue_script( 'wc-cielo-checkout-icons' );
+	}
+	add_action( 'wp_enqueue_scripts', 'remove_wc_cielo_scripts', 1000 );
+
+
 == Screenshots ==
 
 1. screenshot-1.png
 
 == Changelog ==
 
-= 3.0.0 - xx/06/2014 =
+= 3.0.0 - 22/06/2014 =
 
 * Refatorado todo o código do plugin.
 * Adicionado completo suporte para as versões 2.0.x e 2.1.x do WooCommerce
@@ -193,6 +232,8 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 * Removida a opção de captura (não tinha utilidade e a melhor forma de trabalhar é capturar automaticamente sempre).
 * Adicionado suporte para os cartões JBC e Aura.
 * Adicionado a opção de pagamento por débito para o MasterCard.
+* Adicionada uma mensagem informando o cartão, forma de pagamento (crédito ou débito) e quantidade de parcelas nas notas do pedido ao concluir o pagamento.
+* Adicionado filtro `wc_cielo_form_path`, que torna possível customizar o formulário de seleção do cartão e de parcelas.
 
 = 2.0.10 - 17/06/2014 =
 
@@ -252,6 +293,8 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 * Removida a opção de captura (não tinha utilidade e a melhor forma de trabalhar é capturar automaticamente sempre).
 * Adicionado suporte para os cartões JBC e Aura.
 * Adicionado a opção de pagamento por débito para o MasterCard.
+* Adicionada uma mensagem informando o cartão, forma de pagamento (crédito ou débito) e quantidade de parcelas nas notas do pedido ao concluir o pagamento.
+* Adicionado filtro wc_cielo_form_path, que torna possível customizar o formulário de seleção do cartão e de parcelas.
 
 == License ==
 
