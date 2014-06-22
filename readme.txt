@@ -233,7 +233,7 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 * Adicionada novas formas de exibir o formulário com os cartões de crédito e parcelas disponíveis.
 * Removida a opção de captura (não tinha utilidade e a melhor forma de trabalhar é capturar automaticamente sempre).
 * Adicionado suporte para os cartões JBC e Aura.
-* Adicionado a opção de pagamento por débito para o MasterCard.
+* Adicionado opção de pagamento por débito para o MasterCard.
 * Adicionada uma mensagem informando o cartão, forma de pagamento (crédito ou débito) e quantidade de parcelas nas notas do pedido ao concluir o pagamento.
 * Adicionado filtro `wc_cielo_form_path`, que torna possível customizar o formulário de seleção do cartão e de parcelas.
 
@@ -294,7 +294,7 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 * Adicionada novas formas de exibir o formulário com os cartões de crédito e parcelas disponíveis.
 * Removida a opção de captura (não tinha utilidade e a melhor forma de trabalhar é capturar automaticamente sempre).
 * Adicionado suporte para os cartões JBC e Aura.
-* Adicionado a opção de pagamento por débito para o MasterCard.
+* Adicionado opção de pagamento por débito para o MasterCard.
 * Adicionada uma mensagem informando o cartão, forma de pagamento (crédito ou débito) e quantidade de parcelas nas notas do pedido ao concluir o pagamento.
 * Adicionado filtro wc_cielo_form_path, que torna possível customizar o formulário de seleção do cartão e de parcelas.
 
