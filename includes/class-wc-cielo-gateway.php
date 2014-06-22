@@ -67,6 +67,37 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		add_action( 'woocommerce_cielo_return', array( $this, 'return_handler' ) );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ), 999 );
+
+		// Display admin notices.
+		$this->admin_notices();
+	}
+
+	/**
+	 * Returns a bool that indicates if currency is amongst the supported ones.
+	 *
+	 * @return bool
+	 */
+	public function using_supported_currency() {
+		return ( 'BRL' == get_woocommerce_currency() );
+	}
+
+	/**
+	 * Displays notifications when the admin has something wrong with the configuration.
+	 *
+	 * @return void
+	 */
+	protected function admin_notices() {
+		if ( is_admin() ) {
+			// Checks if api_key is not empty.
+			if ( 'test' != $this->environment && ( empty( $this->number ) || empty( $this->key ) ) ) {
+				add_action( 'admin_notices', array( $this, 'plugin_not_configured_message' ) );
+			}
+
+			// Checks that the currency is supported
+			if ( ! $this->using_supported_currency() ) {
+				add_action( 'admin_notices', array( $this, 'currency_not_supported_message' ) );
+			}
+		}
 	}
 
 	/**
@@ -78,15 +109,29 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 */
 	public function is_available() {
 		// Test if is valid for use.
-		$available = parent::is_available() && 'yes' == $this->get_option( 'enabled' );
+		$available = parent::is_available() && 'yes' == $this->get_option( 'enabled' ) && $this->check_environment() && $this->using_supported_currency();
 
 		return $available;
 	}
 
 	/**
+	 * Check the environment.
+	 *
+	 * @return bool
+	 */
+	public function check_environment() {
+		if ( 'test' == $this->environment ) {
+			return true;
+		}
+
+		// For production.
+		return ( ! empty( $this->methods ) && ! empty( $this->number ) && ! empty( $this->key ) );
+	}
+
+	/**
 	 * Initialise Gateway Settings Form Fields
 	 */
-	function init_form_fields() {
+	public function init_form_fields() {
 		$this->form_fields = array(
 			'enabled' => array(
 				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
@@ -533,4 +578,39 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		}
 	}
 
+	/**
+	 * Gets the admin url.
+	 *
+	 * @return string
+	 */
+	protected function admin_url() {
+		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+			return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_gateway' );
+		}
+
+		return admin_url( 'admin.php?page=woocommerce_settings&tab=payment_gateways&section=WC_Cielo_Gateway' );
+	}
+
+	/**
+	 * Adds error message when the plugin is not configured properly.
+	 *
+	 * @return string Error Mensage.
+	 */
+	public function plugin_not_configured_message() {
+		$id = 'woocommerce_' . $this->id . '_';
+		if ( ( isset( $_POST[ $id . 'environment' ] ) && 'test' == $_POST[ $id . 'environment' ] ) || ( isset( $_POST[ $id . 'number' ] ) && ! empty( $_POST[ $id . 'number' ] ) && isset( $_POST[ $id . 'key' ] ) && ! empty( $_POST[ $id . 'key' ] ) ) ) {
+			return;
+		}
+
+		echo '<div class="error"><p><strong>' . __( 'Cielo Disabled', 'cielo-woocommerce' ) . '</strong>: ' . sprintf( __( 'You should inform your Affiliation Number and Key. %s', 'cielo-woocommerce' ), '<a href="' . $this->admin_url() . '">' . __( 'Click here to configure!', 'cielo-woocommerce' ) . '</a>' ) . '</p></div>';
+	}
+
+	/**
+	 * Adds error message when an unsupported currency is used.
+	 *
+	 * @return string
+	 */
+	public function currency_not_supported_message() {
+		echo '<div class="error"><p><strong>' . __( 'Cielo Disabled', 'cielo-woocommerce' ) . '</strong>: ' . sprintf( __( 'The currency <code>%s</code> is not supported. Works only with Brazilian Real.', 'cielo-woocommerce' ), get_woocommerce_currency() ) . '</p></div>';
+	}
 }
