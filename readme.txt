@@ -4,7 +4,7 @@ Donate link: http://omniwp.com.br/donate/
 Tags: WooCommerce, Payment Gateway, Cielo
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -224,6 +224,11 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 
 == Changelog ==
 
+= 3.0.2 - 22/06/2014 =
+
+* Melhorada a exibição das notas do pedido com as informações sobre o pagamento.
+* Corrigido o script que atualiza as opções do plugin ao utilizar uma versão mais nova.
+
 = 3.0.1 - 22/06/2014 =
 
 * Permitido valores inferiores a R$ 5,00 para pagamento à vista em cartão de crédito.
@@ -290,7 +295,7 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 
 == Upgrade Notice ==
 
-= 3.0.1 =
+= 3.0.2 =
 
 * Refatorado todo o código do plugin.
 * Adicionado completo suporte para as versões 2.0.x e 2.1.x do WooCommerce
