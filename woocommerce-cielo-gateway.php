@@ -48,6 +48,7 @@ class WC_Cielo {
 
 		// Checks with WooCommerce and WooCommerce is installed.
 		if ( class_exists( 'WC_Payment_Gateway' ) ) {
+			$this->upgrade();
 			$this->includes();
 
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateway' ) );
@@ -104,6 +105,75 @@ class WC_Cielo {
 		$methods[] = 'WC_Cielo_Gateway';
 
 		return $methods;
+	}
+
+	/**
+	 * Upgrade plugin options.
+	 *
+	 * @return void
+	 */
+	private function upgrade() {
+		if ( is_admin() ) {
+			$version = get_option( 'wc_cielo_version', '0' );
+
+			if ( version_compare( $version, WC_Cielo::VERSION, '<' ) ) {
+
+				// Upgrade from 2.0.x.
+				$options = get_option( 'woocommerce_cielo_settings' );
+				$new_options = array();
+				if ( isset( $options['enabled'] ) ) {
+					$new_options['enabled'] = $options['enabled'];
+				}
+				if ( isset( $options['title'] ) ) {
+					$new_options['title'] = $options['title'];
+				}
+				if ( isset( $options['description'] ) ) {
+					$new_options['description'] = $options['description'];
+				}
+				if ( isset( $options['description'] ) ) {
+					$new_options['description'] = $options['description'];
+				}
+				if ( isset( $options['mode'] ) ) {
+					$new_options['environment'] = $options['mode'];
+				}
+				if ( isset( $options['numero'] ) ) {
+					$new_options['number'] = $options['numero'];
+				}
+				if ( isset( $options['chave'] ) ) {
+					$new_options['key'] = $options['chave'];
+				}
+				if ( isset( $options['meios'] ) ) {
+					$new_options['methods'] = $options['meios'];
+				}
+				if ( isset( $options['autorizar'] ) ) {
+					$new_options['authorization'] = $options['autorizar'];
+				}
+				if ( isset( $options['parcela_minima'] ) ) {
+					$new_options['smallest_installment'] = $options['parcela_minima'];
+				}
+				if ( isset( $options['taxa_juros'] ) ) {
+					$new_options['interest_rate'] = $options['taxa_juros'];
+				}
+				if ( isset( $options['debit_discount'] ) ) {
+					$new_options['interest_rate'] = $options['debit_discount'];
+				}
+				if ( isset( $options['parcelas'] ) ) {
+					$new_options['installments'] = $options['parcelas'];
+				}
+				if ( isset( $options['juros'] ) ) {
+					$new_options['interest'] = $options['juros'];
+				}
+				if ( isset( $options['parcelamento'] ) ) {
+					$new_options['installment_type'] = ( '2' == $options['parcelamento'] ) ? 'client' : 'store';
+				}
+				if ( ! isset( $options['design'] ) ) {
+					$new_options['design'] = 'default';
+				}
+
+				update_option( 'woocommerce_cielo_settings', $new_options );
+				update_option( 'wc_cielo_version', WC_Cielo::VERSION );
+			}
+		}
 	}
 
 	/**
