@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						}
 					}
 
-					if ( $credit_total < $this->smallest_installment ) {
+					if ( 1 != $i && $credit_total < $smallest_value ) {
 						continue;
 					}
 

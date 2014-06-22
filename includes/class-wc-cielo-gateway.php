@@ -435,7 +435,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
 			}
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
-			if ( $installments > $this->installments || $installment_total < $smallest_value ) {
+			if ( $installments > $this->installments || 1 != $installments && $installment_total < $smallest_value ) {
 				$this->add_error( __( 'invalid number of installments!', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
