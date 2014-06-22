@@ -180,9 +180,9 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'default'     => ''
 			),
 			'methods' => array(
-				'title'       => __( 'Credit Card Accepted Brands', 'cielo-woocommerce' ),
+				'title'       => __( 'Accepted Card Brands', 'cielo-woocommerce' ),
 				'type'        => 'multiselect',
-				'description' => __( 'Select the credit card brands that will be accepted as payment. Press the Ctrl key to select more than one brand.', 'cielo-woocommerce' ),
+				'description' => __( 'Select the card brands that will be accepted as payment. Press the Ctrl key to select more than one brand.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => array( 'visa', 'mastercard' ),
 				'options'     => WC_Cielo_API::get_payment_methods()
@@ -203,7 +203,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			'smallest_installment' => array(
 				'title'       => __( 'Smallest Installment', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Smallest value of each installment, cannot be less than 5', 'cielo-woocommerce' ),
+				'description' => __( 'Smallest value of each installment, cannot be less than 5.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '5'
 			),
@@ -224,7 +224,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			'installments' => array(
 				'title'       => __( 'Installment Within', 'cielo-woocommerce' ),
 				'type'        => 'select',
-				'description' => __( 'Maximum number of installments for orders in your store', 'cielo-woocommerce' ),
+				'description' => __( 'Maximum number of installments for orders in your store.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '1',
 				'options'     => array(
@@ -422,7 +422,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			// Validate the installments amount.
 			$installment_total = $order->order_total / $installments;
 			if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
-				$interest_total    = $installment_total * ( ( 100 + $this->interest_rate ) / 100 );
+				$interest_total    = $installment_total * ( ( 100 + absint( $this->interest_rate ) ) / 100 );
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
 			}
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
