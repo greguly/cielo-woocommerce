@@ -4,7 +4,7 @@ Donate link: http://omniwp.com.br/donate/
 Tags: WooCommerce, Payment Gateway, Cielo
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: trunk
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,12 +37,31 @@ Suporta as versões 2.0.x e 2.1.x do WooCommerce.
 
 * This plugin is released under a GPL license.
 
-
 == Changelog ==
 
-= 2.0.9.1 - 2014/06/17 =
+= 3.0.0 - xx/06/2014 =
 
-* Corrigido erro depois do pagamento,  ocorria apenas nas versões anteriores a 2.1 do WooCommerce
+* Refatorado todo o código do plugin.
+* Adicionado completo suporte para as versões 2.0.x e 2.1.x do WooCommerce
+* Atualizada a versão da API da Cielo para 1.3.0.
+* Adicionada ação de cancelar a transação (devolver o dinheiro) ao marcar o pedido como "reembolsado".
+* Adicionada novas formas de exibir o formulário com os cartões de crédito e parcelas disponíveis.
+* Removida a opção de captura (não tinha utilidade e a melhor forma de trabalhar é capturar automaticamente sempre).
+* Adicionado suporte para os cartões JBC e Aura.
+* Adicionado a opção de pagamento por débito para o MasterCard.
+
+= 2.0.10 - 17/06/2014 =
+
+* Corrigido a finalização e a URL de retorno para versões 2.0.x do WooCommerce.
+
+= 2.0.9 - 12/06/2014 =
+
+* Correção dos valores padrões das opções.
+
+= 2.0.8 - 12/06/2014 =
+
+* Correção do retorno do pagamento para as versões 2.1.x do WooCommerce.
+
 = 2.0.7 - 11/06/2014 =
 
 * Suporte inicial para as versões 2.1.x do WooCommerce.
@@ -79,10 +98,13 @@ Suporta as versões 2.0.x e 2.1.x do WooCommerce.
 
 == Upgrade Notice ==
 
-= 2.0.9.1 =
+= 3.0.0 =
 
-* Corrigido erro para as versões anteriores a 2.1 do WooCommerce.
-
-= 2.0.7 =
-
-* Suporte inicial para as versões 2.1.x do WooCommerce.
+* Refatorado todo o código do plugin.
+* Adicionado completo suporte para as versões 2.0.x e 2.1.x do WooCommerce
+* Atualizada a versão da API da Cielo para 1.3.0.
+* Adicionada ação de cancelar a transação (devolver o dinheiro) ao marcar o pedido como "reembolsado".
+* Adicionada novas formas de exibir o formulário com os cartões de crédito e parcelas disponíveis.
+* Removida a opção de captura (não tinha utilidade e a melhor forma de trabalhar é capturar automaticamente sempre).
+* Adicionado suporte para os cartões JBC e Aura.
+* Adicionado a opção de pagamento por débito para o MasterCard.
