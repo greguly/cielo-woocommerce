@@ -387,7 +387,12 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		}
 
 		$model = ( 'icons' == $this->design ) ? 'icons' : 'default';
-		include_once( 'views/html-payment-form-' . $model . '.php' );
+
+		// Makes it possible to create custom templates.
+		$path = apply_filters( 'wc_cielo_form_path', plugin_dir_path( __FILE__ ) . 'views/html-payment-form-' . $model . '.php', $model );
+		if ( file_exists( $path ) ) {
+			include_once( $path );
+		}
 	}
 
 	/**
