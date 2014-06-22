@@ -540,9 +540,9 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			$this->process_order_status( $order, $status, $order_note );
 
 			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
-				$thankpage_url = $this->get_return_url( $order );
+				$return_url = $this->get_return_url( $order );
 			} else {
-				$thankpage_url = add_query_arg( 'order', $order->id, add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
+				$return_url = add_query_arg( 'order', $order->id, add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
 			}
 
 			// Order cancelled.
@@ -554,10 +554,14 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 					$woocommerce->add_message( $message);
 				}
 
-				$thankpage_url = home_url( '/' );
+				if ( function_exists( 'wc_get_page_id' ) ) {
+					$return_url = get_permalink( wc_get_page_id( 'shop' ) );
+				} else {
+					$return_url = get_permalink( woocommerce_get_page_id( 'shop' ) );
+				}
 			}
 
-			wp_redirect( $thankpage_url );
+			wp_redirect( $return_url );
 			exit;
 		} else {
 			if ( function_exists( 'wc_get_page_id' ) ) {
