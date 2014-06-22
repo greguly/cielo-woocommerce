@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php endforeach ?>
 	</ul>
 	<div class="clear"></div>
-	<p id="cielo-select-name"><?php _e( 'Pay with' ) ?> <strong><?php echo esc_attr( WC_Cielo_API::get_payment_method_name( current( $this->methods ) ) ); ?></strong></p>
+	<p id="cielo-select-name"><?php _e( 'Pay with', 'cielo-woocommerce' ); ?> <strong><?php echo esc_attr( WC_Cielo_API::get_payment_method_name( current( $this->methods ) ) ); ?></strong></p>
 
 	<div id="cielo-installments">
 		<p class="form-row form-row-first">
