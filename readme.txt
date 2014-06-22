@@ -12,30 +12,174 @@ Adds Brazilian payment gateway Cielo to WooCommerce
 
 == Description ==
 
-### Adds Brazilian payment gateway Cielo to WooCommerce.
+### Adds Brazilian payment gateway Cielo to WooCommerce. ###
 
 The Cielo WooCommerce plugin enables integration with WooCommerce and the Cielo Payment Gateway (for Brazilian Merchants).
 
 Please notice that WooCommerce must be installed and active.
 
-O suporte em Português é feito em http://br.forums.wordpress.org/forum/plugins-e-codigos
+= Contribute =
 
-Suporta as versões 2.0.x e 2.1.x do WooCommerce.
+You can contribute to the source code in our [GitHub](https://github.com/greguly/cielo-woocommerce) page.
+
+### Descrição em Português: ###
+
+Utilize a Cielo em sua loja WooCommerce e permita os seus clientes pagarem com cartão de crédito ou débido.
+
+A [Cielo](http://www.cielo.com.br/) é uma empresa líder em soluções de pagamentos eletrônicos na América Latina. Responsável pelo credenciamento de estabelecimentos comerciais, e pela captura, transmissão, processamento e liquidação financeira das transações realizadas com cartões de crédito e débito, capturando transações das maiores bandeiras de cartões do mundo.
+
+Estão disponíveis as seguintes bandeiras:
+
+* Visa (crédito e débido)
+* MasterCard (crédito e débido)
+* Diners Club
+* Discover
+* Elo
+* American Express
+* JCB
+* Aura
+
+Com este plugin é possível escolher entre os modelos de *BuyPage*:
+
+* Cielo
+* Loja (ainda não implementado, será possível em breve)
+
+= Desenvolvimento =
+
+O plugin **Cielo WooCommerce** foi desenvolvido sem nenhum incentivo da Cielo. Isto quer dizer que nenhum dos desenvolvedores deste plugin possuem vínculos com a Cielo e contamos com a sua ajuda para melhorar o código e o funcionamento deste plugin.
+
+Toda a integração foi desenvolvida a partir da última versão do [kit de integração da Cielo](http://www.cielo.com.br/portal/cielo/solucoes-de-tecnologia/e-commerce.html).
+
+= Compatibilidade =
+
+Compatível com as versões 2.0.x e 2.1.x do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
+
+= Instalação =
+
+Confira o nosso guia de instalação e configuração da Cielo na aba [Installation](http://wordpress.org/plugins/cielo-woocommerce/installation/).
+
+= Dúvidas? =
+
+Você pode esclarecer suas dúvidas usando:
+
+* A nossa sessão de [FAQ](http://wordpress.org/plugins/cielo-woocommerce/faq/).
+* O fórum de suporte do [WordPress](http://wordpress.org/support/plugin/cielo-woocommerce) (apenas em inglês).
+* O fórum de suporte do [WordPress Brasil](http://br.forums.wordpress.org/forum/plugins-e-codigos) utilizando as tags "cielo" e "woocommerce".
+* O nosso fórum de suporte no [GitHub](https://github.com/greguly/cielo-woocommerce/issues).
+
+= Coloborar =
+
+Você pode contribuir com código-fonte em nossa página no [GitHub](https://github.com/greguly/cielo-woocommerce).
 
 == Installation ==
 
-1. Upload plugin files to your plugins folder, or install using WordPress' built-in Add New Plugin installer
-1. Activate the plugin
+* Upload plugin files to your plugins folder, or install using WordPress built-in Add New Plugin installer;
+* Activate the plugin;
+* Navigate to WooCommerce -> Settings -> Payment Gateways, choose Cielo and fill the plugin options.
 
-== Screenshots ==
+### Instalação e configuração em Português: ###
 
-1. screenshot-1.png
+= Instalação do plugin: =
+
+* Envie os arquivos do plugin para a pasta wp-content/plugins, ou instale usando o instalador de plugins do WordPress.
+* Ative o plugin.
+* Para mais detalhes sobre a instalação de plugins no WordPress leia o tutorial [WordPress - Gerenciando Plugins](http://codex.wordpress.org/pt-br:Gerenciando_Plugins#Instalando_Plugins).
+
+= Requerimentos: =
+
+* Ter um site pronto com o WordPress e WooCommerce instalados.
+* Utilizar um certificado SSL (é recomendado um de 2048 bits).
+* Ler o material "[Boas Práticas de Segurança no e-Commerce](http://www.cielo.com.br/documents/b771c7655be54bc983aba229162f0faa.pdf)" da Cielo.
+* Ter cadastro no [Cielo e-Commerce](http://www.cielo.com.br/portal/cielo/solucoes-de-tecnologia/e-commerce.html), faça o seu cadastro utilizando:
+    * [Cadastro de clientes do Banco do Brasil, Bradesco ou HSBC](http://www.cielo.com.br/sitecielo/afiliacao/credenciamentoafiliacaonaologado.html)
+    * [Cadastro de clientes dos demais bancos](http://www.cielo.com.br/sitecielo/e-commerce/credenciamento-ecommerce.html)
+
+= Configurações do plugin: =
+
+É possível acessar a tela de configurações do plugin na página de administração do WordPress em `WooCommerce -> Configurações -> Finalizar Compra -> Cielo`.
+
+O plugin funciona com os ambientes de **Teste** e **Produção**, onde você deve utilizar o ambiente de **Teste** para testar a integração antes de fazer a homologação. Uma vez que estiver homologado, você poderá ter utilizar o ambiente de **Produção** onde é possível entrar com o **número** e a **chave** de afiliação do estabelecimento com a Cielo.
+
+#### Notas sobre o ambiente de testes ####
+
+No ambiente de **Testes** é possível utilizar alguns cartões de teste disponíveis no [kit de integração da Cielo](http://www.cielo.com.br/portal/cielo/solucoes-de-tecnologia/e-commerce.html), basta fazer o download do kit e ler o arquivo "Cielo e-Commerce - Manual do Desenvolvedor X.X.X.X.pdf" que esta dentro da pasta "Materiais Técnicos".
+
+Outra coisa importante é saber que o ambiente de **Testes** tem alguns comportamentos peculiares que você deve conhecer para poder utilizá-lo com eficiência:
+
+* Para simular pagamentos aprovados o valor total do pedido não pode ter nenhum centavo, exemplo: `R$ 100,00`.
+* É possível simular pagamentos recusados fazendo pedidos com o valor total contendo centavos, exemplo: `R$ 100,99`.
+* Os cartões do kit de integração que estão marcados com a opção "Autenticação" poderão redirecionar para uma página em branco com um XML e um botão, logo após inserir os dados dentro da página da Cielo, isto é normal e serve para "simular" a autenticação dentro do banco do cliente, basta clicar no botão e você será redirecionado novamente para a sua loja (não se preocupe, o cliente não irá ver esta tela no ambiente de produção e sim o site de seu banco).
+* Ao tentar simular uma compra, observe que o juros as vezes pode adicionar centavos no total e isso vai simular uma transação recusada (parece besta, mas muita gente quer simular pagamentos aprovados e acaba forçando todos para serem recusados por causa disso).
 
 == Frequently Asked Questions ==
 
 = What is the plugin license? =
 
 * This plugin is released under a GPL license.
+
+= What is needed to use this plugin? =
+
+* WooCommerce version 2.0.x or latter installed and active.
+* Follow our [installation guide](http://wordpress.org/plugins/cielo-woocommerce/installation/).
+
+### FAQ em Português: ###
+
+= Qual é a licença do plugin? =
+
+Este plugin esta licenciado como GPL.
+
+= O que eu preciso para utilizar este plugin? =
+
+* WooCommerce versão 2.0.x ou superior instalado e ativado.
+* Seguir o nosso [guia de instalação](http://wordpress.org/plugins/cielo-woocommerce/installation/).
+
+= São aceitas quais moedas? =
+
+No momento apenas Real (BRL).
+
+= Quais são as bandeiras disponíveis? =
+
+* Visa (crédito e débido)
+* MasterCard (crédito e débido)
+* Diners Club
+* Discover
+* Elo
+* American Express
+* JCB
+* Aura
+
+= Quais são os modelos de BuyPage disponíveis? =
+
+* Cielo
+* Loja (ainda não implementado, será possível em breve)
+
+= Como funciona a BuyPage Cielo? =
+
+Na BuyPage Cielo a digitação dos dados do cartão será no ambiente da Cielo. Geralmente é aconselhada a clientes que não queiram lidar com questões de segurança e desejam utilizar a infraestrutura da Cielo.
+
+= Como funciona a BuyPage Loja? =
+
+Na BuyPage Loja a digitação dos dados do cartão será no ambiente da Loja. Ou seja, a própria Loja se encarrega do desenvolvimento de uma página segura na Internet (HTTPS), respeitando políticas de segurança, para capturar os dados do cartão do portador.
+
+Este modelo de BuyPage não esta disponível ainda no plugin, iremos implementar em breve e contamos com a sua ajuda, tanto para a melhoria do código e implementação desta feature como também para doações (desta forma você ajuda os desenvolvedores deste plugin a ter mais tempo livre para implementar esta funcionalidade).
+
+= Aconteceu um erro, o que eu faço? =
+
+Sempre que ocorrer um erro você deve ativar a opção de log do plugin e tentar simular o erro novamente, desta forma o erro será gravado no arquivo de log e você poderá saber o que aconteceu.
+
+Não é um problema caso você não consiga entender o arquivo de log, pois você pode salvar o conteúdo dele utilizando o [pastebin.com](http://pastebin.com) ou o [gist.github.com](http://gist.github.com) solicitar ajuda usando:
+
+* O fórum de suporte do [WordPress](http://wordpress.org/support/plugin/cielo-woocommerce) (apenas em inglês).
+* O fórum de suporte do [WordPress Brasil](http://br.forums.wordpress.org/forum/plugins-e-codigos) utilizando as tags "cielo" e "woocommerce".
+* O nosso fórum de suporte no [GitHub](https://github.com/greguly/cielo-woocommerce/issues).
+
+= O que fazer quando tentar finalizar a compra aparece a mensagem "Cielo: Um erro aconteceu ao processar o seu pagamento, por favor, tente novamente ou entre em contato para conseguir assistência" ? =
+
+Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas para fazer a conexão com a Cielo. Mas é possível saber com certeza o que aconteceu de errado utilizando a opção de log do plugin como descrito na sessão acima.
+
+== Screenshots ==
+
+1. screenshot-1.png
 
 == Changelog ==
 
@@ -108,3 +252,11 @@ Suporta as versões 2.0.x e 2.1.x do WooCommerce.
 * Removida a opção de captura (não tinha utilidade e a melhor forma de trabalhar é capturar automaticamente sempre).
 * Adicionado suporte para os cartões JBC e Aura.
 * Adicionado a opção de pagamento por débito para o MasterCard.
+
+== License ==
+
+Cielo WooCommerce is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+Cielo WooCommerce is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with Cielo WooCommerce. If not, see <http://www.gnu.org/licenses/>.
