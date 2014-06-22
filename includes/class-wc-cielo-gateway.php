@@ -11,7 +11,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @var WC_Cielo_API
 	 */
-	protected $api = null;
+	public $api = null;
 
 	/**
 	 * Constructor for the gateway.

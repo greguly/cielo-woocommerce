@@ -458,4 +458,64 @@ class WC_Cielo_API {
 
 		return $body;
 	}
+
+	/**
+	 * Do transaction cancellation.
+	 *
+	 * @param  WC_Order $order Order data.
+	 * @param  string $tid     Transaction ID.
+	 * @param  string $id      Request ID.
+	 *
+	 * @return array
+	 */
+	public function do_transaction_cancellation( $order, $tid, $id ) {
+		$account_data = $this->get_account_data();
+		$xml          = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-cancelamento id="' . $id . '" versao="' . self::VERSION . '"></requisicao-cancelamento>' );
+		$xml->add_tid( $tid );
+		$xml->add_account_data( $account_data['number'], $account_data['key'] );
+
+		// Render the XML.
+		$data = $xml->render();
+
+		if ( 'yes' == $this->gateway->debug ) {
+			$this->gateway->log->add( $this->gateway->id, 'Canceling the transaction for the order' . $order->get_order_number() . '...' );
+		}
+
+		// Do the request.
+		$response = $this->do_request( $data );
+
+		// Set error message.
+		$error = new StdClass;
+		$error->mensagem = __( 'An error occurred while trying to cancel the payment, turn on the Cielo log option and try again.', 'cielo-woocommerce' );
+
+		if ( is_wp_error( $response ) || ( isset( $response['response'] ) && 200 != $response['response']['code'] ) ) {
+			if ( 'yes' == $this->gateway->debug ) {
+				$this->gateway->log->add( $this->gateway->id, 'An error occurred while canceling the transaction: ' . print_r( $response, true ) );
+			}
+
+			return $error;
+		}
+
+		// Get the transaction response data.
+		try {
+			$body = @new SimpleXmlElement( $response['body'], LIBXML_NOCDATA );
+		} catch ( Exception $e ) {
+			$body = '';
+
+			if ( 'yes' == $this->gateway->debug ) {
+				$this->gateway->log->add( $this->gateway->id, 'Error while parsing the Cielo response: ' . print_r( $e->getMessage(), true ) );
+			}
+		}
+
+		// Error when getting the transaction response data.
+		if ( empty( $body ) ) {
+			return $error;
+		}
+
+		if ( 'yes' == $this->gateway->debug ) {
+			$this->gateway->log->add( $this->gateway->id, 'Order ' . $order->get_order_number() . ' canceled successfully' );
+		}
+
+		return $body;
+	}
 }
