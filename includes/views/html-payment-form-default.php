@@ -16,7 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<p class="form-row form-row-last">
 		<label for="cielo-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
 		<select id="cielo-installments" name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">
-			<?php if ( ! empty( array_intersect( WC_Cielo_API::get_debit_methods(), $this->methods ) ) ) :
+			<?php
+				$debit_methods   = WC_Cielo_API::get_debit_methods();
+				$available_debit = array_intersect( $debit_methods, $this->methods );
+				if ( ! empty( $available_debit ) ) :
 					$debit_total    = $cart_total * ( ( 100 - WC_Cielo_API::get_valid_value( $this->debit_discount ) ) / 100 );
 					$debit_discount = ( $cart_total > $debit_total ) ? ' (' . WC_Cielo_API::get_valid_value( $this->debit_discount ) . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
 				?>

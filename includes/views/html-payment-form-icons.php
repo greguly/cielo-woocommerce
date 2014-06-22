@@ -15,7 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div id="cielo-installments">
 		<p class="form-row form-row-first">
-			<?php if ( ! empty( array_intersect( WC_Cielo_API::get_debit_methods(), $this->methods ) ) ) :
+			<?php
+				$debit_methods   = WC_Cielo_API::get_debit_methods();
+				$available_debit = array_intersect( $debit_methods, $this->methods );
+				if ( ! empty( $available_debit ) ) :
 					$debit_total    = $cart_total * ( ( 100 - WC_Cielo_API::get_valid_value( $this->debit_discount ) ) / 100 );
 					$debit_discount = ( $cart_total > $debit_total ) ? ' (' . WC_Cielo_API::get_valid_value( $this->debit_discount ) . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
 				?>
