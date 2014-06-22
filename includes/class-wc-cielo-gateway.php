@@ -513,7 +513,26 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 			// Update the order status.
 			$status = ( isset( $response->status ) && ! empty( $response->status ) ) ? (string) $response->status : -1;
-			$this->process_order_status( $order, $status, $tid );
+			$order_note = 'TID: ' . $tid . '.';
+			if ( isset( $response->{'forma-pagamento'} ) ) {
+				$payment_method = $response->{'forma-pagamento'};
+
+				$order_note .= __( 'Paid with', 'cielo-woocommerce' );
+				$order_note .= ' ';
+				$order_note .= WC_Cielo_API::get_payment_method_name( (string) $payment_method->bandeira );
+				$order_note .= ' ';
+
+				if ( 'A' == $payment_method->produto ) {
+					$order_note .=  __( 'debit', 'cielo-woocommerce' );
+				} elseif ( '1' == $payment_method->produto ) {
+					$order_note .= __( 'credit at sight', 'cielo-woocommerce' );
+				} else {
+					$order_note .= sprintf( __( 'credit %dx', 'cielo-woocommerce' ), $payment_method->parcelas );
+				}
+
+				$order_note .= '.';
+			}
+			$this->process_order_status( $order, $status, $order_note );
 
 			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
 				$thankpage_url = $this->get_return_url( $order );
@@ -552,24 +571,24 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @param  WC_Order $Order  Order data.
 	 * @param  int      $status Status ID.
-	 * @param  string   $tid    Transaction ID.
+	 * @param  string   $note   Custom order note.
 	 *
 	 * @return void
 	 */
-	public function process_order_status( $order, $status, $tid ) {
-		$note = __( 'Cielo', 'cielo-woocommerce' ) . ': ' . WC_Cielo_API::get_status_name( $status );
+	public function process_order_status( $order, $status, $note = '' ) {
+		$status_note = __( 'Cielo', 'cielo-woocommerce' ) . ': ' . WC_Cielo_API::get_status_name( $status );
 
 		// Order cancelled.
 		if ( 9 == $status ) {
-			$order->update_status( 'cancelled', $note );
+			$order->update_status( 'cancelled', $status_note );
 
 		// Order failed.
 		} elseif ( ( 4 != $status && 6 != $status ) || -1 == $status ) {
-			$order->update_status( 'failed', $note );
+			$order->update_status( 'failed', $status_note );
 
 		// Order paid.
 		} else {
-			$order->add_order_note( $note . ' TID: ' . $tid . '.' );
+			$order->add_order_note( $status_note . '. ' . $note );
 
 			// Complete the payment and reduce stock levels.
 			$order->payment_complete();

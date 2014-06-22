@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Cielo WooCommerce v3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-06-22 03:33:46+0000\n"
+"PO-Revision-Date: 2014-06-22 19:01:30+0000\n"
 "Last-Translator: Claudio Sanches <contato@claudiosmweb.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -139,7 +139,7 @@ msgstr "Um erro aconteceu ao tentar cancelar o pagamento, ative a opção de log
 #: includes/class-wc-cielo-gateway.php:27
 #: includes/class-wc-cielo-gateway.php:148
 #: includes/class-wc-cielo-gateway.php:349
-#: includes/class-wc-cielo-gateway.php:556
+#: includes/class-wc-cielo-gateway.php:579
 #: woocommerce-cielo-gateway.php:130
 #@ cielo-woocommerce
 msgid "Cielo"
@@ -351,82 +351,82 @@ msgstr "Ativar logs"
 msgid "Log Cielo events, such as API requests, inside %s"
 msgstr "Grava eventos da Cielo, como por exemplo solicitações a API, dentro de %s"
 
-#: includes/class-wc-cielo-gateway.php:405
+#: includes/class-wc-cielo-gateway.php:409
 #@ cielo-woocommerce
 msgid "please select a card."
 msgstr "por favor, selecione um cartão."
 
-#: includes/class-wc-cielo-gateway.php:411
+#: includes/class-wc-cielo-gateway.php:415
 #@ cielo-woocommerce
 msgid "please select a number of installments."
 msgstr "por favor, selecione o número de parcelas."
 
-#: includes/class-wc-cielo-gateway.php:417
+#: includes/class-wc-cielo-gateway.php:421
 #, php-format
 #@ cielo-woocommerce
 msgid "%s does not accept payment by debit."
 msgstr "%s não aceita pagamentos com a modalidade débito."
 
-#: includes/class-wc-cielo-gateway.php:430
+#: includes/class-wc-cielo-gateway.php:434
 #@ cielo-woocommerce
 msgid "invalid number of installments!"
 msgstr "o número de parcelas é inválido!"
 
-#: includes/class-wc-cielo-gateway.php:487
+#: includes/class-wc-cielo-gateway.php:491
 #@ cielo-woocommerce
 msgid "Invalid request"
 msgstr "Requisição inválida"
 
-#: includes/class-wc-cielo-gateway.php:522
+#: includes/class-wc-cielo-gateway.php:545
 #@ cielo-woocommerce
 msgid "Order canceled successfully."
 msgstr "Pedido cancelado com sucesso."
 
-#: includes/class-wc-cielo-gateway.php:591
+#: includes/class-wc-cielo-gateway.php:614
 #@ cielo-woocommerce
 msgid "View order details"
 msgstr "Ver detalhes do pedido"
 
-#: includes/class-wc-cielo-gateway.php:591
+#: includes/class-wc-cielo-gateway.php:614
 #, php-format
 #@ cielo-woocommerce
 msgid "Your payment worth %s was received successfully."
 msgstr "O seu pagamento de %s foi feito com sucesso."
 
-#: includes/class-wc-cielo-gateway.php:591
+#: includes/class-wc-cielo-gateway.php:614
 #@ cielo-woocommerce
 msgid "The authorization code was generated."
 msgstr "O código de autorização foi gerado."
 
-#: includes/class-wc-cielo-gateway.php:593
+#: includes/class-wc-cielo-gateway.php:616
 #, php-format
 #@ cielo-woocommerce
 msgid "For more information or questions regarding your order, go to the %s."
 msgstr "Para mais informações ou dúvidas a respeito do seu pedido, vá para a %s."
 
-#: includes/class-wc-cielo-gateway.php:593
+#: includes/class-wc-cielo-gateway.php:616
 #@ cielo-woocommerce
 msgid "order details page"
 msgstr "página de detalhes do pedido"
 
-#: includes/class-wc-cielo-gateway.php:621
-#: includes/class-wc-cielo-gateway.php:630
+#: includes/class-wc-cielo-gateway.php:644
+#: includes/class-wc-cielo-gateway.php:653
 #@ cielo-woocommerce
 msgid "Cielo Disabled"
 msgstr "Cielo desativado"
 
-#: includes/class-wc-cielo-gateway.php:621
+#: includes/class-wc-cielo-gateway.php:644
 #, php-format
 #@ cielo-woocommerce
 msgid "You should inform your Affiliation Number and Key. %s"
 msgstr "Você deve informar o seu Número de afiliação e chave de afiliação. %s"
 
-#: includes/class-wc-cielo-gateway.php:621
+#: includes/class-wc-cielo-gateway.php:644
 #@ cielo-woocommerce
 msgid "Click here to configure!"
 msgstr "Clique aqui para configurar!"
 
-#: includes/class-wc-cielo-gateway.php:630
+#: includes/class-wc-cielo-gateway.php:653
 #, php-format
 #@ cielo-woocommerce
 msgid "The currency <code>%s</code> is not supported. Works only with Brazilian Real."
@@ -442,34 +442,34 @@ msgstr "Cartão"
 msgid "Installments"
 msgstr "Parcelas"
 
-#: includes/views/html-payment-form-default.php:21
-#: includes/views/html-payment-form-icons.php:20
+#: includes/views/html-payment-form-default.php:24
+#: includes/views/html-payment-form-icons.php:23
 #@ cielo-woocommerce
 msgctxt "price"
 msgid "off"
 msgstr "de desconto"
 
-#: includes/views/html-payment-form-default.php:24
-#: includes/views/html-payment-form-icons.php:23
+#: includes/views/html-payment-form-default.php:27
+#: includes/views/html-payment-form-icons.php:26
 #, php-format
 #@ cielo-woocommerce
 msgid "Debit %s%s"
 msgstr "Débito %s%s"
 
-#: includes/views/html-payment-form-default.php:29
-#: includes/views/html-payment-form-icons.php:30
+#: includes/views/html-payment-form-default.php:32
+#: includes/views/html-payment-form-icons.php:33
 #@ cielo-woocommerce
 msgid "(no interest)"
 msgstr "(sem juros)"
 
-#: includes/views/html-payment-form-default.php:37
-#: includes/views/html-payment-form-icons.php:38
+#: includes/views/html-payment-form-default.php:40
+#: includes/views/html-payment-form-icons.php:41
 #@ cielo-woocommerce
 msgid "(with interest)"
 msgstr "(com juros)"
 
-#: includes/views/html-payment-form-default.php:46
-#: includes/views/html-payment-form-icons.php:51
+#: includes/views/html-payment-form-default.php:49
+#: includes/views/html-payment-form-icons.php:54
 #, php-format
 #@ cielo-woocommerce
 msgid "%sx of %s %s"
@@ -556,4 +556,25 @@ msgstr "O melhor valor de cada parcela, não pode ser menor do que 5."
 #@ cielo-woocommerce
 msgid "Maximum number of installments for orders in your store."
 msgstr "Número máximo de parcelas que a sua loja irá aceitar."
+
+#: includes/class-wc-cielo-gateway.php:520
+#@ cielo-woocommerce
+msgid "Paid with"
+msgstr "Pago com"
+
+#: includes/class-wc-cielo-gateway.php:526
+#@ cielo-woocommerce
+msgid "debit"
+msgstr "débito"
+
+#: includes/class-wc-cielo-gateway.php:528
+#@ cielo-woocommerce
+msgid "credit at sight"
+msgstr "crédito à vista"
+
+#: includes/class-wc-cielo-gateway.php:530
+#, php-format
+#@ cielo-woocommerce
+msgid "credit %dx"
+msgstr "crédito em %d vezes"
 
