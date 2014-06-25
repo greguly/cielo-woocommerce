@@ -4,7 +4,7 @@ Donate link: http://omniwp.com.br/donate/
 Tags: WooCommerce, Payment Gateway, Cielo
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -224,6 +224,10 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 
 == Changelog ==
 
+= 3.0.3 - 25/06/2014 =
+
+* Adicionada opção para selecionar os métodos de débito disponíveis.
+
 = 3.0.2 - 22/06/2014 =
 
 * Melhorada a exibição das notas do pedido com as informações sobre o pagamento.
@@ -295,7 +299,7 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 
 == Upgrade Notice ==
 
-= 3.0.2 =
+= 3.0.3 =
 
 * Refatorado todo o código do plugin.
 * Adicionado completo suporte para as versões 2.0.x e 2.1.x do WooCommerce
@@ -309,6 +313,7 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 * Adicionado filtro wc_cielo_form_path, que torna possível customizar o formulário de seleção do cartão e de parcelas.
 * Permitido valores inferiores a R$ 5,00 para pagamento à vista em cartão de crédito.
 * Quando cancelado o pagamento na tela da Cielo o cliente é redirecionado para o caralogo do WooCommerce.
+* Adicionada opção para selecionar os métodos de débito disponíveis.
 
 == License ==
 
