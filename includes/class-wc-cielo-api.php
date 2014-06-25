@@ -120,8 +120,24 @@ class WC_Cielo_API {
 	 *
 	 * @return array
 	 */
-	public static function get_debit_methods() {
-		return array( 'visa', 'mastercard' );
+	public static function get_debit_methods( $debit_methods ) {
+		switch ( $debit_methods ) {
+			case 'all' :
+				$methods = array( 'visa', 'mastercard' );
+				break;
+			case 'visa' :
+				$methods = array( 'visa' );
+				break;
+			case 'mastercard' :
+				$methods = array( 'mastercard' );
+				break;
+
+			default :
+				$methods = array();
+				break;
+		}
+
+		return $methods;
 	}
 
 	/**
@@ -356,7 +372,7 @@ class WC_Cielo_API {
 		}
 
 		// Set the debit values.
-		if ( in_array( $card_brand, self::get_debit_methods() ) && 0 == $installments ) {
+		if ( in_array( $card_brand, self::get_debit_methods( $this->gateway->debit_methods ) ) && 0 == $installments ) {
 			$order_total     = $order->order_total * ( ( 100 - self::get_valid_value( $this->gateway->debit_discount ) ) / 100 );
 			$payment_product = 'A';
 			$installments    = '1';

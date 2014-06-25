@@ -25,12 +25,12 @@
 		});
 
 		/**
-		 * Switch the options based on the selected methods/
+		 * Switch the options based on the selected methods.
 		 *
 		 * @param {array} methods
 		 */
 		function switchMethods( methods ) {
-			var fields = $( '#mainform .form-table:eq(0) tr:eq(7), #mainform .form-table:eq(0) tr:eq(10)' );
+			var fields = $( '#mainform .form-table:eq(0) tr:eq(7), #mainform .form-table:eq(0) tr:eq(8)' );
 
 			if ( -1 < $.inArray( 'visa', methods ) || -1 < $.inArray( 'mastercard', methods ) ) {
 				fields.show();
@@ -43,6 +43,28 @@
 
 		$( '#woocommerce_cielo_methods' ).on( 'change', function () {
 			switchMethods( $( this ).val() );
+		});
+
+		/**
+		 * Switch the options based on the selected debit methods.
+		 *
+		 * @param {array} debit_methods
+		 */
+		function switchDebitMethods( debit_methods ) {
+			var fields  = $( '#mainform .form-table:eq(0) tr:eq(11)' ),
+				methods = $( '#woocommerce_cielo_methods' ).val();
+
+			if ( 'none' !== debit_methods && ( -1 < $.inArray( 'visa', methods ) || -1 < $.inArray( 'mastercard', methods ) ) ) {
+				fields.show();
+			} else {
+				fields.hide();
+			}
+		}
+
+		switchDebitMethods( $( '#woocommerce_cielo_debit_methods' ).val() );
+
+		$( '#woocommerce_cielo_debit_methods' ).on( 'change', function () {
+			switchDebitMethods( $( this ).val() );
 		});
 	});
 

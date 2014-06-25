@@ -39,6 +39,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$this->number               = $this->get_option( 'number' );
 		$this->key                  = $this->get_option( 'key' );
 		$this->methods              = $this->get_option( 'methods' );
+		$this->debit_methods        = $this->get_option( 'debit_methods', 'visa' );
 		$this->authorization        = $this->get_option( 'authorization' );
 		$this->smallest_installment = $this->get_option( 'smallest_installment' );
 		$this->interest_rate        = $this->get_option( 'interest_rate' );
@@ -186,6 +187,19 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'desc_tip'    => true,
 				'default'     => array( 'visa', 'mastercard' ),
 				'options'     => WC_Cielo_API::get_payment_methods()
+			),
+			'debit_methods' => array(
+				'title'       => __( 'Accepted Debit Cards', 'cielo-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'Select the debit card that will be accepted as payment.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => 'visa',
+				'options'     => array(
+					'none'       => __( 'None', 'cielo-woocommerce' ),
+					'visa'       => __( 'Visa only', 'cielo-woocommerce' ),
+					'mastercard' => __( 'MasterCard only', 'cielo-woocommerce' ),
+					'all'        => __( 'All debit methods', 'cielo-woocommerce' )
+				)
 			),
 			'authorization' => array(
 				'title'       => __( 'Automatic Authorization (MasterCard and Visa only)', 'cielo-woocommerce' ),
@@ -422,7 +436,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		}
 
 		// Validate if debit is available.
-		if ( ! in_array( $card, WC_Cielo_API::get_debit_methods() ) && 0 == $installments ) {
+		if ( ! in_array( $card, WC_Cielo_API::get_debit_methods( $this->debit_methods ) ) && 0 === $installments ) {
 			$this->add_error( sprintf( __( '%s does not accept payment by debit.', 'cielo-woocommerce' ), WC_Cielo_API::get_payment_method_name( $card ) ) );
 			$valid = false;
 		}

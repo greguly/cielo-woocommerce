@@ -17,14 +17,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<label for="cielo-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
 		<select id="cielo-installments" name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">
 			<?php
-				$debit_methods   = WC_Cielo_API::get_debit_methods();
+				$debit_methods   = WC_Cielo_API::get_debit_methods( $this->debit_methods );
 				$available_debit = array_intersect( $debit_methods, $this->methods );
 				if ( ! empty( $available_debit ) ) :
 					$debit_total    = $cart_total * ( ( 100 - WC_Cielo_API::get_valid_value( $this->debit_discount ) ) / 100 );
 					$debit_discount = ( $cart_total > $debit_total ) ? ' (' . WC_Cielo_API::get_valid_value( $this->debit_discount ) . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
 				?>
-
-				<option value="0" class="cielo-debit"><?php echo sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $debit_total ) ), $debit_discount ); ?></option>
+				<option value="0" class="cielo-debit" data-debit="<?php echo esc_attr( $this->debit_methods ); ?>"><?php echo sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $debit_total ) ), $debit_discount ); ?></option>
 
 			<?php endif; ?>
 			<?php for ( $i = 1; $i <= $this->installments; $i++ ) :

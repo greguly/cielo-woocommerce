@@ -12,18 +12,35 @@
 		 * @param {string} card
 		 */
 		function setInstallmentsFields( card ) {
-			var installments = $( '#cielo-installments' );
+			var installments = $( '#cielo-installments' ),
+				methods      = [],
+				debitMethods = null;
 
 			$( '#cielo-installments' ).empty();
 			$( '#cielo-installments' ).prepend( $.data( document.body, 'cielo_installments' ) );
+			debitMethods = $( '.cielo-debit', installments ).attr( 'data-debit' );
 
-			if ( 'visa' !== card && 'mastercard' !== card ) {
+			switch( debitMethods ) {
+				case 'all' :
+					methods = ['visa', 'mastercard'];
+					break;
+				case 'visa' :
+					methods = ['visa'];
+					break;
+				case 'mastercard' :
+					methods = ['mastercard'];
+					break;
+			}
+
+			if ( -1 === $.inArray( card, methods ) ) {
 				$( '.cielo-debit', installments ).remove();
 			}
 
 			if ( 'discover' === card ) {
 				$( 'label', installments ).not( '.cielo-at-sight' ).remove();
 			}
+
+			$( 'input:eq(0)', installments ).attr( 'checked', 'checked' );
 		}
 
 		// Set on update the checkout fields.
