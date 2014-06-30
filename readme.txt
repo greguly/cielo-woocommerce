@@ -163,7 +163,7 @@ Na BuyPage Loja a digitação dos dados do cartão será no ambiente da Loja. Ou
 
 Este modelo de BuyPage não esta disponível ainda no plugin, iremos implementar em breve e contamos com a sua ajuda, tanto para a melhoria do código e implementação desta feature como também para doações (desta forma você ajuda os desenvolvedores deste plugin a ter mais tempo livre para implementar esta funcionalidade).
 
-= Ao pagar o pedido fica com o status "processando", isto esta certo ? =
+= O pedido foi pago e ficou com o status de "processando" e não como "concluído", isto esta certo ? =
 
 Sim, esta certo e significa que o plugin esta trabalhando como deveria.
 
