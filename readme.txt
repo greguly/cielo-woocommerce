@@ -71,6 +71,10 @@ Você pode esclarecer suas dúvidas usando:
 
 Você pode contribuir com código-fonte em nossa página no [GitHub](https://github.com/greguly/cielo-woocommerce).
 
+= Agradecimentos =
+
+* [Anilton Veiga](https://www.behance.net/aniltonveiga) - Criação do design/ícones do formulário de pagamento.
+
 == Installation ==
 
 * Upload plugin files to your plugins folder, or install using WordPress built-in Add New Plugin installer;
@@ -163,6 +167,14 @@ Na BuyPage Loja a digitação dos dados do cartão será no ambiente da Loja. Ou
 
 Este modelo de BuyPage não esta disponível ainda no plugin, iremos implementar em breve e contamos com a sua ajuda, tanto para a melhoria do código e implementação desta feature como também para doações (desta forma você ajuda os desenvolvedores deste plugin a ter mais tempo livre para implementar esta funcionalidade).
 
+= É possível usar o pagamento por celular? =
+
+No momento ainda não é possível, entretanto pretendemos integrar no futuro.
+
+= É possível fazer pagamentos recorrentes/assinaturas? =
+
+Não é possível no momento, mas será entregado no futuro.
+
 = O pedido foi pago e ficou com o status de "processando" e não como "concluído", isto esta certo ? =
 
 Sim, esta certo e significa que o plugin esta trabalhando como deveria.
@@ -177,6 +189,8 @@ Sim, isto é possível mudando o status do pedido para "reembolsado", desta form
 
 * Nota 1: Apenas pagamentos feitos em menos de 90 dias podem ser reembolsados.
 * Nota 2: Isto irá funcionar apenas para pagamentos feitos depois de instalada a versão 3.0.0 deste plugin.
+
+Não é possível ainda fazer devoluções parciais do total do pedido, por enquanto é reembolsado o valor inteiro como descrito acima. Pretendemos implementar este recurso em breve.
 
 = Aconteceu um erro, o que eu faço? =
 
