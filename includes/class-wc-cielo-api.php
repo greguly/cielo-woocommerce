@@ -492,20 +492,25 @@ class WC_Cielo_API {
 	 * @param  WC_Order $order Order data.
 	 * @param  string $tid     Transaction ID.
 	 * @param  string $id      Request ID.
+	 * @param  float  $amount  Amount for refund.
 	 *
 	 * @return array
 	 */
-	public function do_transaction_cancellation( $order, $tid, $id ) {
+	public function do_transaction_cancellation( $order, $tid, $id, $amount = null ) {
 		$account_data = $this->get_account_data();
 		$xml          = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-cancelamento id="' . $id . '" versao="' . self::VERSION . '"></requisicao-cancelamento>' );
 		$xml->add_tid( $tid );
 		$xml->add_account_data( $account_data['number'], $account_data['key'] );
 
+		if ( $amount ) {
+			$xml->add_value( $amount );
+		}
+
 		// Render the XML.
 		$data = $xml->render();
 
 		if ( 'yes' == $this->gateway->debug ) {
-			$this->gateway->log->add( $this->gateway->id, 'Canceling the transaction for the order' . $order->get_order_number() . '...' );
+			$this->gateway->log->add( $this->gateway->id, 'Canceling the transaction for the order ' . $order->get_order_number() . '...' );
 		}
 
 		// Do the request.

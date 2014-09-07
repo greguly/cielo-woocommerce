@@ -110,6 +110,15 @@ class WC_Cielo_XML extends SimpleXMLElement {
 	}
 
 	/**
+	 * Add value.
+	 *
+	 * @param string $value.
+	 */
+	public function add_value( $value ) {
+		$this->addChild( 'valor', $value );
+	}
+
+	/**
 	 * Render the formated XML.
 	 *
 	 * @return string

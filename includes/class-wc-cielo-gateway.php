@@ -25,6 +25,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$this->icon         = apply_filters( 'wc_cielo_icon', plugins_url( 'assets/images/cielo.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields   = true;
 		$this->method_title = __( 'Cielo', 'cielo-woocommerce' );
+		$this->supports     = array( 'products', 'refunds' );
 
 		// Load the form fields.
 		$this->init_form_fields();
@@ -467,6 +468,9 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			// Save the tid.
 			if ( isset( $response->tid ) && ! empty( $response->tid ) ) {
 				update_post_meta( $order->id, '_wc_cielo_transaction_tid', (string) $response->tid );
+
+				// For WooCommerce 2.2 or later.
+				update_post_meta( $order->id, '_transaction_id', (string) $response->tid, true );
 			}
 
 			// Set the transaction URL.
@@ -532,7 +536,13 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 			// Update the order status.
 			$status = ( isset( $response->status ) && ! empty( $response->status ) ) ? (string) $response->status : -1;
-			$order_note = "\n" . 'TID: ' . $tid . '.';
+			$order_note = "\n";
+
+			// For backward compatibility!
+			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1.12', '<=' ) ) {
+				$order_note = "\n" . 'TID: ' . $tid . '.';
+			}
+
 			if ( isset( $response->{'forma-pagamento'} ) ) {
 				$payment_method = $response->{'forma-pagamento'};
 
@@ -639,6 +649,51 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		} else {
 			echo '<div class="woocommerce-info">' . sprintf( __( 'For more information or questions regarding your order, go to the %s.', 'cielo-woocommerce' ), '<a href="' . $order_url . '">' . __( 'order details page', 'cielo-woocommerce' ) . '</a>' ) . '</div>';
 		}
+	}
+
+	/**
+	 * Process a refund in WooCommerce 2.2 or later.
+	 *
+	 * @param  int    $order_id
+	 * @param  float  $amount
+	 * @param  string $reason
+	 *
+	 * @return bool|wp_error True or false based on success, or a WP_Error object.
+	 */
+	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+		$order = wc_get_order( $order_id );
+
+		if ( ! $order || ! $order->get_transaction_id() ) {
+			return false;
+		}
+
+		$diff = ( strtotime( $order->order_date ) - strtotime( current_time( 'mysql' ) ) );
+		$days = absint( $diff / ( 60 * 60 * 24 ) );
+
+		if ( 90 > $days ) {
+			$tid      = $order->get_transaction_id();
+			$gateway  = new WC_Cielo_Gateway();
+			$amount   = number_format( wc_format_decimal( $amount ), 2, '', '' );
+			$response = $gateway->api->do_transaction_cancellation( $order, $tid, $order->id . '-' . time(), $amount );
+
+			// Already canceled.
+			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+				$order->add_order_note( __( 'Cielo', 'cielo-woocommerce' ) . ': ' . sanitize_text_field( $response->mensagem ) );
+
+				return new WP_Error( 'cielo_refund_error', sanitize_text_field( $response->mensagem ) );
+			} else {
+				if ( isset( $response->cancelamentos->cancelamento ) ) {
+					$order->add_order_note( sprintf( __( 'Cielo: %s - Refunded amount: %s.', 'cielo-woocommerce' ), sanitize_text_field( $response->cancelamentos->cancelamento->mensagem ), wc_price( $response->cancelamentos->cancelamento->valor / 100 ) ) );
+				}
+
+				return true;
+			}
+
+		} else {
+			return new WP_Error( 'cielo_refund_error', __( 'This transaction has been made ​​more than 90 days and therefore it can not be canceled', 'cielo-woocommerce' ) );
+		}
+
+		return false;
 	}
 
 	/**
