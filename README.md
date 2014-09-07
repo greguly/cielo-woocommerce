@@ -242,13 +242,13 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 ## Screenshots ##
 
 ### 1. Configurações do plugin. ###
-![1. Configurações do plugin.](http://s.wordpress.org/extend/plugins/cielo-woocommerce/screenshot-1.png)
+![1. Configurações do plugin.](http://ps.w.org/cielo-woocommerce/assets/screenshot-1.png)
 
 ### 2. Checkout com o formulário padrão. ###
-![2. Checkout com o formulário padrão.](http://s.wordpress.org/extend/plugins/cielo-woocommerce/screenshot-2.png)
+![2. Checkout com o formulário padrão.](http://ps.w.org/cielo-woocommerce/assets/screenshot-2.png)
 
 ### 2. Checkout com o formulário utilizando ícones dos cartões. ###
-![2. Checkout com o formulário utilizando ícones dos cartões.](http://s.wordpress.org/extend/plugins/cielo-woocommerce/screenshot-3.png)
+![2. Checkout com o formulário utilizando ícones dos cartões.](http://ps.w.org/cielo-woocommerce/assets/screenshot-3.png)
 
 
 ## Changelog ##
