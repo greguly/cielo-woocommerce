@@ -185,8 +185,7 @@ Para produtos baixáveis a configuração padrão do WooCommerce é permitir o a
 
 = É possível cancelar o pagamento/devolver o dinheiro do cliente pelo plugin? =
 
-Você pode fazer reembolsos apenas de transações feitas em menos de 90 dias.  
-Este plugin suporta fazer reembolsos totais e parciais.
+Sim é possível fazer reembolsos do valor total ou parcial, entretanto apenas para transações feitas em menos de 90 dias, 
 
 **Reembolso total**
 
