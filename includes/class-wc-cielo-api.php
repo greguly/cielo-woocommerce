@@ -160,7 +160,7 @@ class WC_Cielo_API {
 	 */
 	public function curl_settings( $handle, $r, $url ) {
 		if ( isset( $r['sslcertificates'] ) && $this->get_certificate() === $r['sslcertificates'] && $this->get_api_url() === $url ) {
-			curl_setopt( $handle , CURLOPT_SSLVERSION , 3 );
+			curl_setopt( $handle, CURLOPT_SSLVERSION, 3 );
 		}
 	}
 
@@ -231,14 +231,10 @@ class WC_Cielo_API {
 	 * @return string
 	 */
 	protected function get_language() {
-		$language = 'EN';
+		$language = strtoupper( substr( get_locale(), 0, 2 ) );
 
-		if ( defined( 'WPLANG' ) && '' != WPLANG ) {
-			$language = strtoupper( substr( WPLANG, 0, 2 ) );
-
-			if ( ! in_array( $language, array( 'PT', 'EN', 'ES' ) ) ) {
-				$language = 'EN';
-			}
+		if ( ! in_array( $language, array( 'PT', 'EN', 'ES' ) ) ) {
+			$language = 'EN';
 		}
 
 		return $language;
