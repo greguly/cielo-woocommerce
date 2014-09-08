@@ -4,7 +4,7 @@ Donate link: http://claudiosmweb.com/doacoes/
 Tags: WooCommerce, Payment Gateway, Cielo
 Requires at least: 3.5
 Tested up to: 4.0
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -247,6 +247,10 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 
 == Changelog ==
 
+= 3.1.1 - 07/09/2014 =
+
+* Melhorada a integração com o `_transaction_id` para o WooCommerce 2.2.
+
 = 3.1.0 - 07/09/2014 =
 
 * Adicionado suporte para reembolsos parciais do WooCommerce 2.2.
@@ -327,10 +331,11 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 
 == Upgrade Notice ==
 
-= 3.1.0 =
+= 3.1.1 =
 
 * Adicionado suporte para reembolsos parciais do WooCommerce 2.2.
 * Melhorada a compatibilidade com o WordPress 4.0.
+* Melhorada a integração com o `_transaction_id` para o WooCommerce 2.2.
 
 == License ==
 

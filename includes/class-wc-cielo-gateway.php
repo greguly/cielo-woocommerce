@@ -470,7 +470,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				update_post_meta( $order->id, '_wc_cielo_transaction_tid', (string) $response->tid );
 
 				// For WooCommerce 2.2 or later.
-				update_post_meta( $order->id, '_transaction_id', (string) $response->tid, true );
+				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
 			}
 
 			// Set the transaction URL.
