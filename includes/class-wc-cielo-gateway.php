@@ -131,6 +131,21 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		return ( ! empty( $this->methods ) && ! empty( $this->number ) && ! empty( $this->key ) );
 	}
 
+
+	/**
+	* Get log file path
+	* 
+	* @return string
+	*/
+	public function get_log_file_path() {
+		if ( function_exists( 'wc_get_log_file_path' ) ) {
+			return wc_get_log_file_path( $this->id );
+		} else {
+			return 'wc-logs/' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.log';
+		}
+	}
+
+
 	/**
 	 * Initialise Gateway Settings Form Fields
 	 */
@@ -313,7 +328,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'type'        => 'checkbox',
 				'label'       => __( 'Enable logging', 'cielo-woocommerce' ),
 				'default'     => 'no',
-				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside <code>%s</code>', 'cielo-woocommerce' ),  wc_get_log_file_path(  esc_attr( $this->id )  )
+				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside <code>%s</code>', 'cielo-woocommerce' ),  $this->get_log_file_path() )
 			)
 		);
 	}
