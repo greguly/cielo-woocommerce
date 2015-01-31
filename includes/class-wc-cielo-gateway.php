@@ -644,7 +644,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				$return_url = add_query_arg( 'order', $order->id, add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
 			}
 
-			// Order cancelled.
+					// Order cancelled.
 			if ( 9 == $status ) {
 				$message = __( 'Order canceled successfully.', 'cielo-woocommerce' );
 				if ( function_exists( 'wc_add_notice' ) ) {
