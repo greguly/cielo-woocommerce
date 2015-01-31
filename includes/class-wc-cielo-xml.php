@@ -50,6 +50,17 @@ class WC_Cielo_XML extends SimpleXMLElement {
 		$order_data->addChild( 'soft-descriptor', '' );
 	}
 
+	public function add_card_data($card_number,$card_expiry,$card_cvv,$name_on_card){
+		$card_data =  $this->addChild( 'dados-portador' );
+		$card_data->addChild('numero',$card_number);
+		$card_data->addChild('validade',$card_expiry);
+
+		//For this current version all the cards must have cvvs there for it is always set at 1
+		// For more information see page 11 of Manual Desenvovedor de Webservice Cielo v. 2.54
+		$card_data->addChild('indicador',1);
+		$card_data->addChild('codigo-seguranca',$card_cvv);
+		$card_data->addChild('nome-portador',$name_on_card);
+	}
 	/**
 	 * Add payment data.
 	 *

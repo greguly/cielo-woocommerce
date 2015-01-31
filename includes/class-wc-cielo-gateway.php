@@ -170,17 +170,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'desc_tip'    => true,
 				'default'     => __( 'Pay using the secure method of Cielo', 'cielo-woocommerce' )
 			),
-			'store_contract' => array(
-				'title'       => __( 'Store Contract Method', 'cielo-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'Select the store contract method with cielo.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => 'test',
-				'options'     => array(
-					'buypagecielo'       => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
-					'buypageloja' => __( 'BuyPage Loja', 'cielo-woocommerce' )
-				)
-			),
 			'environment' => array(
 				'title'       => __( 'Environment', 'cielo-woocommerce' ),
 				'type'        => 'select',
@@ -205,6 +194,17 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'description' => __( 'Store access key assigned by Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => ''
+			),
+			'store_contract' => array(
+				'title'       => __( 'Store Contract Method', 'cielo-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'Select the store contract method with cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => 'buypagecielo',
+				'options'     => array(
+					'buypagecielo'       => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
+					'buypageloja' => __( 'BuyPage Loja', 'cielo-woocommerce' )
+				)
 			),
 			'methods' => array(
 				'title'       => __( 'Accepted Card Brands', 'cielo-woocommerce' ),
@@ -465,6 +465,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$card_number = isset( $_POST['card_number'] ) ? sanitize_text_field( $_POST['card_number'] ) : false;
 		$card_expiration = isset( $_POST['expiry_date'] ) ? sanitize_text_field( $_POST['expiry_date'] ) : false;
 		$card_cvv = isset( $_POST['cvv'] ) ? sanitize_text_field( $_POST['cvv'] ) : false;
+		$card_buypageloja = false;
 
 		// Validate the card brand.
 		if ( ! in_array( $card, $this->methods ) ) {
@@ -501,6 +502,11 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				$this->add_error( __( 'please type the cvv code for the card', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
+			$card_buypageloja = array(
+				'name_on_card'=>$name_on_card,
+				'card_expiration'=>$card_expiration,
+				'card_cvv'=>$card_cvv,
+				'card_number'=>$card_number);
 		}
 
 		// Validate if debit is available.
@@ -524,7 +530,8 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		}
 
 		if ( $valid ) {
-			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card, $installments );
+
+			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card, $installments,$card_buypageloja);
 
 			// Set the error alert.
 			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {

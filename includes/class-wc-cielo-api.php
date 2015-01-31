@@ -351,7 +351,7 @@ class WC_Cielo_API {
 	 *
 	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
-	public function do_transaction( $order, $id, $card_brand, $installments ) {
+	public function do_transaction( $order, $id, $card_brand, $installments,$card_buypageloja=false ) {
 		$account_data    = $this->get_account_data();
 		$payment_product = '1';
 		$order_total     = $order->order_total;
@@ -384,6 +384,11 @@ class WC_Cielo_API {
 		$xml->add_account_data( $account_data['number'], $account_data['key'] );
 		$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language() );
 		$xml->add_payment_data( $card_brand, $payment_product, $installments );
+		
+		if($card_buypageloja){
+			$xml->add_card_data($card_buypageloja['card_number'],$card_buypageloja['card_expiration'],$card_buypageloja['card_cvv'],$card_buypageloja['name_on_card']);
+		}
+		
 		$xml->add_return_url( $this->get_return_url( $order ) );
 		$xml->add_authorize( $authorization );
 		$xml->add_capture( 'true' );
