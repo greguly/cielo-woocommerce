@@ -13,6 +13,7 @@
  * License: GNU General Public License v2.0
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
+define('SCRIPT_DEBUG',true);
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -31,7 +32,6 @@ class WC_Cielo {
 	 * @var string
 	 */
 	const VERSION = '3.1.1';
-
 	/**
 	 * Instance of this class.
 	 *
