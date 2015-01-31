@@ -36,6 +36,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		// Define user set variables.
 		$this->title                = $this->get_option( 'title' );
 		$this->description          = $this->get_option( 'description' );
+		$this->store_contract		= $this->get_option( 'store_contract' );
 		$this->environment          = $this->get_option( 'environment' );
 		$this->number               = $this->get_option( 'number' );
 		$this->key                  = $this->get_option( 'key' );
@@ -168,6 +169,17 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'description' => __( 'This controls the description which the user sees during checkout.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => __( 'Pay using the secure method of Cielo', 'cielo-woocommerce' )
+			),
+			'store_contract' => array(
+				'title'       => __( 'Store Contract Method', 'cielo-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'Select the store contract method with cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => 'test',
+				'options'     => array(
+					'buypagecielo'       => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
+					'buypageloja' => __( 'BuyPage Loja', 'cielo-woocommerce' )
+				)
 			),
 			'environment' => array(
 				'title'       => __( 'Environment', 'cielo-woocommerce' ),
@@ -340,11 +352,17 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		if ( is_checkout() ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
+
 			if ( 'icons' == $this->design ) {
-				wp_enqueue_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
+				wp_enqueue_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::CobrarERSION );
 				wp_enqueue_script( 'wc-cielo-checkout-icons', plugins_url( 'assets/js/checkout-icons' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
 			} else {
 				wp_enqueue_script( 'wc-cielo-checkout-default', plugins_url( 'assets/js/checkout-default' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+			}
+
+			if('buypageloja' == $this->store_contract){
+				wp_enqueue_style( 'wc-cielo-checkout-buypageloja', plugins_url( 'assets/css/checkout-buypageloja' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
+				wp_enqueue_script( 'wc-cielo-checkout-buypageloja', plugins_url( 'assets/js/checkout-buypageloja' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
 			}
 		}
 	}
@@ -416,6 +434,11 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 		$model = ( 'icons' == $this->design ) ? 'icons' : 'default';
 
+		//checking if it should load the buypage loja form template (overrides the other models
+		if('buypageloja'==$this->store_contract){
+			$model = 'buypageloja';
+		}
+
 		// Makes it possible to create custom templates.
 		$path = apply_filters( 'wc_cielo_form_path', plugin_dir_path( __FILE__ ) . 'views/html-payment-form-' . $model . '.php', $model );
 		if ( file_exists( $path ) ) {
@@ -437,6 +460,12 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$valid        = true;
 		$payment_url  = '';
 
+
+		$name_on_card = isset( $_POST['name_on_card'] ) ? sanitize_text_field( $_POST['name_on_card'] ) : false;
+		$card_number = isset( $_POST['card_number'] ) ? sanitize_text_field( $_POST['card_number'] ) : false;
+		$card_expiration = isset( $_POST['expiry_date'] ) ? sanitize_text_field( $_POST['expiry_date'] ) : false;
+		$card_cvv = isset( $_POST['cvv'] ) ? sanitize_text_field( $_POST['cvv'] ) : false;
+
 		// Validate the card brand.
 		if ( ! in_array( $card, $this->methods ) ) {
 			$this->add_error( __( 'please select a card.', 'cielo-woocommerce' ) );
@@ -447,6 +476,31 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		if ( '' === $installments ) {
 			$this->add_error( __( 'please select a number of installments.', 'cielo-woocommerce' ) );
 			$valid = false;
+		}
+
+		if('buypageloja'==$this->store_contract){
+			//Validate card number was typed for the card
+			if ( !$card_number) {
+				$this->add_error( __( 'please type the card number.', 'cielo-woocommerce' ) );
+				$valid = false;
+			}
+			//Validate name typed for the card
+			if ( !$name_on_card) {
+				$this->add_error( __( 'please type the name of the card holder.', 'cielo-woocommerce' ) );
+				$valid = false;
+			}
+
+			//Validate the expiration date
+			if ( !$card_expiration) {
+				$this->add_error( __( 'please type the card expiry date.', 'cielo-woocommerce' ) );
+				$valid = false;
+			}
+
+			//Validate the cvv for the card 
+			if ( !$card_cvv) {
+				$this->add_error( __( 'please type the cvv code for the card', 'cielo-woocommerce' ) );
+				$valid = false;
+			}
 		}
 
 		// Validate if debit is available.
