@@ -332,6 +332,13 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Admin page.
+	 */
+	public function admin_options() {
+		include 'views/html-admin-page.php';
+	}
+
+	/**
 	 * Checkout scripts.
 	 *
 	 * @return void
