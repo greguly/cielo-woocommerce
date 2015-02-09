@@ -160,7 +160,7 @@ class WC_Cielo_API {
 	 */
 	public function curl_settings( $handle, $r, $url ) {
 		if ( isset( $r['sslcertificates'] ) && $this->get_certificate() === $r['sslcertificates'] && $this->get_api_url() === $url ) {
-			curl_setopt( $handle, CURLOPT_SSLVERSION, 3 );
+			curl_setopt( $handle, CURLOPT_SSLVERSION, 4 );
 		}
 	}
 
