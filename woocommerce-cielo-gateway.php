@@ -5,7 +5,7 @@
  * Description: Adiciona a opção de pagamento pela Cielo ao WooCommerce
  * Author: Gabriel Reguly, claudiosanches
  * Author URI: http://omniwp.com.br
- * Version: 3.1.1
+ * Version: 3.1.2
  * License: GPLv2 or later
  * Text Domain: cielo-woocommerce
  * Domain Path: /languages/
@@ -30,7 +30,7 @@ class WC_Cielo {
 	 *
 	 * @var string
 	 */
-	const VERSION = '3.1.1';
+	const VERSION = '3.1.2';
 
 	/**
 	 * Instance of this class.
