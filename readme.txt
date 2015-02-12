@@ -52,7 +52,7 @@ Toda a integração foi desenvolvida a partir da última versão do [kit de inte
 
 = Compatibilidade =
 
-Compatível com as versões 2.0.x e 2.1.x do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
+Compatível desde a versão 2.0.x até 2.3.x do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
 
 = Instalação =
 
