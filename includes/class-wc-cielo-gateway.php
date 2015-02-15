@@ -90,7 +90,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 * @return void
 	 */
 	protected function admin_notices() {
-		if ( is_admin() ) {
+		if ( is_admin() && 'yes' == $this->get_option( 'enabled' ) ) {
 			// Checks if api_key is not empty.
 			if ( 'test' != $this->environment && ( empty( $this->number ) || empty( $this->key ) ) ) {
 				add_action( 'admin_notices', array( $this, 'plugin_not_configured_message' ) );
