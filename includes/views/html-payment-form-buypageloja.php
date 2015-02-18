@@ -9,16 +9,16 @@ if ( ! defined( 'ABSPATH' ) ) {
          <ul>
             <li class="cielo-card_number">
                 <label for="card_number"><?php _e('Card number','cielo-woocommerce' );?> <span class="required">*</span></label>
-                <input type="text" name="card_number" id="card_number" placeholder="1234 5678 9012 3456">
+                <input type="text" name="card_number" id="card_number" placeholder="1234 5678 9012 3456" VALUE="4012001037141112">
             </li>
             <li class="cielo-expiry_date">
                 <label for="expiry_date"><?php _e('Expiry date','cielo-woocommerce' );?> <span class="required">*</span></label>
-                <input type="text" name="expiry_date" id="expiry_date" maxlength="5" placeholder="mm/yy">
+                <input type="text" name="expiry_date" id="expiry_date" maxlength="5" placeholder="mm/yy" value="05/18">
             </li>
 
             <li class="cielo-cvv">
                 <label for="cvv"><?php _e('CVV','cielo-woocommerce' );?> <span class="required">*</span></label>
-                <input type="text" name="cvv" id="cvv" maxlength="3" placeholder="123">
+                <input type="text" name="cvv" id="cvv" maxlength="3" placeholder="123" value="123">
             </li>
 
             <!--<li class="vertical">
@@ -53,7 +53,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
             <li>
                 <label for="name_on_card"><?php _e('Name on card','cielo-woocommerce' );?> <span class="required">*</span></label>
-                <input type="text" name="name_on_card" id="name_on_card" placeholder="<?php _e('Please type here the name on the card','cielo-woocommerce' );?>">
+                <input type="text" name="name_on_card" id="name_on_card" value="PAULO R D VIEIRA" placeholder="<?php _e('Please type here the name on the card','cielo-woocommerce' );?>">
             </li>
         </ul>
 	</div>

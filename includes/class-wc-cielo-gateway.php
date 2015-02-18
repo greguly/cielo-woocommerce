@@ -195,15 +195,22 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'desc_tip'    => true,
 				'default'     => ''
 			),
+			'soft_descriptor' => array(
+				'title'       => __( 'Credit Card Invoice Description', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Type the description that will be shown on the credit card invoice (max. size 22 characters)' ),
+				'desc_tip'    => true,
+				'default'     => 'NAMEOFTHESTORE'
+			),
 			'store_contract' => array(
-				'title'       => __( 'Store Contract Method', 'cielo-woocommerce' ),
+				'title'       => __( 'Store Solution', 'cielo-woocommerce' ),
 				'type'        => 'select',
 				'description' => __( 'Select the store contract method with cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => 'buypagecielo',
 				'options'     => array(
-					'buypagecielo'       => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
-					'buypageloja' => __( 'BuyPage Loja', 'cielo-woocommerce' )
+					'buypagecielo'       => __( 'Cielo Checkout', 'cielo-woocommerce' ),
+					'buypageloja' => __( 'Webservice Integrada', 'cielo-woocommerce' )
 				)
 			),
 			'methods' => array(
@@ -532,7 +539,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		if ( $valid ) {
 
 			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card, $installments,$card_buypageloja);
-
+			
 			// Set the error alert.
 			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
 				$this->add_error( (string) $response->mensagem );
