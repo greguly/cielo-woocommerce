@@ -11,6 +11,13 @@
   margin: 0 auto;
   position: relative;
 }
+.cc-brand {
+display: inline-block !important;
+width: auto !important;
+border: none !important;
+margin:0px !important;
+
+}
 .cielo-buypageloja .numbers {
   -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);

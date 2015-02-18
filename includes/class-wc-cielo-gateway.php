@@ -198,7 +198,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			'soft_descriptor' => array(
 				'title'       => __( 'Credit Card Invoice Description', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Type the description that will be shown on the credit card invoice (max. size 22 characters)' ),
+				'description' => __( 'Type the description that will be shown on the credit card invoice (max. size 13 characters)' ),
 				'desc_tip'    => true,
 				'default'     => 'NAMEOFTHESTORE'
 			),
@@ -361,15 +361,18 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 
 			if ( 'icons' == $this->design ) {
-				wp_enqueue_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::CobrarERSION );
+				wp_enqueue_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
 				wp_enqueue_script( 'wc-cielo-checkout-icons', plugins_url( 'assets/js/checkout-icons' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
 			} else {
 				wp_enqueue_script( 'wc-cielo-checkout-default', plugins_url( 'assets/js/checkout-default' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
 			}
 
 			if('buypageloja' == $this->store_contract){
+
 				wp_enqueue_style( 'wc-cielo-checkout-buypageloja', plugins_url( 'assets/css/checkout-buypageloja' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
 				wp_enqueue_script( 'wc-cielo-checkout-buypageloja', plugins_url( 'assets/js/checkout-buypageloja' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+					wp_enqueue_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
+
 			}
 		}
 	}

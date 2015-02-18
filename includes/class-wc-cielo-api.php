@@ -396,8 +396,9 @@ class WC_Cielo_API {
 		if($card_buypageloja){
 			$expiration_date = $card_buypageloja['card_expiration'];
 			$expiration_date = split('/',$expiration_date);
-			$expiration_date = '20'.$expiration_date[1].$expiration_date[0];
-			$xml->add_card_data($card_buypageloja['card_number'],$expiration_date,$card_buypageloja['card_cvv'],$card_buypageloja['name_on_card']);
+			$expiration_date = $expiration_date[1].$expiration_date[0];
+			$card_number = str_replace(' ','',$card_buypageloja['card_number']);
+			$xml->add_card_data($card_number,$expiration_date,$card_buypageloja['card_cvv'],$card_buypageloja['name_on_card']);
 		}
 
 		$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language(),'',$this->gateway->soft_descriptor );
