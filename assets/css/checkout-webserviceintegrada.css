@@ -119,43 +119,4 @@ margin:0px !important;
 }
 .cielo-webserviceintegrada input:focus {
   outline: 1px solid #3388dd;
-}
-.cielo-webserviceintegrada #card_number {
-  background-image: url(../images/images.png), url(../images/images.png);
-  background-position: 2px -121px, 260px -61px;
-  background-size: 120px 361px, 120px 361px;
-  background-repeat: no-repeat;
-  padding-left: 54px;
-  max-width: 225px;
-  float:left;
-}
-.cielo-webserviceintegrada #card_number.visa {
-  background-position: 2px -163px, 260px -61px;
-}
-.cielo-webserviceintegrada #card_number.visa_electron {
-  background-position: 2px -205px, 260px -61px;
-}
-.cielo-webserviceintegrada #card_number.mastercard {
-  background-position: 2px -247px, 260px -61px;
-}
-.cielo-webserviceintegrada #card_number.maestro {
-  background-position: 2px -289px, 260px -61px;
-}
-.cielo-webserviceintegrada #card_number.discover {
-  background-position: 2px -331px, 260px -61px;
-}
-.cielo-webserviceintegrada #card_number.valid.visa {
-  background-position: 2px -163px, 260px -87px;
-}
-.cielo-webserviceintegrada #card_number.valid.visa_electron {
-  background-position: 2px -205px, 260px -87px;
-}
-.cielo-webserviceintegrada #card_number.valid.mastercard {
-  background-position: 2px -247px, 260px -87px;
-}
-.cielo-webserviceintegrada #card_number.valid.maestro {
-  background-position: 2px -289px, 260px -87px;
-}
-.cielo-webserviceintegrada #card_number.valid.discover {
-  background-position: 2px -331px, 260px -87px;
-}
+} 

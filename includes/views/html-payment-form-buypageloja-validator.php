@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <fieldset id="cielo-payment-form">
-	<div class="cielo-buypageloja">
+	<div class="cielo-webserviceintegrada">
          <ul>
             <li class="cielo-card_number">
                 <label for="card_number"><?php _e('Card number','cielo-woocommerce' );?> <span class="required">*</span></label>

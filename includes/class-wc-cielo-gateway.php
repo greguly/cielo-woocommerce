@@ -210,7 +210,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'default'     => 'buypagecielo',
 				'options'     => array(
 					'buypagecielo'       => __( 'Cielo Checkout', 'cielo-woocommerce' ),
-					'buypageloja' => __( 'Webservice Integrada', 'cielo-woocommerce' )
+					'webserviceintegrada' => __( 'Webservice Integrada', 'cielo-woocommerce' )
 				)
 			),
 			'methods' => array(
@@ -367,10 +367,10 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				wp_enqueue_script( 'wc-cielo-checkout-default', plugins_url( 'assets/js/checkout-default' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
 			}
 
-			if('buypageloja' == $this->store_contract){
+			if('webserviceintegrada' == $this->store_contract){
 
-				wp_enqueue_style( 'wc-cielo-checkout-buypageloja', plugins_url( 'assets/css/checkout-buypageloja' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
-				wp_enqueue_script( 'wc-cielo-checkout-buypageloja', plugins_url( 'assets/js/checkout-buypageloja' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+				wp_enqueue_style( 'wc-cielo-checkout-webserviceintegrada', plugins_url( 'assets/css/checkout-webserviceintegrada' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
+				wp_enqueue_script( 'wc-cielo-checkout-webserviceintegrada', plugins_url( 'assets/js/checkout-webserviceintegrada' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
 					wp_enqueue_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
 
 			}
@@ -445,8 +445,8 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$model = ( 'icons' == $this->design ) ? 'icons' : 'default';
 
 		//checking if it should load the buypage loja form template (overrides the other models
-		if('buypageloja'==$this->store_contract){
-			$model = 'buypageloja';
+		if('webserviceintegrada'==$this->store_contract){
+			$model = 'webserviceintegrada';
 		}
 
 		// Makes it possible to create custom templates.
@@ -475,7 +475,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$card_number = isset( $_POST['card_number'] ) ? sanitize_text_field( $_POST['card_number'] ) : false;
 		$card_expiration = isset( $_POST['expiry_date'] ) ? sanitize_text_field( $_POST['expiry_date'] ) : false;
 		$card_cvv = isset( $_POST['cvv'] ) ? sanitize_text_field( $_POST['cvv'] ) : false;
-		$card_buypageloja = false;
+		$card_webserviceintegrada = false;
 
 		// Validate the card brand.
 		if ( ! in_array( $card, $this->methods ) ) {
@@ -489,7 +489,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			$valid = false;
 		}
 
-		if('buypageloja'==$this->store_contract){
+		if('webserviceintegrada'==$this->store_contract){
 			//Validate card number was typed for the card
 			if ( !$card_number) {
 				$this->add_error( __( 'please type the card number.', 'cielo-woocommerce' ) );
@@ -512,7 +512,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				$this->add_error( __( 'please type the cvv code for the card', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
-			$card_buypageloja = array(
+			$card_webserviceintegrada = array(
 				'name_on_card'=>$name_on_card,
 				'card_expiration'=>$card_expiration,
 				'card_cvv'=>$card_cvv,
@@ -541,7 +541,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 		if ( $valid ) {
 
-			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card, $installments,$card_buypageloja);
+			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card, $installments,$card_webserviceintegrada);
 			
 			// Set the error alert.
 			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
