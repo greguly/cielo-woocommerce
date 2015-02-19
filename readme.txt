@@ -3,8 +3,8 @@ Contributors: Gabriel Reguly, claudiosanches
 Donate link: http://claudiosmweb.com/doacoes/
 Tags: WooCommerce, Payment Gateway, Cielo
 Requires at least: 3.5
-Tested up to: 4.0
-Stable tag: 3.1.1
+Tested up to: 4.1
+Stable tag: 3.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,7 +52,7 @@ Toda a integração foi desenvolvida a partir da última versão do [kit de inte
 
 = Compatibilidade =
 
-Compatível com as versões 2.0.x e 2.1.x do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
+Compatível desde a versão 2.0.x até 2.3.x do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
 
 = Instalação =
 
@@ -247,6 +247,10 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 
 == Changelog ==
 
+= 3.1.2 - 08/02/2015 =
+
+* Correção do SSL da Cielo.
+
 = 3.1.1 - 07/09/2014 =
 
 * Melhorada a integração com o `_transaction_id` para o WooCommerce 2.2.
@@ -331,11 +335,9 @@ Ao criar um formulário customizado pode ser boa ideia remover os scripts adicio
 
 == Upgrade Notice ==
 
-= 3.1.1 =
+= 3.1.2 =
 
-* Adicionado suporte para reembolsos parciais do WooCommerce 2.2.
-* Melhorada a compatibilidade com o WordPress 4.0.
-* Melhorada a integração com o `_transaction_id` para o WooCommerce 2.2.
+* Correção do SSL da Cielo.
 
 == License ==
 
