@@ -31,12 +31,9 @@ class WC_Cielo {
 	 *
 	 * @var string
 	 */
-<<<<<<< HEAD
-	const VERSION = '3.1.1';
-=======
-	const VERSION = '3.1.2';
 
->>>>>>> FETCH_HEAD
+	const VERSION = '3.1.2';
+ 
 	/**
 	 * Instance of this class.
 	 *
