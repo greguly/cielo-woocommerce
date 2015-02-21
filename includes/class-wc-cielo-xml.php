@@ -37,7 +37,7 @@ class WC_Cielo_XML extends SimpleXMLElement {
 	 * @param string   $language    Data language.
 	 * @param string   $description Description.
 	 */
-	public function add_order_data( $order, $total, $currency, $language, $description = '' ) {
+	public function add_order_data( $order, $total, $currency, $language, $description = '',$soft_descriptor='' ) {
 		$order_data = $this->addChild( 'dados-pedido' );
 		$order_data->addChild( 'numero', $order->id );
 		$order_data->addChild( 'valor', number_format( $total, 2, '', '' ) );
@@ -47,9 +47,24 @@ class WC_Cielo_XML extends SimpleXMLElement {
 			$order_data->addChild( 'descricao', $description );
 		}
 		$order_data->addChild( 'idioma', $language );
-		$order_data->addChild( 'soft-descriptor', '' );
+
+		if ( '' != $soft_descriptor) {
+			$order_data->addChild( 'soft-descriptor', $soft_descriptor);	
+		}
+		
 	}
 
+	public function add_card_data($card_number,$card_expiry,$card_cvv,$name_on_card){
+		$card_data =  $this->addChild( 'dados-portador' );
+		$card_data->addChild('numero',$card_number);
+		$card_data->addChild('validade',$card_expiry);
+
+		//For this current version all the cards must have cvvs there for it is always set at 1
+		// For more information see page 11 of Manual Desenvovedor de Webservice Cielo v. 2.54
+		$card_data->addChild('indicador',1);
+		$card_data->addChild('codigo-seguranca',$card_cvv);
+		$card_data->addChild('nome-portador',$name_on_card);
+	}
 	/**
 	 * Add payment data.
 	 *
