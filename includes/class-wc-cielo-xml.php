@@ -31,13 +31,14 @@ class WC_Cielo_XML extends SimpleXMLElement {
 	/**
 	 * Add order data.
 	 *
-	 * @param WC_Order $order       WooCommerce order data.
-	 * @param float    $total       Order total.
-	 * @param int      $currency    Order currency.
-	 * @param string   $language    Data language.
-	 * @param string   $description Description.
+	 * @param WC_Order $order           WooCommerce order data.
+	 * @param float    $total           Order total.
+	 * @param int      $currency        Order currency.
+	 * @param string   $language        Data language.
+	 * @param string   $description     Description.
+	 * @param string   $soft_descriptor Soft descriptor.
 	 */
-	public function add_order_data( $order, $total, $currency, $language, $description = '',$soft_descriptor='' ) {
+	public function add_order_data( $order, $total, $currency, $language, $description = '', $soft_descriptor = '' ) {
 		$order_data = $this->addChild( 'dados-pedido' );
 		$order_data->addChild( 'numero', $order->id );
 		$order_data->addChild( 'valor', number_format( $total, 2, '', '' ) );
@@ -48,10 +49,9 @@ class WC_Cielo_XML extends SimpleXMLElement {
 		}
 		$order_data->addChild( 'idioma', $language );
 
-		if ( '' != $soft_descriptor) {
-			$order_data->addChild( 'soft-descriptor', $soft_descriptor);	
+		if ( '' != $soft_descriptor ) {
+			$order_data->addChild( 'soft-descriptor', trim( substr( $soft_descriptor, 0, 13 ) ) );
 		}
-		
 	}
 
 	public function add_card_data($card_number,$card_expiry,$card_cvv,$name_on_card){

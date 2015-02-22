@@ -198,9 +198,9 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			'soft_descriptor' => array(
 				'title'       => __( 'Credit Card Invoice Description', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Type the description that will be shown on the credit card invoice (max. size 13 characters)' ),
+				'description' => __( 'Type the description that will be shown on the credit card invoice (max. size 13 characters)', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => 'NAMEOFTHESTORE'
+				'default'     => get_bloginfo( 'name' )
 			),
 			'store_contract' => array(
 				'title'       => __( 'Store Solution', 'cielo-woocommerce' ),
@@ -515,7 +515,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				$valid = false;
 			}
 
-			//Validate the cvv for the card 
+			//Validate the cvv for the card
 			if ( !$card_cvv) {
 				$this->add_error( __( 'please type the cvv code for the card', 'cielo-woocommerce' ) );
 				$valid = false;
@@ -550,7 +550,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		if ( $valid ) {
 
 			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card, $installments,$card_webserviceintegrada);
-			
+
 			// Set the error alert.
 			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
 				$this->add_error( (string) $response->mensagem );

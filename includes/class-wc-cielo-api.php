@@ -160,11 +160,8 @@ class WC_Cielo_API {
 	 */
 	public function curl_settings( $handle, $r, $url ) {
 		if ( isset( $r['sslcertificates'] ) && $this->get_certificate() === $r['sslcertificates'] && $this->get_api_url() === $url ) {
- 
-				curl_setopt( $handle, CURLOPT_SSLVERSION, 4 ); //forcar o SSL3
- 
+			curl_setopt( $handle, CURLOPT_SSLVERSION, 4 );
 		}
-
 	}
 
 	/**
@@ -403,9 +400,10 @@ class WC_Cielo_API {
 			$xml->add_card_data($card_number,$expiration_date,$card_webserviceintegrada['card_cvv'],$card_webserviceintegrada['name_on_card']);
 		}
 
-		$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language(),'',$this->gateway->soft_descriptor );
+		$soft_descriptor = isset( $this->gateway->soft_descriptor ) ? $this->gateway->soft_descriptor : '';
+		$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language(), '', $soft_descriptor );
 		$xml->add_payment_data( $card_brand, $payment_product, $installments );
-		
+
 		$xml->add_return_url( $this->get_return_url( $order ) );//'http://lojadamais.com.br');//$this->get_return_url( $order ) );
 		$xml->add_authorize( $authorization );
 		$xml->add_capture( 'true' );
