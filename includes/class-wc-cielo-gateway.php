@@ -622,12 +622,20 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 			// Set the error alert.
 			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+				if ( 'yes' == $this->debug ) {
+					$this->log->add( $this->id, 'Cielo payment error: ' . print_r( $response->mensagem, true ) );
+				}
+
 				$this->add_error( (string) $response->mensagem );
 			}
 
 			// Update the order status.
-			$status = ( isset( $response->status ) && ! empty( $response->status ) ) ? (string) $response->status : -1;
+			$status = ( isset( $response->status ) && ! empty( $response->status ) ) ? intval( $response->status ) : -1;
 			$order_note = "\n";
+
+			if ( 'yes' == $this->debug ) {
+				$this->log->add( $this->id, 'Cielo payment status: ' . $status );
+			}
 
 			// For backward compatibility!
 			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1.12', '<=' ) ) {
