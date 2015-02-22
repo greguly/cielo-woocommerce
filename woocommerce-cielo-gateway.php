@@ -79,8 +79,6 @@ class WC_Cielo {
 
 	/**
 	 * Load the plugin text domain for translation.
-	 *
-	 * @return void
 	 */
 	public function load_plugin_textdomain() {
 		$locale = apply_filters( 'plugin_locale', get_locale(), 'cielo-woocommerce' );
@@ -91,8 +89,6 @@ class WC_Cielo {
 
 	/**
 	 * Includes.
-	 *
-	 * @return void
 	 */
 	private function includes() {
 		include_once( 'includes/class-wc-cielo-xml.php' );
@@ -117,8 +113,6 @@ class WC_Cielo {
 	 * Cancel order payment.
 	 *
 	 * @param  int $order_id Order ID.
-	 *
-	 * @return void
 	 */
 	public function cancel_payment( $order_id ) {
 		$order    = new WC_Order( $order_id );
@@ -151,8 +145,6 @@ class WC_Cielo {
 
 	/**
 	 * Upgrade plugin options.
-	 *
-	 * @return void
 	 */
 	private function upgrade() {
 		if ( is_admin() ) {

@@ -15,8 +15,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 	/**
 	 * Constructor for the gateway.
-	 *
-	 * @return void
 	 */
 	public function __construct() {
 		global $woocommerce;
@@ -87,8 +85,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 	/**
 	 * Displays notifications when the admin has something wrong with the configuration.
-	 *
-	 * @return void
 	 */
 	protected function admin_notices() {
 		if ( is_admin() && 'yes' == $this->get_option( 'enabled' ) ) {
@@ -352,8 +348,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 	/**
 	 * Checkout scripts.
-	 *
-	 * @return void
 	 */
 	public function checkout_scripts() {
 		if ( is_checkout() ) {
@@ -383,8 +377,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 * Admin scripts.
 	 *
 	 * @param  string $hook Page slug.
-	 *
-	 * @return void
 	 */
 	public function admin_scripts( $hook ) {
 		if ( in_array( $hook, array( 'woocommerce_page_wc-settings', 'woocommerce_page_woocommerce_settings' ) ) && ( isset( $_GET['section'] ) && in_array( $_GET['section'], array( 'wc_cielo_gateway', 'WC_Cielo_Gateway' ) ) ) ) {
@@ -398,8 +390,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 * Add error messages in checkout.
 	 *
 	 * @param  string $message Error message.
-	 *
-	 * @return void
 	 */
 	protected function add_error( $message ) {
 		global $woocommerce;
@@ -585,8 +575,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 	/**
 	 * Check return.
-	 *
-	 * @return void
 	 */
 	public function check_return() {
 		@ob_clean();
@@ -609,8 +597,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 * Return handler.
 	 *
 	 * @param  WC_Order $order Order data.
-	 *
-	 * @return void
 	 */
 	public function return_handler( $order ) {
 		global $woocommerce;
@@ -705,8 +691,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 * @param  WC_Order $Order  Order data.
 	 * @param  int      $status Status ID.
 	 * @param  string   $note   Custom order note.
-	 *
-	 * @return void
 	 */
 	public function process_order_status( $order, $status, $note = '' ) {
 		$status_note = __( 'Cielo', 'cielo-woocommerce' ) . ': ' . WC_Cielo_API::get_status_name( $status );

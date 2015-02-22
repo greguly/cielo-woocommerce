@@ -184,8 +184,6 @@ class WC_Cielo_API {
 	 * @param  resource $handle The cURL handle returned by curl_init().
 	 * @param  array    $r      The HTTP request arguments.
 	 * @param  string   $url    The destination URL.
-	 *
-	 * @return void
 	 */
 	public function curl_settings( $handle, $r, $url ) {
 		if ( isset( $r['sslcertificates'] ) && $this->get_certificate() === $r['sslcertificates'] && $this->get_api_url() === $url ) {
