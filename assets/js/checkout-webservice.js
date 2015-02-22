@@ -7,6 +7,37 @@
 
 		var cielo_submit = false;
 
+		// Add jQuery.Payment support for Elo and Aura.
+		if ( $.payment.cards ) {
+			var cards = [];
+
+			$.each($.payment.cards, function(index, val) {
+				cards.push(val.type);
+			});
+
+			if ( -1 === $.inArray( 'elo', cards ) ) {
+				$.payment.cards.push({
+					type: 'elo',
+					pattern: /^(636[2-3])/,
+					length: [16],
+					cvcLength: [3],
+					luhn: true,
+					format: /(\d{1,4})/g
+				});
+			}
+
+			if ( -1 === $.inArray( 'aura', cards ) ) {
+				$.payment.cards.unshift({
+					type: 'aura',
+					pattern: /^5078/,
+					length: [19],
+					cvcLength: [3],
+					luhn: true,
+					format: /(\d{1,4})/g
+				});
+			}
+		}
+
 		$( 'form.checkout' ).on( 'checkout_place_order_cielo', function() {
 			return formHandler( this );
 		});
@@ -44,11 +75,18 @@
 				card_number = $( '#cielo-card-number', $form ).val(),
 				card_brand  = $.payment.cardType( card_number );
 
-			// Fixed the diners name.
+			// Fixed some brand names for Cielo.
 			if ( 'dinersclub' === card_brand ) {
 				card_brand = 'diners';
 			}
+			if ( 'visaelectron' === card_brand ) {
+				card_brand = 'visa';
+			}
+			if ( 'maestro' === card_brand ) {
+				card_brand = 'mastercard';
+			}
 
+			// Check the card brand is available.
 			if ( -1 !== $.inArray( card_brand, wc_cielo_checkout_webservice_params.available_brands ) ) {
 				// Remove any brand input.
 				$( '.cielo-card-brand', $form ).remove();

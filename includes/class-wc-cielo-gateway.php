@@ -354,6 +354,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 			if ( 'webservice' == $this->store_contract ) {
+				wp_enqueue_style( 'wc-cielo-checkout-webservice', plugins_url( 'assets/css/checkout-webservice' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
 				wp_enqueue_script( 'wc-cielo-checkout-webservice', plugins_url( 'assets/js/checkout-webservice' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery', 'wc-credit-card-form' ), WC_Cielo::VERSION, true );
 				wp_localize_script(
 					'wc-cielo-checkout-webservice',
