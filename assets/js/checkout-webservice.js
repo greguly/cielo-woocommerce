@@ -19,10 +19,10 @@
 				$.payment.cards.push({
 					type: 'elo',
 					pattern: /^(636[2-3])/,
+					format: /(\d{1,4})/g,
 					length: [16],
 					cvcLength: [3],
-					luhn: true,
-					format: /(\d{1,4})/g
+					luhn: true
 				});
 			}
 
@@ -30,10 +30,10 @@
 				$.payment.cards.unshift({
 					type: 'aura',
 					pattern: /^5078/,
+					format: /(\d{1,6})(\d{1,2})?(\d{1,11})?/,
 					length: [19],
 					cvcLength: [3],
-					luhn: true,
-					format: /(\d{1,4})/g
+					luhn: true
 				});
 			}
 		}
