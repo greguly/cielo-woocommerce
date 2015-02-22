@@ -354,13 +354,13 @@ msgstr "Grava eventos da Cielo, como por exemplo solicitações a API, dentro de
 
 #: includes/class-wc-cielo-gateway.php:449
 #@ cielo-woocommerce
-msgid "please select a card."
-msgstr "por favor, selecione um cartão."
+msgid "Please select a card."
+msgstr "Por favor, selecione um cartão."
 
 #: includes/class-wc-cielo-gateway.php:455
 #@ cielo-woocommerce
-msgid "please select a number of installments."
-msgstr "por favor, selecione o número de parcelas."
+msgid "Please select a number of installments."
+msgstr "Por favor, selecione o número de parcelas."
 
 #: includes/class-wc-cielo-gateway.php:461
 #, php-format
@@ -370,8 +370,8 @@ msgstr "%s não aceita pagamentos com a modalidade débito."
 
 #: includes/class-wc-cielo-gateway.php:474
 #@ cielo-woocommerce
-msgid "invalid number of installments!"
-msgstr "o número de parcelas é inválido!"
+msgid "Invalid number of installments!"
+msgstr "O número de parcelas é inválido!"
 
 #: includes/class-wc-cielo-gateway.php:534
 #@ cielo-woocommerce
@@ -623,8 +623,8 @@ msgstr "Configurações"
 #: includes/views/html-admin-page.php:17
 #, php-format
 #@ cielo-woocommerce
-msgid "Help us to implement the Cielo Checkout and Webservice Solution. We count on your help in the form of a %s."
-msgstr "Ajude-nos a implementar o Checkout Cielo e a Solução Webservice. Contamos com a sua ajuda em forma de uma %s."
+msgid "Help us to implement the Cielo Checkout. We count on your help in the form of a %s."
+msgstr "Ajude-nos a implementar o Checkout Cielo. Contamos com a sua ajuda em forma de uma %s."
 
 #: includes/views/html-admin-page.php:17
 #@ cielo-woocommerce
