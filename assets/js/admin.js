@@ -5,67 +5,69 @@
 
 		/**
 		 * Switch the options based on environment.
-		 *
-		 * @param {string} type
 		 */
-		function switchEnvironment( type ) {
-			var fields = $( '#mainform .form-table:eq(0) tr:eq(4), #mainform .form-table:eq(0) tr:eq(5)' );
+		$( '#woocommerce_cielo_environment' ).on( 'change', function() {
+			var number = $( '#woocommerce_cielo_number' ).closest( 'tr' ),
+				key = $( '#woocommerce_cielo_key' ).closest( 'tr' );
 
-			if ( 'test' === type ) {
-				fields.hide();
+			if ( 'test' === $( this ).val() ) {
+				number.hide();
+				key.hide();
 			} else {
-				fields.show();
+				number.show();
+				key.show();
 			}
-		}
+		}).change();
 
-		switchEnvironment( $( '#woocommerce_cielo_environment' ).val() );
+		/**
+		 * Switch the options based on the store contract.
+		 */
+		$( '#woocommerce_cielo_store_contract' ).on( 'change', function() {
+			var design = $( '#mainform h3:eq(1), #mainform .form-table:eq(1)' );
 
-		$( '#woocommerce_cielo_environment' ).on( 'change', function () {
-			switchEnvironment( $( this ).val() );
-		});
+			if ( 'webservice' === $( this ).val() ) {
+				design.hide();
+			} else {
+				design.show();
+			}
+		}).change();
 
 		/**
 		 * Switch the options based on the selected methods.
-		 *
-		 * @param {array} methods
 		 */
-		function switchMethods( methods ) {
-			var fields = $( '#mainform .form-table:eq(0) tr:eq(7), #mainform .form-table:eq(0) tr:eq(8)' );
+		$( '#woocommerce_cielo_methods' ).on( 'change', function() {
+			var methods = $( this ).val(),
+				debit_methods = $( '#woocommerce_cielo_debit_methods' ).closest( 'tr' ),
+				authorization = $( '#woocommerce_cielo_authorization' ).closest( 'tr' ),
+				debit_discount = $( '#woocommerce_cielo_debit_discount' ).closest( 'tr' );
 
 			if ( -1 < $.inArray( 'visa', methods ) || -1 < $.inArray( 'mastercard', methods ) ) {
-				fields.show();
+				debit_methods.show();
+				authorization.show();
+				debit_discount.show();
 			} else {
-				fields.hide();
+				debit_methods.hide();
+				authorization.hide();
+				debit_discount.hide();
 			}
-		}
 
-		switchMethods( $( '#woocommerce_cielo_methods' ).val() );
-
-		$( '#woocommerce_cielo_methods' ).on( 'change', function () {
-			switchMethods( $( this ).val() );
-		});
+			$( '#woocommerce_cielo_debit_methods' ).change();
+		}).change();
 
 		/**
 		 * Switch the options based on the selected debit methods.
-		 *
-		 * @param {array} debit_methods
 		 */
-		function switchDebitMethods( debit_methods ) {
-			var fields  = $( '#mainform .form-table:eq(0) tr:eq(11)' ),
+		$( '#woocommerce_cielo_debit_methods' ).on( 'change', function() {
+			var debit_methods = $( this ).val(),
+				debit_discount = $( '#woocommerce_cielo_debit_discount' ).closest( 'tr' ),
 				methods = $( '#woocommerce_cielo_methods' ).val();
 
 			if ( 'none' !== debit_methods && ( -1 < $.inArray( 'visa', methods ) || -1 < $.inArray( 'mastercard', methods ) ) ) {
-				fields.show();
+				debit_discount.show();
 			} else {
-				fields.hide();
+				debit_discount.hide();
 			}
-		}
-
-		switchDebitMethods( $( '#woocommerce_cielo_debit_methods' ).val() );
-
-		$( '#woocommerce_cielo_debit_methods' ).on( 'change', function () {
-			switchDebitMethods( $( this ).val() );
-		});
+		}).change();
 	});
 
 }( jQuery ));

@@ -36,7 +36,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		// Define user set variables.
 		$this->title                = $this->get_option( 'title' );
 		$this->description          = $this->get_option( 'description' );
-		$this->store_contract		= $this->get_option( 'store_contract' );
+		$this->store_contract		= $this->get_option( 'store_contract', 'buypage_cielo' );
 		$this->environment          = $this->get_option( 'environment' );
 		$this->number               = $this->get_option( 'number' );
 		$this->key                  = $this->get_option( 'key' );
@@ -170,6 +170,17 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'desc_tip'    => true,
 				'default'     => __( 'Pay using the secure method of Cielo', 'cielo-woocommerce' )
 			),
+			'store_contract' => array(
+				'title'       => __( 'Store Solution', 'cielo-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'Select the store contract method with cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => 'buypage_cielo',
+				'options'     => array(
+					'buypage_cielo' => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
+					'webservice'   => __( 'Webservice Solution', 'cielo-woocommerce' )
+				)
+			),
 			'environment' => array(
 				'title'       => __( 'Environment', 'cielo-woocommerce' ),
 				'type'        => 'select',
@@ -194,24 +205,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'description' => __( 'Store access key assigned by Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => ''
-			),
-			'soft_descriptor' => array(
-				'title'       => __( 'Credit Card Invoice Description', 'cielo-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'Type the description that will be shown on the credit card invoice (max. size 13 characters)', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => get_bloginfo( 'name' )
-			),
-			'store_contract' => array(
-				'title'       => __( 'Store Solution', 'cielo-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'Select the store contract method with cielo.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => 'buypagecielo',
-				'options'     => array(
-					'buypagecielo' => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
-					'webservice'   => __( 'Webservice Solution', 'cielo-woocommerce' )
-				)
 			),
 			'methods' => array(
 				'title'       => __( 'Accepted Card Brands', 'cielo-woocommerce' ),
@@ -668,7 +661,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				$return_url = add_query_arg( 'order', $order->id, add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
 			}
 
-					// Order cancelled.
+			// Order cancelled.
 			if ( 9 == $status ) {
 				$message = __( 'Order canceled successfully.', 'cielo-woocommerce' );
 				if ( function_exists( 'wc_add_notice' ) ) {

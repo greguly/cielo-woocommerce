@@ -425,8 +425,7 @@ class WC_Cielo_API {
 			$xml->add_card_data( $credit_card_data['card_number'], $credit_card_data['card_expiration'], $credit_card_data['card_cvv'], $credit_card_data['name_on_card'] );
 		}
 
-		$soft_descriptor = isset( $this->gateway->soft_descriptor ) ? $this->gateway->soft_descriptor : '';
-		$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language(), '', $soft_descriptor );
+		$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language() );
 		$xml->add_payment_data( $card_brand, $payment_product, $installments );
 
 		$xml->add_return_url( self::get_return_url( $order ) );
