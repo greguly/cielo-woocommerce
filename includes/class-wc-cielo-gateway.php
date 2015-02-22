@@ -209,9 +209,8 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'desc_tip'    => true,
 				'default'     => 'buypagecielo',
 				'options'     => array(
-					'buypagecielo'       => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
-					'cielocheckout'       => __( 'Cielo Checkout', 'cielo-woocommerce' ),
-					'webserviceintegrada' => __( 'Webservice Integrada', 'cielo-woocommerce' )
+					'buypagecielo' => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
+					'webservice'   => __( 'Webservice Solution', 'cielo-woocommerce' )
 				)
 			),
 			'methods' => array(
@@ -367,20 +366,22 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		if ( is_checkout() ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-
-			if ( 'icons' == $this->design ) {
-				wp_enqueue_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
-				wp_enqueue_script( 'wc-cielo-checkout-icons', plugins_url( 'assets/js/checkout-icons' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+			if ( 'webservice' == $this->store_contract ) {
+				wp_enqueue_script( 'wc-cielo-checkout-webservice', plugins_url( 'assets/js/checkout-webservice' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery', 'wc-credit-card-form' ), WC_Cielo::VERSION, true );
+				wp_localize_script(
+					'wc-cielo-checkout-webservice',
+					'wc_cielo_checkout_webservice_params',
+					array(
+						'available_brands' => $this->methods
+					)
+				);
 			} else {
-				wp_enqueue_script( 'wc-cielo-checkout-default', plugins_url( 'assets/js/checkout-default' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
-			}
-
-			if('webserviceintegrada' == $this->store_contract){
-
-				wp_enqueue_style( 'wc-cielo-checkout-webserviceintegrada', plugins_url( 'assets/css/checkout-webserviceintegrada' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
-				wp_enqueue_script( 'wc-cielo-checkout-webserviceintegrada', plugins_url( 'assets/js/checkout-webserviceintegrada' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+				if ( 'icons' == $this->design ) {
 					wp_enqueue_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', plugin_dir_path( __FILE__ ) ), array(), WC_Cielo::VERSION );
-
+					wp_enqueue_script( 'wc-cielo-checkout-icons', plugins_url( 'assets/js/checkout-icons' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+				} else {
+					wp_enqueue_script( 'wc-cielo-checkout-default', plugins_url( 'assets/js/checkout-default' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+				}
 			}
 		}
 	}
@@ -427,8 +428,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	public function payment_fields() {
 		global $woocommerce;
 
-		wp_enqueue_script( 'wc-credit-card-form' );
-
 		$cart_total = 0;
 		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
@@ -450,15 +449,18 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			echo wpautop( wptexturize( $description ) );
 		}
 
-		$model = ( 'icons' == $this->design ) ? 'icons' : 'default';
+		// Set the payment form type.
+		if ( 'webservice' == $this->store_contract ) {
+			wp_enqueue_script( 'wc-credit-card-form' );
 
-		//checking if it should load the buypage loja form template (overrides the other models
-		if('webserviceintegrada'==$this->store_contract){
-			$model = 'webserviceintegrada';
+			$model = 'webservice';
+		} else {
+			$model = ( 'icons' == $this->design ) ? 'icons' : 'default';
 		}
 
 		// Makes it possible to create custom templates.
 		$path = apply_filters( 'wc_cielo_form_path', plugin_dir_path( __FILE__ ) . 'views/html-payment-form-' . $model . '.php', $model );
+
 		if ( file_exists( $path ) ) {
 			include_once( $path );
 		}
@@ -478,53 +480,55 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		$valid        = true;
 		$payment_url  = '';
 
-
-		$name_on_card = isset( $_POST['name_on_card'] ) ? sanitize_text_field( $_POST['name_on_card'] ) : false;
-		$card_number = isset( $_POST['card_number'] ) ? sanitize_text_field( $_POST['card_number'] ) : false;
-		$card_expiration = isset( $_POST['expiry_date'] ) ? sanitize_text_field( $_POST['expiry_date'] ) : false;
-		$card_cvv = isset( $_POST['cvv'] ) ? sanitize_text_field( $_POST['cvv'] ) : false;
-		$card_webserviceintegrada = false;
+		$name_on_card    = isset( $_POST['cielo_holder_name'] ) ? sanitize_text_field( $_POST['cielo_holder_name'] ) : false;
+		$card_number     = isset( $_POST['cielo_card_number'] ) ? sanitize_text_field( $_POST['cielo_card_number'] ) : false;
+		$card_expiration = isset( $_POST['cielo_card_expiry'] ) ? sanitize_text_field( $_POST['cielo_card_expiry'] ) : false;
+		$card_cvv        = isset( $_POST['cielo_card_cvc'] ) ? sanitize_text_field( $_POST['cielo_card_cvc'] ) : false;
+		$card_webservice = array();
 
 		// Validate the card brand.
 		if ( ! in_array( $card, $this->methods ) ) {
-			$this->add_error( __( 'please select a card.', 'cielo-woocommerce' ) );
+			$this->add_error( sprintf( __( 'Select a valid card brand. The following cards are accepted: %s.', 'cielo-woocommerce' ), WC_Cielo_API::get_accepted_brands_list( $this->methods ) ) );
 			$valid = false;
 		}
 
 		// Validate the installments field.
 		if ( '' === $installments ) {
-			$this->add_error( __( 'please select a number of installments.', 'cielo-woocommerce' ) );
+			$this->add_error( __( 'Please select a number of installments.', 'cielo-woocommerce' ) );
 			$valid = false;
 		}
 
-		if('webserviceintegrada'==$this->store_contract){
-			//Validate card number was typed for the card
-			if ( !$card_number) {
-				$this->add_error( __( 'please type the card number.', 'cielo-woocommerce' ) );
-				$valid = false;
-			}
-			//Validate name typed for the card
-			if ( !$name_on_card) {
-				$this->add_error( __( 'please type the name of the card holder.', 'cielo-woocommerce' ) );
+		if ( 'webservice' == $this->store_contract ) {
+			// Validate card number was typed for the card
+			if ( ! $card_number ) {
+				$this->add_error( __( 'Please type the card number.', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
 
-			//Validate the expiration date
-			if ( !$card_expiration) {
-				$this->add_error( __( 'please type the card expiry date.', 'cielo-woocommerce' ) );
+			// Validate name typed for the card
+			if ( ! $name_on_card ) {
+				$this->add_error( __( 'Please type the name of the card holder.', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
 
-			//Validate the cvv for the card
-			if ( !$card_cvv) {
-				$this->add_error( __( 'please type the cvv code for the card', 'cielo-woocommerce' ) );
+			// Validate the expiration date
+			if ( ! $card_expiration ) {
+				$this->add_error( __( 'Please type the card expiry date.', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
-			$card_webserviceintegrada = array(
-				'name_on_card'=>$name_on_card,
-				'card_expiration'=>$card_expiration,
-				'card_cvv'=>$card_cvv,
-				'card_number'=>$card_number);
+
+			// Validate the cvv for the card
+			if ( ! $card_cvv ) {
+				$this->add_error( __( 'Please type the cvv code for the card', 'cielo-woocommerce' ) );
+				$valid = false;
+			}
+
+			$card_webservice = array(
+				'name_on_card'    => $name_on_card,
+				'card_expiration' => $card_expiration,
+				'card_cvv'        => $card_cvv,
+				'card_number'     => $card_number
+			);
 		}
 
 		// Validate if debit is available.
@@ -542,14 +546,14 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			}
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 			if ( $installments > $this->installments || 1 != $installments && $installment_total < $smallest_value ) {
-				$this->add_error( __( 'invalid number of installments!', 'cielo-woocommerce' ) );
+				$this->add_error( __( 'Invalid number of installments!', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
 		}
 
 		if ( $valid ) {
 
-			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card, $installments,$card_webserviceintegrada);
+			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card, $installments, $card_webservice );
 
 			// Set the error alert.
 			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
@@ -568,6 +572,8 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			// Set the transaction URL.
 			if ( isset( $response->{'url-autenticacao'} ) && ! empty( $response->{'url-autenticacao'} ) ) {
 				$payment_url = (string) $response->{'url-autenticacao'};
+			} else if ( 'webservice' == $this->store_contract ) {
+				$payment_url = str_replace( '&amp;', '&', urldecode( WC_Cielo_API::get_return_url( $order ) ) );
 			}
 		}
 

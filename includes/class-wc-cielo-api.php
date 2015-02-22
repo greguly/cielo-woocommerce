@@ -116,6 +116,35 @@ class WC_Cielo_API {
 	}
 
 	/**
+	 * Get the accepted brands in a text list.
+	 *
+	 * @param  array $methods
+	 *
+	 * @return string
+	 */
+	public static function get_accepted_brands_list( $methods ) {
+		$total = count( $methods );
+		$count = 1;
+		$list  = '';
+
+		foreach ( $methods as $method ) {
+			$name = self::get_payment_method_name( $method );
+
+			if ( $count == ( $total - 1 ) ) {
+				$list .= $name . ' ';
+			} else if ( $count == $total ) {
+				$list .= sprintf( __( 'and %s', 'cielo-woocommerce' ), $name );
+			} else {
+				$list .= $name . ', ';
+			}
+
+			$count++;
+		}
+
+		return $list;
+	}
+
+	/**
 	 * Get debit methods.
 	 *
 	 * @return array
@@ -176,7 +205,7 @@ class WC_Cielo_API {
 				'key'    => $this->gateway->key
 			);
 		} else {
-			if('webserviceintegrada'== $this->gateway->store_contract){
+			if('webservice'== $this->gateway->store_contract){
 				return array(
 					'number' => $this->test_store_number,
 					'key'    => $this->test_store_key
@@ -219,7 +248,7 @@ class WC_Cielo_API {
 	 *
 	 * @return string
 	 */
-	protected function get_return_url( $order ) {
+	public static function get_return_url( $order ) {
 		global $woocommerce;
 
 		// Backwards compatibility with WooCommerce version prior to 2.1.
@@ -352,25 +381,24 @@ class WC_Cielo_API {
 	/**
 	 * Do transaction.
 	 *
-	 * @param  WC_Order $order          Order data.
-	 * @param  string   $id             Request ID.
-	 * @param  string   $card_brand     Card brand slug.
-	 * @param  int      $installments   Number of installments (use 0 for debit).
+	 * @param  WC_Order $order            Order data.
+	 * @param  string   $id               Request ID.
+	 * @param  string   $card_brand       Card brand slug.
+	 * @param  int      $installments     Number of installments (use 0 for debit).
+	 * @param  array    $credit_card_data Credit card data for the webservice.
 	 *
 	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
-	public function do_transaction( $order, $id, $card_brand, $installments,$card_webserviceintegrada=false ) {
+	public function do_transaction( $order, $id, $card_brand, $installments, $credit_card_data = array() ) {
 		$account_data    = $this->get_account_data();
 		$payment_product = '1';
 		$order_total     = $order->order_total;
 		$authorization   = $this->gateway->authorization;
 
 		// Set the authorization.
-		/*
-		//TODO Review this
 		if ( in_array( $card_brand, self::get_accept_authorization() ) && 3 != $authorization ) {
 			$authorization = 3;
-		}*/
+		}
 
 		// Set the order total with interest.
 		if ( 'client' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
@@ -393,19 +421,15 @@ class WC_Cielo_API {
 		$xml = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-transacao id="' . $id . '" versao="' . self::VERSION . '"></requisicao-transacao>' );
 		$xml->add_account_data( $account_data['number'], $account_data['key'] );
 
-		if ( $card_webserviceintegrada ) {
-			$expiration_date = $card_webserviceintegrada['card_expiration'];
-			$expiration_date = explode( '/', $expiration_date );
-			$expiration_date = $expiration_date[1] . $expiration_date[0];
-			$card_number     = str_replace( ' ', '', $card_webserviceintegrada['card_number'] );
-			$xml->add_card_data( $card_number, $expiration_date, $card_webserviceintegrada['card_cvv'], $card_webserviceintegrada['name_on_card'] );
+		if ( $credit_card_data ) {
+			$xml->add_card_data( $credit_card_data['card_number'], $credit_card_data['card_expiration'], $credit_card_data['card_cvv'], $credit_card_data['name_on_card'] );
 		}
 
 		$soft_descriptor = isset( $this->gateway->soft_descriptor ) ? $this->gateway->soft_descriptor : '';
 		$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language(), '', $soft_descriptor );
 		$xml->add_payment_data( $card_brand, $payment_product, $installments );
 
-		$xml->add_return_url( $this->get_return_url( $order ) );
+		$xml->add_return_url( self::get_return_url( $order ) );
 		$xml->add_authorize( $authorization );
 		$xml->add_capture( 'true' );
 		$xml->add_token_generation( 'false' );
@@ -416,7 +440,6 @@ class WC_Cielo_API {
 		if ( 'yes' == $this->gateway->debug ) {
 			$this->gateway->log->add( $this->gateway->id, 'Requesting a transaction for order ' . $order->get_order_number() . ' with the follow data: ' . print_r( $this->get_secure_xml_data( $xml ), true ) );
 		}
-
 
 		// Do the transaction request.
 		$response = $this->do_request( $data );

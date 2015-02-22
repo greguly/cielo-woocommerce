@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <fieldset id="cielo-payment-form">
-	<ul id="cielo-card-brand" class="cc-brand">
+	<ul id="cielo-card-brand">
 		<?php foreach ( $this->methods as $key => $method ): ?>
 			<li><label title="<?php echo esc_attr( WC_Cielo_API::get_payment_method_name( $method ) ); ?>"><i id="cielo-icon-<?php echo esc_attr( $method ); ?>"></i><input type="radio" name="cielo_card" value="<?php echo esc_attr( $method ); ?>" <?php echo ( 0 == $key ) ? 'checked="checked"' : ''; ?>/><span><?php echo esc_attr( WC_Cielo_API::get_payment_method_name( $method ) ); ?></span></label></li>
 		<?php endforeach ?>
