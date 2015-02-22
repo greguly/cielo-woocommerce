@@ -392,19 +392,20 @@ class WC_Cielo_API {
 
 		$xml = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-transacao id="' . $id . '" versao="' . self::VERSION . '"></requisicao-transacao>' );
 		$xml->add_account_data( $account_data['number'], $account_data['key'] );
-		if($card_webserviceintegrada){
+
+		if ( $card_webserviceintegrada ) {
 			$expiration_date = $card_webserviceintegrada['card_expiration'];
-			$expiration_date = split('/',$expiration_date);
-			$expiration_date = $expiration_date[1].$expiration_date[0];
-			$card_number = str_replace(' ','',$card_webserviceintegrada['card_number']);
-			$xml->add_card_data($card_number,$expiration_date,$card_webserviceintegrada['card_cvv'],$card_webserviceintegrada['name_on_card']);
+			$expiration_date = explode( '/', $expiration_date );
+			$expiration_date = $expiration_date[1] . $expiration_date[0];
+			$card_number     = str_replace( ' ', '', $card_webserviceintegrada['card_number'] );
+			$xml->add_card_data( $card_number, $expiration_date, $card_webserviceintegrada['card_cvv'], $card_webserviceintegrada['name_on_card'] );
 		}
 
 		$soft_descriptor = isset( $this->gateway->soft_descriptor ) ? $this->gateway->soft_descriptor : '';
 		$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language(), '', $soft_descriptor );
 		$xml->add_payment_data( $card_brand, $payment_product, $installments );
 
-		$xml->add_return_url( $this->get_return_url( $order ) );//'http://lojadamais.com.br');//$this->get_return_url( $order ) );
+		$xml->add_return_url( $this->get_return_url( $order ) );
 		$xml->add_authorize( $authorization );
 		$xml->add_capture( 'true' );
 		$xml->add_token_generation( 'false' );
