@@ -257,12 +257,12 @@ class WC_Cielo_API {
 	protected function get_secure_xml_data( $xml ) {
 		// Remove API data.
 		if ( isset( $xml->{'dados-ec'} ) ) {
-			//unset( $xml->{'dados-ec'} );
+			unset( $xml->{'dados-ec'} );
 		}
 
 		// Remove card data.
 		if ( isset( $xml->{'dados-portador'} ) ) {
-			//unset( $xml->{'dados-portador'} );
+			unset( $xml->{'dados-portador'} );
 		}
 
 		return $xml;
