@@ -1,14 +1,14 @@
-.cc-brand:before,
-.cc-brand:after {
+#cielo-card-brand:before,
+#cielo-card-brand:after {
     content: " ";
     display: table;
 }
 
-.cc-brand:after {
+#cielo-card-brand:after {
     clear: both;
 }
 
-.cc-brand {
+#cielo-card-brand {
 	border-bottom: 1px solid #ccc;
 	margin: 0 0 10px;
 	padding: 0;
@@ -18,33 +18,32 @@
     *zoom: 1;
 }
 
-.cc-brand li {
+#cielo-card-brand li {
 	display: block;
 	float: left;
 	list-style: none;
 	margin: 0 30px 5px 0 !important;
 }
 
-.cc-brand li:last-child {
+#cielo-card-brand li:last-child {
 	margin-right: 0 !important;
 }
 
-/*.cc-brand input,*/
-.cc-brand span {
+#cielo-card-brand span {
 	display: none;
 }
 
-.cc-brand input {
+#cielo-card-brand input {
 	display: inline;
 	margin: 0 !important;
 }
 
-.cc-brand label {
+#cielo-card-brand label {
 	display: block;
 	text-align: center;
 }
 
-.cc-brand i {
+#cielo-card-brand i {
 	background-image: url("../images/cards.png");
 	background-repeat: no-repeat;
 	cursor: pointer;
