@@ -9,7 +9,7 @@
  * License: GPLv2 or later
  * Text Domain: cielo-woocommerce
  * Domain Path: /languages/
- * Copyright: © 2012, 2013, 2014 omniWP
+ * Copyright: © 2015 omniWP
  * License: GNU General Public License v2.0
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
@@ -29,7 +29,6 @@ class WC_Cielo {
 	 *
 	 * @var string
 	 */
-
 	const VERSION = '3.1.2';
 
 	/**
@@ -136,7 +135,7 @@ class WC_Cielo {
 				}
 
 			} else {
-				$order->add_order_note( $prefix . __( 'This transaction has been made ​​more than 90 days and therefore it can not be canceled', 'cielo-woocommerce' ) );
+				$order->add_order_note( $prefix . __( 'This transaction has been made more than 90 days and therefore it can not be canceled', 'cielo-woocommerce' ) );
 			}
 
 			update_post_meta( $order_id, '_wc_cielo_transaction_refunded', 'yes' );
