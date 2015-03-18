@@ -8,3 +8,7 @@ cielo-woocommerce.sublime-project
 cielo-woocommerce.sublime-workspace
 
 feature_request.txt
+
+*.sublime-project
+
+*.sublime-workspace
