@@ -12,3 +12,5 @@ feature_request.txt
 *.sublime-project
 
 *.sublime-workspace
+
+.sublime-grunt.cache
