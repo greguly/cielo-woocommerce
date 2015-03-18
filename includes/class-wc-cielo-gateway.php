@@ -174,6 +174,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'default'     => 'buypage_cielo',
 				'options'     => array(
 					'buypage_cielo' => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
+					'checkout_cielo' => __( 'Checkout Cielo', 'cielo-woocommerce' ),
 					'webservice'   => __( 'Webservice Solution', 'cielo-woocommerce' )
 				)
 			),
@@ -186,6 +187,24 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'options'     => array(
 					'test'       => __( 'Test', 'cielo-woocommerce' ),
 					'production' => __( 'Production', 'cielo-woocommerce' )
+				)
+			),
+			'merchant_id' => array(
+				'title'       => __( 'Merchant ID', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Merchant ID store number with Cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => ''
+			),			
+			'antifraud' => array(
+				'title'       => __( 'Anti-Fraud Analysis', 'cielo-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'Enable anti-fraud option to analyse the transactions on cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => 'true',
+				'options'     => array(
+					'true'  => __( 'Enabled', 'cielo-woocommerce' ),
+					'false'  => __( 'Disabled', 'cielo-woocommerce' ),
 				)
 			),
 			'number' => array(

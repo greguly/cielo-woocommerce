@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+define('SCRIPT_DEBUG',true);
+
 if ( ! class_exists( 'WC_Cielo' ) ) :
 
 /**
