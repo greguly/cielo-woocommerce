@@ -16,6 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="updated woocommerce-message">
 		<p><?php printf( __( 'Help us to implement the Cielo Checkout. We count on your help in the form of a %s.', 'cielo-woocommerce' ), '<a href="http://www10.vakinha.com.br/VaquinhaE.aspx?e=342130" target="_blank">' . __( 'Vakinha', 'cielo-woocommerce' ) . '</a>' ); ?></p>
 	</div>
+	<?php if('webservice'==$this->store_contract){ ?>
+			<div class="updated woocommerce-message">
+			<?php if(!is_ssl()){ ?>
+				<p><?php printf( __( 'A SSL Certificate is required for Webservice Solution. Please verify if a certificate is installed on your server.', 'cielo-woocommerce' )); ?></p>
+			</div>
+			<?php } ?>
+	<?php  } ?>
 <?php endif; ?>
 
 <table class="form-table">
