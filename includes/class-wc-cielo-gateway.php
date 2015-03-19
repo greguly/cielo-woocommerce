@@ -714,7 +714,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 
 		$payment_function = 'process_payment_'.$this->store_contract;
-		return call_user_func($payment_function,$order_id);
+ 		return call_user_func($payment_function,$order_id);
 	}
 
 	/**

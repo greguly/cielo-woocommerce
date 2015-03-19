@@ -3,21 +3,7 @@
 
 	$(function() {
 
-		/**
-		 * Switch the options based on environment.
-		 */
-		$('#woocommerce_cielo_environment').on('change', function() {
-			var number = $('#woocommerce_cielo_number').closest('tr'),
-				key = $('#woocommerce_cielo_key').closest('tr');
 
-			if ('test' === $(this).val()) {
-				number.hide();
-				key.hide();
-			} else {
-				number.show();
-				key.show();
-			}
-		}).change();
 
 		/**
 		 * Switch the options based on the store contract.
@@ -77,6 +63,22 @@
 			$('#woocommerce_cielo_debit_methods').change();
 		}).change();
 
+		/**
+		 * Switch the options based on environment.
+		 */
+		$('#woocommerce_cielo_environment').on('change', function() {
+			var number = $('#woocommerce_cielo_number').closest('tr'),
+				key = $('#woocommerce_cielo_key').closest('tr');
+
+			if ('test' === $(this).val()) {
+				number.hide();
+				key.hide();
+			} else {
+				number.show();
+				key.show();
+			}
+		}).change();
+		
 		/**
 		 * Switch the options based on the selected debit methods.
 		 */
