@@ -193,7 +193,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'default'     => 'buypage_cielo',
 				'options'     => array(
 					'buypage_cielo' => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
-					'checkout_cielo' => __( 'Checkout Cielo', 'cielo-woocommerce' ),
+					//'checkout_cielo' => __( 'Checkout Cielo', 'cielo-woocommerce' ),
 					'webservice'   => __( 'Webservice Solution', 'cielo-woocommerce' )
 				)
 			),
