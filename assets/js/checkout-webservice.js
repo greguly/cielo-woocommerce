@@ -51,7 +51,44 @@
 		});
 		$( 'form.checkout, form#order_review' ).on( 'change', '#cielo-payment-form input', function() {
 			$( '.cielo-card-brand' ).remove();
+
 		});
+
+		$( 'form.checkout, form#order_review' ).on( 'payment.cardType', '#cielo-payment-form input#cielo-card-number', function(evt) {
+    		var card = $.payment.cardType(evt.target.value) || 'unknown';
+    		setInstallmentsFields(card);
+		});
+
+		/**
+		 * Set the installment fields.
+		 *
+		 * @param {string} card
+		 */
+		function setInstallmentsFields( card ) {
+			 
+			var methods      = [],
+				debitMethods = null;
+ 
+ 			debitMethods = $( '.cielo-debit' ).attr( 'data-debit' );
+
+			switch( debitMethods ) {
+				case 'all' :
+					methods = ['visa', 'mastercard'];
+					break;
+				case 'visa' :
+					methods = ['visa'];
+					break;
+				case 'mastercard' :
+					methods = ['mastercard'];
+					break;
+			}
+
+			if ( -1 === $.inArray( card, methods ) ) {
+				$( '.cielo-debit' ).hide();
+				$('.cielo-debit').removeAttr('selected').find('option:first').attr('selected', 'selected')
+			}else $( '.cielo-debit' ).show();
+		}
+
 
 		/**
 		 * Form Handler.
@@ -86,6 +123,9 @@
 				card_brand = 'mastercard';
 			}
 
+
+		 
+
 			// Check the card brand is available.
 			if ( -1 !== $.inArray( card_brand, wc_cielo_checkout_webservice_params.available_brands ) ) {
 				// Remove any brand input.
@@ -101,6 +141,7 @@
 
 			return true;
 		}
+		  
 	});
 
 }( jQuery ));

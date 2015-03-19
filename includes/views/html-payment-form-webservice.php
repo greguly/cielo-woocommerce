@@ -11,25 +11,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</p>
 	<p class="form-row form-row-last">
 		<label for="cielo-card-number"><?php _e( 'Card Number', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
-		<input id="cielo-card-number" name="cielo_card_number" class="input-text wc-credit-card-form-card-number" type="text" maxlength="20" autocomplete="off" placeholder="&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;" style="font-size: 1.5em; padding: 8px;" />
+		<input id="cielo-card-number" name="cielo_card_number" class="input-text wc-credit-card-form-card-number" type="tel" maxlength="20" autocomplete="off" placeholder="&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;" style="font-size: 1.5em; padding: 8px;" />
 	</p>
 	<div class="clear"></div>
 	<p class="form-row form-row-first">
 		<label for="cielo-card-expiry"><?php _e( 'Expiry (MM/YYYY)', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
-		<input id="cielo-card-expiry" name="cielo_card_expiry" class="input-text wc-credit-card-form-card-expiry" type="text" autocomplete="off" placeholder="<?php _e( 'MM / YYYY', 'cielo-woocommerce' ); ?>" style="font-size: 1.5em; padding: 8px;" />
+		<input id="cielo-card-expiry" name="cielo_card_expiry" class="input-text wc-credit-card-form-card-expiry" type="tel" autocomplete="off" placeholder="<?php _e( 'MM / YYYY', 'cielo-woocommerce' ); ?>" style="font-size: 1.5em; padding: 8px;" />
 	</p>
 	<p class="form-row form-row-last">
 		<label for="cielo-card-cvc"><?php _e( 'Security Code', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
-		<input id="cielo-card-cvc" name="cielo_card_cvc" class="input-text wc-credit-card-form-card-cvc" type="text" autocomplete="off" placeholder="<?php _e( 'CVC', 'cielo-woocommerce' ); ?>" style="font-size: 1.5em; padding: 8px;" />
+		<input id="cielo-card-cvc" name="cielo_card_cvc" class="input-text wc-credit-card-form-card-cvc" type="tel" autocomplete="off" placeholder="<?php _e( 'CVC', 'cielo-woocommerce' ); ?>" style="font-size: 1.5em; padding: 8px;" />
 	</p>
 	<?php if ( 1 < $this->installments ) : ?>
 		<p class="form-row form-row-wide">
+
 			<label for="cielo-card-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
 			<select id="cielo-card-installments" name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">
 				<?php
+		
 					$debit_methods   = WC_Cielo_API::get_debit_methods( $this->debit_methods );
 					$available_debit = array_intersect( $debit_methods, $this->methods );
-
+				
 					if ( ! empty( $available_debit ) ) :
 						$debit_total    = $cart_total * ( ( 100 - WC_Cielo_API::get_valid_value( $this->debit_discount ) ) / 100 );
 						$debit_discount = ( $cart_total > $debit_total ) ? ' (' . WC_Cielo_API::get_valid_value( $this->debit_discount ) . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
@@ -55,9 +57,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 							continue;
 						}
 					?>
-
-					<option value="<?php echo $i; ?>" class="<?php echo ( 1 == $i ) ? 'cielo-at-sight' : ''; ?>"><?php echo sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest ); ?></option>
-
+					<?php if(1==$i){ ?>
+						<option value="<?php echo $i; ?>" class="<?php echo ( 1 == $i ) ? 'cielo-at-sight' : ''; ?>"><?php echo sprintf( __( 'Credit Card %sx of %s %s', 'cielo-woocommerce' ), $i, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest ); ?></option>
+					<?php }else if($i>1){ ?>
+					<option value="<?php echo $i; ?>"><?php echo sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest ); ?></option>
+					<?php } ?>
 				<?php endfor; ?>
 			</select>
 		</p>
