@@ -49,7 +49,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 							if ( $credit_total < $interest_total ) {
 								$credit_total    = $interest_total;
-								$credit_interest = __( '(with interest)', 'cielo-woocommerce' );
+								$credit_interest = sprintf(__( '(with %s%% of interest)', 'cielo-woocommerce' ),(WC_Cielo_API::get_valid_value( $this->interest_rate )));
 							}
 						}
 
