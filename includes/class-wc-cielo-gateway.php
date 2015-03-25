@@ -561,17 +561,23 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		}
 
 		if ( 0 != $installments ) {
-			// Validate the installments amount.
-			$installment_total = $order->order_total / $installments;
+
+			$interest_rate = WC_Cielo_API::get_valid_value( $this->interest_rate )/100;
+			$financial_index = $interest_rate / (1- (1/pow((1+$interest_rate),$installments)));
+
+			$installment_total    = $order->order_total  / $installments;
 			if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
-				$interest_total    = $installment_total * ( ( 100 + WC_Cielo_API::get_valid_value( $this->interest_rate ) ) / 100 );
+				$interest_total = $installment_total * $financial_index; ;//( ( 100 + WC_Cielo_API::get_valid_value( $this->interest_rate ) ) / 100 );
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
+
 			}
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
-			if ( $installments > $this->installments || 1 != $installments && $installment_total < $smallest_value ) {
+ 
+			 if ( $installments > $this->installments || 1 != $installments && $installment_total < $smallest_value ) {
 				$this->add_error( __( 'Invalid number of installments!', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
+
 		}
 
 		if ( $valid ) {
@@ -644,13 +650,18 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 		if ( 0 != $installments ) {
 			// Validate the installments amount.
-			$installment_total = $order->order_total / $installments;
+			$interest_rate = WC_Cielo_API::get_valid_value( $this->interest_rate )/100;
+			$financial_index = $interest_rate / (1- (1/pow((1+$interest_rate),$installments)));
+
+			$installment_total    = $order->order_total  / $installments;
 			if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
-				$interest_total    = $installment_total * ( ( 100 + WC_Cielo_API::get_valid_value( $this->interest_rate ) ) / 100 );
+				$interest_total = $installment_total * $financial_index; ;//( ( 100 + WC_Cielo_API::get_valid_value( $this->interest_rate ) ) / 100 );
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
+
 			}
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
-			if ( $installments > $this->installments || 1 != $installments && $installment_total < $smallest_value ) {
+ 
+			 if ( $installments > $this->installments || 1 != $installments && $installment_total < $smallest_value ) {
 				$this->add_error( __( 'Invalid number of installments!', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
