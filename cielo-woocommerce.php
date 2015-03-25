@@ -185,10 +185,10 @@ class WC_Cielo {
 	/**
 	 * WooCommerce fallback notice.
 	 *
-	 * @return  string
+	 * @return string
 	 */
 	public function woocommerce_missing_notice() {
-		echo '<div class="error"><p>' . sprintf( __( 'WooCommerce Cielo Gateway depends on the last version of the %s to work!', 'cielo-woocommerce' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">' . __( 'WooCommerce', 'cielo-woocommerce' ) . '</a>' ) . '</p></div>';
+		include_once 'includes/views/html-notice-woocommerce-missing.php';
 	}
 }
 
