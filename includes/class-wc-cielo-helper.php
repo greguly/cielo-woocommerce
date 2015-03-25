@@ -182,6 +182,34 @@ class WC_Cielo_Helper {
 	}
 
 	/**
+	 * Get order total.
+	 *
+	 * @return float
+	 */
+	public static function get_order_total() {
+		global $woocommerce;
+
+		$order_total = 0;
+		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+			$order_id = absint( get_query_var( 'order-pay' ) );
+		} else {
+			$order_id = isset( $_GET['order_id'] ) ? absint( $_GET['order_id'] ) : 0;
+		}
+
+		// Gets order total from "pay for order" page.
+		if ( 0 < $order_id ) {
+			$order      = new WC_Order( $order_id );
+			$order_total = (float) $order->get_total();
+
+		// Gets order total from cart/checkout.
+		} elseif ( 0 < $woocommerce->cart->total ) {
+			$order_total = (float) $woocommerce->cart->total;
+		}
+
+		return $order_total;
+	}
+
+	/**
 	 * Add error messages in checkout.
 	 *
 	 * @param string $message Error message.

@@ -402,25 +402,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function payment_fields() {
-		global $woocommerce;
-
-		$cart_total = 0;
-		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
-			$order_id = absint( get_query_var( 'order-pay' ) );
-		} else {
-			$order_id = isset( $_GET['order_id'] ) ? absint( $_GET['order_id'] ) : 0;
-		}
-
-		// Gets order total from "pay for order" page.
-		if ( 0 < $order_id ) {
-			$order      = new WC_Order( $order_id );
-			$cart_total = (float) $order->get_total();
-
-		// Gets order total from cart/checkout.
-		} elseif ( 0 < $woocommerce->cart->total ) {
-			$cart_total = (float) $woocommerce->cart->total;
-		}
-
 		if ( $description = $this->get_description() ) {
 			echo wpautop( wptexturize( $description ) );
 		}
@@ -432,6 +413,13 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			$model = 'webservice';
 		} else {
 			$model = ( 'icons' == $this->design ) ? 'icons' : 'default';
+		}
+
+		// Get order total.
+		if ( method_exists( $this, 'get_order_total' ) ) {
+			$order_total = $this->get_order_total();
+		} else {
+			$order_total = WC_Cielo_Helper::get_order_total();
 		}
 
 		// Makes it possible to create custom templates.
