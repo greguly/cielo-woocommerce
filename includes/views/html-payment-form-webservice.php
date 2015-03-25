@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php if ( 1 < $this->installments ) : ?>
 		<p class="form-row form-row-wide">
 			<label for="cielo-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
-			<?php echo $this->helper->get_installments_html( 'select', $cart_total ); ?>
+			<?php echo $this->helper->get_installments_html( 'select', $order_total ); ?>
 		</p>
 	<?php endif; ?>
 	<div class="clear"></div>

@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</p>
 	<p class="form-row form-row-last">
 		<label for="cielo-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
-		<?php echo $this->helper->get_installments_html( 'select', $cart_total ); ?>
+		<?php echo $this->helper->get_installments_html( 'select', $order_total ); ?>
 	</p>
 	<div class="clear"></div>
 </fieldset>

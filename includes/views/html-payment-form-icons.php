@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div id="cielo-installments">
 		<p class="form-row">
-			<?php echo $this->helper->get_installments_html( 'radio', $cart_total ); ?>
+			<?php echo $this->helper->get_installments_html( 'radio', $order_total ); ?>
 		</p>
 	</div>
 

@@ -229,11 +229,12 @@ class WC_Cielo_Helper {
 	/**
 	 * Get installments HTML.
 	 *
-	 * @param  string $type 'select' or 'radio'.
+	 * @param  string $type        'select' or 'radio'.
+	 * @param  float  $order_total Order total.
 	 *
 	 * @return string
 	 */
-	public function get_installments_html( $type = 'select', $cart_total ) {
+	public function get_installments_html( $type = 'select', $order_total = 0 ) {
 		$html = '';
 
 		if ( 'select' == $type ) {
