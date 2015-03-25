@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Cielo WooCommerce v3.1.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-03-19 20:42:33+0000\n"
+"PO-Revision-Date: 2015-03-25 00:28:34+0000\n"
 "Last-Translator: Claudio Sanches <contato@claudiosmweb.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -459,22 +459,9 @@ msgstr "de desconto"
 msgid "Debit %s%s"
 msgstr "Débito %s%s"
 
-#: includes/views/html-payment-form-default.php:31
-#: includes/views/html-payment-form-icons.php:33
-#: includes/views/html-payment-form-webservice.php:44
-#@ cielo-woocommerce
-msgid "(no interest)"
-msgstr "(sem juros)"
-
-#: includes/views/html-payment-form-default.php:39
-#: includes/views/html-payment-form-icons.php:41
-#@ cielo-woocommerce
-msgid "(with interest)"
-msgstr "(com juros)"
-
-#: includes/views/html-payment-form-default.php:48
-#: includes/views/html-payment-form-icons.php:54
-#: includes/views/html-payment-form-webservice.php:63
+#: includes/views/html-payment-form-default.php:56
+#: includes/views/html-payment-form-icons.php:59
+#: includes/views/html-payment-form-webservice.php:69
 #, php-format
 #@ cielo-woocommerce
 msgid "%sx of %s %s"
@@ -654,7 +641,7 @@ msgstr ""
 #: includes/class-wc-cielo-gateway.php:189
 #@ cielo-woocommerce
 msgid "Store Solution"
-msgstr ""
+msgstr "Solução CIELO"
 
 #: includes/class-wc-cielo-gateway.php:191
 #@ cielo-woocommerce
@@ -694,12 +681,12 @@ msgstr ""
 #: includes/class-wc-cielo-gateway.php:225
 #@ cielo-woocommerce
 msgid "Enabled"
-msgstr ""
+msgstr "Habilitado"
 
 #: includes/class-wc-cielo-gateway.php:226
 #@ cielo-woocommerce
 msgid "Disabled"
-msgstr ""
+msgstr "Desabilitado"
 
 #: includes/class-wc-cielo-gateway.php:514
 #: includes/class-wc-cielo-gateway.php:629
@@ -773,15 +760,26 @@ msgstr "Código Verificador"
 msgid "CVC"
 msgstr ""
 
-#: includes/views/html-payment-form-webservice.php:52
-#, php-format
-#@ cielo-woocommerce
-msgid "(with %s%% of interest)"
-msgstr "(com %s%% de juros)"
-
-#: includes/views/html-payment-form-webservice.php:61
+#: includes/views/html-payment-form-default.php:54
+#: includes/views/html-payment-form-webservice.php:67
 #, php-format
 #@ cielo-woocommerce
 msgid "Credit Card %s"
 msgstr "Cartão de Crédito %s"
+
+#: includes/views/html-payment-form-default.php:36
+#: includes/views/html-payment-form-icons.php:37
+#: includes/views/html-payment-form-webservice.php:49
+#, php-format
+#@ cielo-woocommerce
+msgid "no interest Total: %s"
+msgstr "sem juros. Total: %s"
+
+#: includes/views/html-payment-form-default.php:45
+#: includes/views/html-payment-form-icons.php:46
+#: includes/views/html-payment-form-webservice.php:58
+#, php-format
+#@ cielo-woocommerce
+msgid "with interest of %s%% a.m. Total: %s"
+msgstr "com juros de %s%% a.m. Total: %s"
 
