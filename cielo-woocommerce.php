@@ -17,7 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 if ( ! class_exists( 'WC_Cielo' ) ) :
 
 /**
@@ -92,6 +91,7 @@ class WC_Cielo {
 	 */
 	private function includes() {
 		include_once( 'includes/class-wc-cielo-xml.php' );
+		include_once( 'includes/class-wc-cielo-helper.php' );
 		include_once( 'includes/class-wc-cielo-api.php' );
 		include_once( 'includes/class-wc-cielo-gateway.php' );
 	}
