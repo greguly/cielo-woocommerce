@@ -592,4 +592,70 @@ class WC_Cielo_API {
 
 		return $body;
 	}
+
+	/**
+	 * Get installments HTML.
+	 *
+	 * @param  string $type 'select' or 'radio'.
+	 *
+	 * @return string
+	 */
+	public function get_installments_html( $type = 'select', $cart_total ) {
+		$html = '';
+
+		if ( 'select' == $type ) {
+			$html .= '<select id="cielo-installments" name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">';
+		}
+
+		$debit_methods   = WC_Cielo_API::get_debit_methods( $this->gateway->debit_methods );
+		$available_debit = array_intersect( $debit_methods, $this->gateway->methods );
+
+		if ( ! empty( $available_debit ) ) {
+			$debit_total    = $cart_total * ( ( 100 - WC_Cielo_API::get_valid_value( $this->gateway->debit_discount ) ) / 100 );
+			$debit_discount = ( $cart_total > $debit_total ) ? ' (' . WC_Cielo_API::get_valid_value( $this->gateway->debit_discount ) . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
+
+			if ( 'select' == $type ) {
+				$html .= '<option value="0" class="cielo-debit" data-debit="' . esc_attr( $this->gateway->debit_methods ) . '">' . sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $debit_total ) ), $debit_discount ) . '</option>';
+			} else {
+				$html .= '<label class="cielo-debit" data-debit="' . esc_attr( $this->gateway->debit_methods ) . '"><input type="radio" name="cielo_installments" value="0" /> ' . sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), '<strong>' . sanitize_text_field( woocommerce_price( $debit_total ) ) . '</strong>', $debit_discount ) . '</label>';
+			}
+		}
+
+		for ( $i = 1; $i <= $this->gateway->installments; $i++ ) {
+
+			$interest_rate   = WC_Cielo_API::get_valid_value( $this->gateway->interest_rate ) / 100;
+			$financial_index = $interest_rate / (1 - ( 1 / pow( 1 + $interest_rate, $i ) ) );
+			$credit_total    = $cart_total / $i;
+			$credit_interest = sprintf(__( 'no interest Total: %s', 'cielo-woocommerce' ),sanitize_text_field( woocommerce_price( $cart_total ) ));
+			$smallest_value  = ( 5 <= $this->gateway->smallest_installment ) ? $this->gateway->smallest_installment : 5;
+
+			if ( 'client' == $this->gateway->installment_type && $i >= $this->gateway->interest ) {
+				$interest_total = $cart_total * $financial_index;
+				$interest_cart_total = $interest_total*$i;
+
+				if ( $credit_total < $interest_total ) {
+					$credit_total    = $interest_total;
+					$credit_interest = sprintf(__( 'with interest of %s%% a.m. Total: %s', 'cielo-woocommerce' ), WC_Cielo_API::get_valid_value( $this->gateway->interest_rate ), sanitize_text_field( woocommerce_price( $interest_cart_total ) ) );
+				}
+			}
+
+			if ( 1 != $i && $credit_total < $smallest_value ) {
+				continue;
+			}
+
+			$at_sight = ( 1 == $i ) ? 'cielo-at-sight' : '';
+
+			if ( 'select' == $type ) {
+				$html .= '<option value="' . $i . '" class="' . $at_sight . '">' . sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest ) . '</option>';
+			} else {
+				$html .= '<label class="' . $at_sight . '"><input type="radio" name="cielo_installments" value="' . $i . '" /> ' . sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, '<strong>' . sanitize_text_field( woocommerce_price( $credit_total ) ) . '</strong>', $credit_interest ) . '</label>';
+			}
+		}
+
+		if ( 'select' == $type ) {
+			$html .= '</select>';
+		}
+
+		return $html;
+	}
 }
