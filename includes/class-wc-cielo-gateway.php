@@ -386,30 +386,13 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Admin scripts.
 	 *
-	 * @param  string $hook Page slug.
+	 * @param string $hook Page slug.
 	 */
 	public function admin_scripts( $hook ) {
 		if ( in_array( $hook, array( 'woocommerce_page_wc-settings', 'woocommerce_page_woocommerce_settings' ) ) && ( isset( $_GET['section'] ) && in_array( $_GET['section'], array( 'wc_cielo_gateway', 'WC_Cielo_Gateway' ) ) ) ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 			wp_enqueue_script( 'wc-cielo-admin', plugins_url( 'assets/js/admin' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
-		}
-	}
-
-	/**
-	 * Add error messages in checkout.
-	 *
-	 * @param  string $message Error message.
-	 */
-	protected function add_error( $message ) {
-		global $woocommerce;
-
-		$title = '<strong>' . __( 'Cielo', 'cielo-woocommerce' ) . ':</strong> ';
-
-		if ( function_exists( 'wc_add_notice' ) ) {
-			wc_add_notice( $title . $message, 'error' );
-		} else {
-			$woocommerce->add_error( $title . $message );
 		}
 	}
 
@@ -482,37 +465,37 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 		// Validate the card brand.
 		if ( ! in_array( $card, $this->methods ) ) {
-			$this->add_error( sprintf( __( 'Select a valid card brand. The following cards are accepted: %s.', 'cielo-woocommerce' ), WC_Cielo_Helper::get_accepted_brands_list( $this->methods ) ) );
+			$this->helper->add_error( sprintf( __( 'Select a valid card brand. The following cards are accepted: %s.', 'cielo-woocommerce' ), WC_Cielo_Helper::get_accepted_brands_list( $this->methods ) ) );
 			$valid = false;
 		}
 
 		// Validate the installments field.
 		if ( '' === $installments ) {
-			$this->add_error( __( 'Please select a number of installments.', 'cielo-woocommerce' ) );
+			$this->helper->add_error( __( 'Please select a number of installments.', 'cielo-woocommerce' ) );
 			$valid = false;
 		}
 
 		// Validate card number was typed for the card
 		if ( ! $card_number ) {
-			$this->add_error( __( 'Please type the card number.', 'cielo-woocommerce' ) );
+			$this->helper->add_error( __( 'Please type the card number.', 'cielo-woocommerce' ) );
 			$valid = false;
 		}
 
 		// Validate name typed for the card
 		if ( ! $name_on_card ) {
-			$this->add_error( __( 'Please type the name of the card holder.', 'cielo-woocommerce' ) );
+			$this->helper->add_error( __( 'Please type the name of the card holder.', 'cielo-woocommerce' ) );
 			$valid = false;
 		}
 
 		// Validate the expiration date
 		if ( ! $card_expiration ) {
-			$this->add_error( __( 'Please type the card expiry date.', 'cielo-woocommerce' ) );
+			$this->helper->add_error( __( 'Please type the card expiry date.', 'cielo-woocommerce' ) );
 			$valid = false;
 		}
 
 		// Validate the cvv for the card
 		if ( ! $card_cvv ) {
-			$this->add_error( __( 'Please type the cvv code for the card', 'cielo-woocommerce' ) );
+			$this->helper->add_error( __( 'Please type the cvv code for the card', 'cielo-woocommerce' ) );
 			$valid = false;
 		}
 
@@ -526,7 +509,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 		// Validate if debit is available.
 		if ( ! in_array( $card, WC_Cielo_Helper::get_debit_methods( $this->debit_methods ) ) && 0 === $installments ) {
-			$this->add_error( sprintf( __( '%s does not accept payment by debit.', 'cielo-woocommerce' ), WC_Cielo_Helper::get_payment_method_name( $card ) ) );
+			$this->helper->add_error( sprintf( __( '%s does not accept payment by debit.', 'cielo-woocommerce' ), WC_Cielo_Helper::get_payment_method_name( $card ) ) );
 			$valid = false;
 		}
 
@@ -544,7 +527,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 
 			 if ( $installments > $this->installments || 1 != $installments && $installment_total < $smallest_value ) {
-				$this->add_error( __( 'Invalid number of installments!', 'cielo-woocommerce' ) );
+				$this->helper->add_error( __( 'Invalid number of installments!', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
 
@@ -556,7 +539,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 			// Set the error alert.
 			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
-				$this->add_error( (string) $response->mensagem );
+				$this->helper->add_error( (string) $response->mensagem );
 				$valid = false;
 			}
 
@@ -602,19 +585,19 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 		// Validate the card brand.
 		if ( ! in_array( $card, $this->methods ) ) {
-			$this->add_error( sprintf( __( 'Select a valid card brand. The following cards are accepted: %s.', 'cielo-woocommerce' ), WC_Cielo_Helper::get_accepted_brands_list( $this->methods ) ) );
+			$this->helper->add_error( sprintf( __( 'Select a valid card brand. The following cards are accepted: %s.', 'cielo-woocommerce' ), WC_Cielo_Helper::get_accepted_brands_list( $this->methods ) ) );
 			$valid = false;
 		}
 
 		// Validate the installments field.
 		if ( '' === $installments ) {
-			$this->add_error( __( 'Please select a number of installments.', 'cielo-woocommerce' ) );
+			$this->helper->add_error( __( 'Please select a number of installments.', 'cielo-woocommerce' ) );
 			$valid = false;
 		}
 
 		// Validate if debit is available.
 		if ( ! in_array( $card, WC_Cielo_Helper::get_debit_methods( $this->debit_methods ) ) && 0 === $installments ) {
-			$this->add_error( sprintf( __( '%s does not accept payment by debit.', 'cielo-woocommerce' ), WC_Cielo_Helper::get_payment_method_name( $card ) ) );
+			$this->helper->add_error( sprintf( __( '%s does not accept payment by debit.', 'cielo-woocommerce' ), WC_Cielo_Helper::get_payment_method_name( $card ) ) );
 			$valid = false;
 		}
 
@@ -632,7 +615,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 
 			 if ( $installments > $this->installments || 1 != $installments && $installment_total < $smallest_value ) {
-				$this->add_error( __( 'Invalid number of installments!', 'cielo-woocommerce' ) );
+				$this->helper->add_error( __( 'Invalid number of installments!', 'cielo-woocommerce' ) );
 				$valid = false;
 			}
 		}
@@ -643,7 +626,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 			// Set the error alert.
 			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
-				$this->add_error( (string) $response->mensagem );
+				$this->helper->add_error( (string) $response->mensagem );
 				$valid = false;
 			}
 
@@ -737,7 +720,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 					$this->log->add( $this->id, 'Cielo payment error: ' . print_r( $response->mensagem, true ) );
 				}
 
-				$this->add_error( (string) $response->mensagem );
+				$this->helper->add_error( (string) $response->mensagem );
 			}
 
 			// Update the order status.

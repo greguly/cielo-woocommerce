@@ -182,6 +182,23 @@ class WC_Cielo_Helper {
 	}
 
 	/**
+	 * Add error messages in checkout.
+	 *
+	 * @param string $message Error message.
+	 */
+	public function add_error( $message ) {
+		global $woocommerce;
+
+		$title = '<strong>' . esc_attr( $this->gateway->title ) . ':</strong> ';
+
+		if ( function_exists( 'wc_add_notice' ) ) {
+			wc_add_notice( $title . $message, 'error' );
+		} else {
+			$woocommerce->add_error( $title . $message );
+		}
+	}
+
+	/**
 	 * Get installments HTML.
 	 *
 	 * @param  string $type 'select' or 'radio'.
