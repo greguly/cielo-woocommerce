@@ -64,7 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						}
 					?>
 					<?php if(1==$i){ ?>
-						<option value="<?php echo $i; ?>" class="<?php echo ( 1 == $i ) ? 'cielo-at-sight' : ''; ?>"><?php echo sprintf( __( 'Credit Card %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $interest_cart_total ) ) ); ?></option>
+						<option value="<?php echo $i; ?>" class="<?php echo ( 1 == $i ) ? 'cielo-at-sight' : ''; ?>"><?php echo sprintf( __( 'Credit Card %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $credit_total ) ) ); ?></option>
 					<?php }else if($i>1){ ?>
 					<option value="<?php echo $i; ?>"><?php echo sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest ); ?></option>
 					<?php } ?>
