@@ -69,9 +69,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ), 999 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
-
-		// Display admin notices.
-		$this->admin_notices();
 	}
 
 	/**
@@ -81,42 +78,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	 */
 	public function using_supported_currency() {
 		return ( 'BRL' == get_woocommerce_currency() );
-	}
-
-	/**
-	 * Displays notifications when the admin has something wrong with the configuration.
-	 */
-	protected function admin_notices() {
-		if ( is_admin() && 'yes' == $this->get_option( 'enabled' ) ) {
-			// Checks if api_key is not empty.
-			if ( 'test' != $this->environment && ( empty( $this->number ) || empty( $this->key ) ) ) {
-				add_action( 'admin_notices', array( $this, 'plugin_not_configured_message' ) );
-			}
-
-			// Checks that the currency is supported
-			if ( ! $this->using_supported_currency() ) {
-				add_action( 'admin_notices', array( $this, 'currency_not_supported_message' ) );
-			}
-
-			if('webservice'==$this->store_contract && !$this->woocommerce_version_check()){
- 				add_action( 'admin_notices', array( $this, 'version_not_supported_message_for_webservice' ) );
-			}
-		}
-	}
-	/**
-	 * Returns a boolean indicating if Woocommerce's installed version is higher than the argument
-	 * automatically by WooCommerce before allowing customers to use the gateway
-	 * for payment.
-	 *
-	 * @param  string Version of Woocomerce to check against
-	 * @return bool
-	 */
-	public function woocommerce_version_check( $version = '2.3' ) {
-	  global $woocommerce;
-	    if( version_compare( $woocommerce->version, $version, ">=" ) ) {
-	      return true;
-	    }
-	  return false;
 	}
 
 	/**
@@ -724,7 +685,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 
 		$payment_function = 'process_payment_'.$this->store_contract;
- 		return call_user_func($payment_function,$order_id);
+		return call_user_func($payment_function,$order_id);
 	}
 
 	/**
@@ -931,49 +892,5 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Gets the admin url.
-	 *
-	 * @return string
-	 */
-	protected function admin_url() {
-		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
-			return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_gateway' );
-		}
-
-		return admin_url( 'admin.php?page=woocommerce_settings&tab=payment_gateways&section=WC_Cielo_Gateway' );
-	}
-
-
-	/**
-	 * Adds error message when version is not compatible with webservice (minimum version is 2.3.x)
-	 *
-	 * @return string Error Mensage.
-	 */
-	public function version_not_supported_message_for_webservice() {
-		echo '<div class="error"><p><strong>' . __( 'Cielo Disabled', 'cielo-woocommerce' ) . '</strong>: ' .  __( 'Webservice Cielo Store Solution will only work for Woocommerce 2.3.x and up.', 'cielo-woocommerce' ) . '</p></div>';
-	}
-	/**
-	 * Adds error message when the plugin is not configured properly.
-	 *
-	 * @return string Error Mensage.
-	 */
-	public function plugin_not_configured_message() {
- 		if ( ( isset( $_POST[ $id . 'environment' ] ) && 'test' == $_POST[ $id . 'environment' ] ) || ( isset( $_POST[ $id . 'number' ] ) && ! empty( $_POST[ $id . 'number' ] ) && isset( $_POST[ $id . 'key' ] ) && ! empty( $_POST[ $id . 'key' ] ) ) ) {
-			return;
-		}
-
-		echo '<div class="error"><p><strong>' . __( 'Cielo Disabled', 'cielo-woocommerce' ) . '</strong>: ' . sprintf( __( 'You should inform your Affiliation Number and Key. %s', 'cielo-woocommerce' ), '<a href="' . $this->admin_url() . '">' . __( 'Click here to configure!', 'cielo-woocommerce' ) . '</a>' ) . '</p></div>';
-	}
-
-	/**
-	 * Adds error message when an unsupported currency is used.
-	 *
-	 * @return string
-	 */
-	public function currency_not_supported_message() {
-		echo '<div class="error"><p><strong>' . __( 'Cielo Disabled', 'cielo-woocommerce' ) . '</strong>: ' . sprintf( __( 'The currency <code>%s</code> is not supported. Works only with Brazilian Real.', 'cielo-woocommerce' ), get_woocommerce_currency() ) . '</p></div>';
 	}
 }

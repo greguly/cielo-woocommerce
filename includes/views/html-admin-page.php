@@ -8,24 +8,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<h3><?php echo ( ! empty( $this->method_title ) ) ? $this->method_title : __( 'Settings', 'cielo-woocommerce' ) ; ?></h3>
+<h3><?php echo $this->method_title; ?></h3>
 
-<?php echo ( ! empty( $this->method_description ) ) ? wpautop( $this->method_description ) : ''; ?>
+<?php
+	if ( 'yes' == $this->get_option( 'enabled' ) ) {
+		if ( ! 'BRL' == get_woocommerce_currency() && ! class_exists( 'woocommerce_wpml' ) ) {
+			include 'html-notice-currency-not-supported.php';
+		}
+
+		if ( 'test' != $this->environment && ( empty( $this->number ) || empty( $this->key ) ) ) {
+			include 'html-notice-currency-not-supported.php';
+		}
+
+		if ( 'webservice' == $this->store_contract ) {
+			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.2.11', '<=' ) ) {
+				include 'html-notice-need-update-woocommerce.php';
+			}
+
+			if ( 'test' != $this->environment && 'no' == get_option( 'woocommerce_force_ssl_checkout' ) && ! class_exists( 'WordPressHTTPS' ) ) {
+				include 'html-notice-ssl-required.php';
+			}
+		}
+	}
+?>
+
+<?php echo wpautop( $this->method_description ); ?>
 
 <?php if ( apply_filters( 'cielo_woocommerce_help_message', true ) ) : ?>
 	<div class="updated woocommerce-message">
 		<p><?php printf( __( 'Help us to implement the Cielo Checkout. We count on your help in the form of a %s.', 'cielo-woocommerce' ), '<a href="http://www10.vakinha.com.br/VaquinhaE.aspx?e=342130" target="_blank">' . __( 'Vakinha', 'cielo-woocommerce' ) . '</a>' ); ?></p>
 	</div>
-	<?php if('webservice'==$this->store_contract){ ?>
-			<div class="updated woocommerce-message">
-			<?php if(!is_ssl()){ ?>
-				<p><?php printf( __( 'A SSL Certificate is required for Webservice Solution. Please verify if a certificate is installed on your server.', 'cielo-woocommerce' )); ?></p>
-			</div>
-			<?php } ?>
-	<?php  } ?>
 <?php endif; ?>
 
 <table class="form-table">
 	<?php $this->generate_settings_html(); ?>
 </table>
-
