@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_Cielo' ) ) :
 
+define('SCRIPT_DEBUG',true);
 /**
  * WooCommerce WC_Cielo main class.
  */
