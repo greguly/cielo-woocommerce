@@ -1,10 +1,11 @@
 <?php
 /**
- * WC Cielo Gateway Class.
+ * WC Cielo Credit Gateway Class.
  *
- * Built the Cielo method.
+ * Built the Cielo Credit methods
  */
-class WC_Cielo_Gateway extends WC_Payment_Gateway {
+
+abstract class WC_Cielo_Gateway extends WC_Payment_Gateway {
 
 	/**
 	 * Cielo WooCommerce API.
@@ -23,13 +24,13 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Constructor for the gateway.
 	 */
-	public function __construct() {
+	public function __construct($id=false,$method_title=false) {
 		global $woocommerce;
 
-		$this->id           = 'cielo';
+		$this->id           = $id ? $id : 'cielo';
 		$this->icon         = apply_filters( 'wc_cielo_icon', plugins_url( 'assets/images/cielo.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields   = true;
-		$this->method_title = __( 'Cielo', 'cielo-woocommerce' );
+		$this->method_title = $method_title ? $method_title : __( 'Cielo', 'cielo-woocommerce' );
 		$this->supports     = array( 'products', 'refunds' );
 
 		// Load the form fields.
@@ -132,6 +133,49 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
+	 *  Gateway Settings Form Fields related specifically to debug and testing
+	 */
+	public function init_form_debug_fields() {
+		$debug_fields = array(
+			'testing' => array(
+				'title'       => __( 'Gateway Testing', 'cielo-woocommerce' ),
+				'type'        => 'title',
+				'description' => ''
+			),
+			'debug' => array(
+				'title'       => __( 'Debug Log', 'cielo-woocommerce' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'Enable logging', 'cielo-woocommerce' ),
+				'default'     => 'no',
+				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside %s', 'cielo-woocommerce' ),  $this->get_log_file_path() )
+			)
+		);
+		return $debug_fields;
+	}
+
+	/**
+	 *  Gateway Settings Form Fields related specifically to layout/design
+	 */
+	public function init_form_layout_fields() {
+		$layout_fields = array(
+			'design_options' => array(
+				'title'       => __( 'Design', 'cielo-woocommerce' ),
+				'type'        => 'title',
+				'description' => ''
+			),
+			'design' => array(
+				'title'   => __( 'Payment Form Design', 'cielo-woocommerce' ),
+				'type'    => 'select',
+				'default' => 'default',
+				'options' => array(
+					'default' => __( 'Default', 'cielo-woocommerce' ),
+					'icons'   => __( 'With card icons', 'cielo-woocommerce' )
+				)
+			)
+		);
+		return $layout_fields;
+	}
+	/**
 	 * Initialise Gateway Settings Form Fields
 	 */
 	public function init_form_fields() {
@@ -139,7 +183,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			'enabled' => array(
 				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Enable Cielo', 'cielo-woocommerce' ),
+				'label'   => sprintf(__( 'Enable %s', 'cielo-woocommerce' ),$this->method_title),
 				'default' => 'yes'
 			),
 			'title' => array(
@@ -147,7 +191,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'type'        => 'text',
 				'description' => __( 'This controls the title which the user sees during checkout.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => __( 'Cielo', 'cielo-woocommerce' )
+				'default'     => $this->method_title
 			),
 			'description' => array(
 				'title'       => __( 'Description', 'cielo-woocommerce' ),
@@ -210,140 +254,6 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 				'description' => __( 'Store access key assigned by Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => ''
-			),
-			'methods' => array(
-				'title'       => __( 'Accepted Card Brands', 'cielo-woocommerce' ),
-				'type'        => 'multiselect',
-				'description' => __( 'Select the card brands that will be accepted as payment. Press the Ctrl key to select more than one brand.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => array( 'visa', 'mastercard' ),
-				'options'     => WC_Cielo_Helper::get_payment_methods()
-			),
-			'debit_methods' => array(
-				'title'       => __( 'Accepted Debit Cards', 'cielo-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'Select the debit card that will be accepted as payment.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => 'visa',
-				'options'     => array(
-					'none'       => __( 'None', 'cielo-woocommerce' ),
-					'visa'       => __( 'Visa only', 'cielo-woocommerce' ),
-					'mastercard' => __( 'MasterCard only', 'cielo-woocommerce' ),
-					'all'        => __( 'All debit methods', 'cielo-woocommerce' )
-				)
-			),
-			'authorization' => array(
-				'title'       => __( 'Automatic Authorization (MasterCard and Visa only)', 'cielo-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'Select the authorization type.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => '2',
-				'options'     => array(
-					'3' => __( 'Direct authorization (does not work for debit)', 'cielo-woocommerce' ),
-					'2' => __( 'Allow authorization for authenticated transaction and non-authenticated', 'cielo-woocommerce' ),
-					'1' => __( 'Authorization transaction only if is authenticated', 'cielo-woocommerce' ),
-					'0' => __( 'Only authenticate the transaction', 'cielo-woocommerce' )
-				)
-			),
-			'smallest_installment' => array(
-				'title'       => __( 'Smallest Installment', 'cielo-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'Smallest value of each installment, cannot be less than 5.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => '5'
-			),
-			'interest_rate' => array(
-				'title'       => __( 'Interest Rate (%)', 'cielo-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'Percentage of interest that will be charged to the customer in the installment where there is interest rate to be charged.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => '2'
-			),
-			'debit_discount' => array(
-				'title'       => __( 'Debit Discount (%)', 'cielo-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'Percentage discount for payments made ​​by debit card.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => '0'
-			),
-			'installments' => array(
-				'title'       => __( 'Installment Within', 'cielo-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'Maximum number of installments for orders in your store.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => '1',
-				'options'     => array(
-					'1'  => '1x',
-					'2'  => '2x',
-					'3'  => '3x',
-					'4'  => '4x',
-					'5'  => '5x',
-					'6'  => '6x',
-					'7'  => '7x',
-					'8'  => '8x',
-					'9'  => '9x',
-					'10' => '10x',
-					'11' => '11x',
-					'12' => '12x'
-				)
-			),
-			'interest' => array(
-				'title'       => __( 'Charge Interest Since', 'cielo-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'Indicate from which installment should be charged interest.', 'cielo-woocommerce' ),
-				'desc_tip'    => true,
-				'default'     => '6',
-				'options'     => array(
-					'1'  => '1x',
-					'2'  => '2x',
-					'3'  => '3x',
-					'4'  => '4x',
-					'5'  => '5x',
-					'6'  => '6x',
-					'7'  => '7x',
-					'8'  => '8x',
-					'9'  => '9x',
-					'10' => '10x',
-					'11' => '11x',
-					'12' => '12x'
-				)
-			),
-			'installment_type' => array(
-				'title'        => __( 'Installment Type', 'cielo-woocommerce' ),
-				'type'         => 'select',
-				'description'  => __( 'Client adds interest installments on the order total.', 'cielo-woocommerce' ),
-				'desc_tip'     => true,
-				'default'      => 'client',
-				'options'      => array(
-					'client' => __( 'Client', 'cielo-woocommerce' ),
-					'store'  => __( 'Store', 'cielo-woocommerce' )
-				)
-			),
-			'design_options' => array(
-				'title'       => __( 'Design', 'cielo-woocommerce' ),
-				'type'        => 'title',
-				'description' => ''
-			),
-			'design' => array(
-				'title'   => __( 'Payment Form Design', 'cielo-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'default',
-				'options' => array(
-					'default' => __( 'Default', 'cielo-woocommerce' ),
-					'icons'   => __( 'With card icons', 'cielo-woocommerce' )
-				)
-			),
-			'testing' => array(
-				'title'       => __( 'Gateway Testing', 'cielo-woocommerce' ),
-				'type'        => 'title',
-				'description' => ''
-			),
-			'debug' => array(
-				'title'       => __( 'Debug Log', 'cielo-woocommerce' ),
-				'type'        => 'checkbox',
-				'label'       => __( 'Enable logging', 'cielo-woocommerce' ),
-				'default'     => 'no',
-				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside %s', 'cielo-woocommerce' ),  $this->get_log_file_path() )
 			)
 		);
 	}
@@ -406,6 +316,7 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			echo wpautop( wptexturize( $description ) );
 		}
 
+
 		// Set the payment form type.
 		if ( 'webservice' == $this->store_contract ) {
 			wp_enqueue_script( 'wc-credit-card-form' );
@@ -422,11 +333,12 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 			$order_total = WC_Cielo_Helper::get_order_total();
 		}
 
+
 		// Makes it possible to create custom templates.
 		$path = apply_filters( 'wc_cielo_form_path', plugin_dir_path( __FILE__ ) . 'views/html-payment-form-' . $model . '.php', $model );
 
 		if ( file_exists( $path ) ) {
-			include_once( $path );
+			include( $path );
 		}
 	}
 
@@ -816,3 +728,5 @@ class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		return $this->helper->process_refund( $order_id, $amount, $reason );
 	}
 }
+
+ 

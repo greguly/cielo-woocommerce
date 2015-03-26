@@ -13,20 +13,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php
 	if ( 'yes' == $this->get_option( 'enabled' ) ) {
 		if ( ! 'BRL' == get_woocommerce_currency() && ! class_exists( 'woocommerce_wpml' ) ) {
-			include 'html-notice-currency-not-supported.php';
+			include 'notices/html-notice-currency-not-supported.php';
 		}
 
 		if ( 'test' != $this->environment && ( empty( $this->number ) || empty( $this->key ) ) ) {
-			include 'html-notice-currency-not-supported.php';
+			include 'notices/html-notice-currency-not-supported.php';
 		}
 
 		if ( 'webservice' == $this->store_contract ) {
 			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.2.11', '<=' ) ) {
-				include 'html-notice-need-update-woocommerce.php';
+				include 'notices/html-notice-need-update-woocommerce.php';
 			}
 
 			if ( 'test' != $this->environment && 'no' == get_option( 'woocommerce_force_ssl_checkout' ) && ! class_exists( 'WordPressHTTPS' ) ) {
-				include 'html-notice-ssl-required.php';
+				include 'notices/html-notice-ssl-required.php';
 			}
 		}
 	}

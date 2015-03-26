@@ -234,15 +234,17 @@ class WC_Cielo_Helper {
 	 *
 	 * @return string
 	 */
-	public function get_installments_html( $type = 'select', $order_total = 0 ) {
+	public function get_installments_html( $type = 'select', $order_total = 0,$gateway_id=false) {
 		$html = '';
 
 		if ( 'select' == $type ) {
-			$html .= '<select id="cielo-installments" name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">';
+			$html .= '<select id="cielo-installments" ';
+			$html .= $gateway_id ? ' data-id="'.$gateway_id.'"' : '';
+			$html .=' name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">';
 		}
 
 		$debit_methods   = self::get_debit_methods( $this->gateway->debit_methods );
-		$available_debit = array_intersect( $debit_methods, $this->gateway->methods );
+		$available_debit = $this->gateway->id == 'cielo_debit' ? $debit_methods: array_intersect( $debit_methods, $this->gateway->methods );
 
 		if ( ! empty( $available_debit ) ) {
 			$debit_total    = $order_total * ( ( 100 - self::get_valid_value( $this->gateway->debit_discount ) ) / 100 );

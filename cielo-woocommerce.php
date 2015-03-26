@@ -94,6 +94,8 @@ class WC_Cielo {
 		include_once( 'includes/class-wc-cielo-helper.php' );
 		include_once( 'includes/class-wc-cielo-api.php' );
 		include_once( 'includes/class-wc-cielo-gateway.php' );
+		include_once( 'includes/class-wc-cielo-debit-gateway.php' );
+		include_once( 'includes/class-wc-cielo-credit-gateway.php' );
 	}
 
 	/**
@@ -104,8 +106,7 @@ class WC_Cielo {
 	 * @return  array          Payment methods with Cielo.
 	 */
 	public function add_gateway( $methods ) {
-		$methods[] = 'WC_Cielo_Gateway';
-
+		array_push($methods,'WC_Cielo_Debit_Gateway','WC_Cielo_Credit_Gateway');
 		return $methods;
 	}
 
@@ -188,7 +189,7 @@ class WC_Cielo {
 	 * @return string
 	 */
 	public function woocommerce_missing_notice() {
-		include_once 'includes/views/html-notice-woocommerce-missing.php';
+		include_once 'includes/views/notices/html-notice-woocommerce-missing.php';
 	}
 }
 
