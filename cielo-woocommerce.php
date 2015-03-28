@@ -106,7 +106,8 @@ class WC_Cielo {
 	 * @return  array          Payment methods with Cielo.
 	 */
 	public function add_gateway( $methods ) {
-		array_push($methods,'WC_Cielo_Debit_Gateway','WC_Cielo_Credit_Gateway');
+		array_push( $methods,'WC_Cielo_Debit_Gateway','WC_Cielo_Credit_Gateway' );
+
 		return $methods;
 	}
 

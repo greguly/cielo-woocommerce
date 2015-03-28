@@ -24,7 +24,7 @@ abstract class WC_Cielo_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Constructor for the gateway.
 	 */
-	public function __construct($id=false,$method_title=false) {
+	public function __construct( $id = false, $method_title = false) {
 		global $woocommerce;
 
 		$this->id           = $id ? $id : 'cielo';
@@ -728,5 +728,3 @@ abstract class WC_Cielo_Gateway extends WC_Payment_Gateway {
 		return $this->helper->process_refund( $order_id, $amount, $reason );
 	}
 }
-
- 

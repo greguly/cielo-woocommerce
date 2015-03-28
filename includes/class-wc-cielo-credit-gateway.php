@@ -9,9 +9,11 @@
 class WC_Cielo_Credit_Gateway extends WC_Cielo_Gateway {
 
 	public function __construct() {
-	 	parent::__construct('cielo_credit',__('Cielo Credit','cielo-woocommerce'));
-	 	$this->debit_methods='none';
-	 }
+		parent::__construct( 'cielo_credit', __( 'Cielo Credit','cielo-woocommerce' ) );
+
+		$this->debit_methods = 'none';
+	}
+
 	public function init_form_credit_fields() {
 		$debit_fields = array(
 
@@ -108,14 +110,11 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Gateway {
 		return $debit_fields;
 	}
 
-		public function init_form_fields() {
- 		parent::init_form_fields();
+	public function init_form_fields() {
+		parent::init_form_fields();
 
- 		$this->form_fields = array_merge($this->form_fields,$this->init_form_credit_fields());
- 		$this->form_fields = array_merge($this->form_fields,parent::init_form_layout_fields());
- 		$this->form_fields = array_merge($this->form_fields,parent::init_form_debug_fields());
- 	}
-
+		$this->form_fields = array_merge( $this->form_fields, $this->init_form_credit_fields() );
+		$this->form_fields = array_merge( $this->form_fields, parent::init_form_layout_fields() );
+		$this->form_fields = array_merge( $this->form_fields, parent::init_form_debug_fields() );
+	}
 }
-
- 

@@ -4,14 +4,13 @@
  *
  * Built the Cielo Credit methods
  */
-
-
 class WC_Cielo_Debit_Gateway extends WC_Cielo_Gateway {
 
 	public function __construct() {
-	 	parent::__construct('cielo_debit',__('Cielo Debit','cielo-woocommerce'));
-	 }
- 	/**
+		parent::__construct( 'cielo_debit', __( 'Cielo Debit', 'cielo-woocommerce' ) );
+	}
+
+	/**
 	 *  Gateway Settings Form Fields related specifically to layout/design
 	 */
 	public function init_form_debit_fields() {
@@ -51,14 +50,12 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Gateway {
 
 		return $debit_fields;
 	}
- 	public function init_form_fields() {
- 		parent::init_form_fields();
 
- 		$this->form_fields = array_merge($this->form_fields,$this->init_form_debit_fields());
- 		$this->form_fields = array_merge($this->form_fields,parent::init_form_layout_fields());
- 		$this->form_fields = array_merge($this->form_fields,parent::init_form_debug_fields());
- 	}
+	public function init_form_fields() {
+		parent::init_form_fields();
 
+		$this->form_fields = array_merge( $this->form_fields, $this->init_form_debit_fields() );
+		$this->form_fields = array_merge( $this->form_fields, parent::init_form_layout_fields() );
+		$this->form_fields = array_merge( $this->form_fields, parent::init_form_debug_fields() );
+	}
 }
-
- 	
