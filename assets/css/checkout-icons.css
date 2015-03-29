@@ -100,8 +100,8 @@
 }
 
 @media screen and (max-width: 550px)  {
-	#cielo-payment-form .form-row-first,
-	#cielo-payment-form .form-row-last {
+	.cielo-payment-form .form-row-first,
+	.cielo-payment-form .form-row-last {
 		float: none !important;
 		margin-bottom: 0 !important;
 		padding-bottom: 0 !important;

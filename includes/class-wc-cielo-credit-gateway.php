@@ -2,28 +2,135 @@
 /**
  * WC Cielo Credit Gateway Class.
  *
- * Built the Cielo Credit methods
+ * Built the Cielo Credit methods.
  */
+class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 
+	/**
+	 * Cielo WooCommerce API.
+	 *
+	 * @var WC_Cielo_API
+	 */
+	public $api = null;
 
-class WC_Cielo_Credit_Gateway extends WC_Cielo_Gateway {
-
+	/**
+	 * Gateway actions.
+	 */
 	public function __construct() {
-		parent::__construct( 'cielo_credit', __( 'Cielo Credit','cielo-woocommerce' ) );
+		$this->id           = 'cielo_credit';
+		$this->icon         = apply_filters( 'wc_cielo_credit_icon', '' );
+		$this->has_fields   = true;
+		$this->method_title = __( 'Cielo - Credit Card', 'cielo-woocommerce' );
+		$this->supports     = array( 'products', 'refunds' );
 
-		$this->debit_methods = 'none';
+		// Load the form fields.
+		$this->init_form_fields();
+
+		// Load the settings.
+		$this->init_settings();
+
+		// Define user set variables.
+		$this->title                = $this->get_option( 'title' );
+		$this->description          = $this->get_option( 'description' );
+		$this->store_contract       = $this->get_option( 'store_contract' );
+		$this->environment          = $this->get_option( 'environment' );
+		$this->number               = $this->get_option( 'number' );
+		$this->key                  = $this->get_option( 'key' );
+		$this->methods              = $this->get_option( 'methods' );
+		$this->authorization        = $this->get_option( 'authorization' );
+		$this->smallest_installment = $this->get_option( 'smallest_installment' );
+		$this->interest_rate        = $this->get_option( 'interest_rate' );
+		$this->installments         = $this->get_option( 'installments' );
+		$this->interest             = $this->get_option( 'interest' );
+		$this->installment_type     = $this->get_option( 'installment_type' );
+		$this->design               = $this->get_option( 'design' );
+		$this->debug                = $this->get_option( 'debug' );
+
+		// Active logs.
+		if ( 'yes' == $this->debug ) {
+			$this->log = $this->get_logger();
+		}
+
+		// Set the API.
+		$this->api = new WC_Cielo_API( $this );
+
+		// Actions.
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_api_wc_cielo_credit_gateway', array( $this, 'check_return' ) );
+		add_action( 'woocommerce_' . $this->id . '_return', array( $this, 'return_handler' ) );
+		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 	}
 
-	public function init_form_credit_fields() {
-		$debit_fields = array(
-
+	/**
+	 * Initialise Gateway Settings Form Fields
+	 */
+	public function init_form_fields() {
+		$this->form_fields = array(
+			'enabled' => array(
+				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
+				'type'    => 'checkbox',
+				'label'   => __( 'Enable Cielo Credit Card', 'cielo-woocommerce' ),
+				'default' => 'yes'
+			),
+			'title' => array(
+				'title'       => __( 'Title', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'This controls the title which the user sees during checkout.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => __( 'Credit Card', 'cielo-woocommerce' )
+			),
+			'description' => array(
+				'title'       => __( 'Description', 'cielo-woocommerce' ),
+				'type'        => 'textarea',
+				'description' => __( 'This controls the description which the user sees during checkout.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => __( 'Pay using the secure method of Cielo', 'cielo-woocommerce' )
+			),
+			'store_contract' => array(
+				'title'       => __( 'Store Solution', 'cielo-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'Select the store contract method with cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => 'buypage_cielo',
+				'options'     => array(
+					'buypage_cielo' => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
+					'webservice'    => __( 'Webservice Solution', 'cielo-woocommerce' )
+				)
+			),
+			'environment' => array(
+				'title'       => __( 'Environment', 'cielo-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'Select the environment type (test or production).', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => 'test',
+				'options'     => array(
+					'test'       => __( 'Test', 'cielo-woocommerce' ),
+					'production' => __( 'Production', 'cielo-woocommerce' )
+				)
+			),
+			'number' => array(
+				'title'       => __( 'Affiliation Number', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Store affiliation number with Cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => ''
+			),
+			'key' => array(
+				'title'       => __( 'Affiliation Key', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Store access key assigned by Cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => ''
+			),
 			'methods' => array(
 				'title'       => __( 'Accepted Card Brands', 'cielo-woocommerce' ),
 				'type'        => 'multiselect',
 				'description' => __( 'Select the card brands that will be accepted as payment. Press the Ctrl key to select more than one brand.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => array( 'visa', 'mastercard' ),
-				'options'     => WC_Cielo_Helper::get_payment_methods()
+				'options'     => $this->get_payment_methods()
 			),
 			'authorization' => array(
 				'title'       => __( 'Automatic Authorization (MasterCard and Visa only)', 'cielo-woocommerce' ),
@@ -104,17 +211,200 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Gateway {
 					'client' => __( 'Client', 'cielo-woocommerce' ),
 					'store'  => __( 'Store', 'cielo-woocommerce' )
 				)
+			),
+			'design_options' => array(
+				'title'       => __( 'Design', 'cielo-woocommerce' ),
+				'type'        => 'title',
+				'description' => ''
+			),
+			'design' => array(
+				'title'   => __( 'Payment Form Design', 'cielo-woocommerce' ),
+				'type'    => 'select',
+				'default' => 'default',
+				'options' => array(
+					'default' => __( 'Default', 'cielo-woocommerce' ),
+					'icons'   => __( 'With card icons', 'cielo-woocommerce' )
+				)
+			),
+			'testing' => array(
+				'title'       => __( 'Gateway Testing', 'cielo-woocommerce' ),
+				'type'        => 'title',
+				'description' => ''
+			),
+			'debug' => array(
+				'title'       => __( 'Debug Log', 'cielo-woocommerce' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'Enable logging', 'cielo-woocommerce' ),
+				'default'     => 'no',
+				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside %s', 'cielo-woocommerce' ), $this->get_log_file_path() )
 			)
 		);
-
-		return $debit_fields;
 	}
 
-	public function init_form_fields() {
-		parent::init_form_fields();
+	/**
+	 * Get Checkout form field.
+	 *
+	 * @param string $model
+	 * @param float  $order_total
+	 */
+	protected function get_checkout_form( $model = 'default', $order_total = 0 ) {
+		$installments_type = ( 'icons' == $model ) ? 'radio' : 'select';
 
-		$this->form_fields = array_merge( $this->form_fields, $this->init_form_credit_fields() );
-		$this->form_fields = array_merge( $this->form_fields, parent::init_form_layout_fields() );
-		$this->form_fields = array_merge( $this->form_fields, parent::init_form_debug_fields() );
+		woocommerce_get_template(
+			'credit-card/' . $model . '-payment-form.php',
+			array(
+				'methods'      => $this->get_available_methods_options(),
+				'installments' => $this->get_installments_html( $installments_type, $order_total )
+			),
+			'woocommerce/cielo/',
+			WC_Cielo::get_templates_path()
+		);
+	}
+
+	/**
+	 * Checkout scripts.
+	 */
+	public function checkout_scripts() {
+		if ( ! is_checkout() ) {
+			return;
+		}
+
+		if ( ! $this->is_available() ) {
+			return;
+		}
+
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		if ( 'webservice' == $this->store_contract ) {
+			wp_enqueue_style( 'wc-cielo-checkout-webservice' );
+			wp_enqueue_script( 'wc-cielo-credit-checkout-webservice', plugins_url( 'assets/js/credit-card/checkout-webservice' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery', 'wc-credit-card-form' ), WC_Cielo::VERSION, true );
+			wp_localize_script(
+				'wc-cielo-credit-checkout-webservice',
+				'wc_cielo_credit_checkout_webservice_params',
+				array(
+					'available_brands' => array_map( 'sanitize_text_field', $this->methods )
+				)
+			);
+		} else {
+			if ( 'icons' == $this->design ) {
+				wp_enqueue_style( 'wc-cielo-checkout-icons' );
+				wp_enqueue_script( 'wc-cielo-credit-checkout-icons', plugins_url( 'assets/js/credit-card/checkout-icons' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+			} else {
+				wp_enqueue_script( 'wc-cielo-credit-checkout-default', plugins_url( 'assets/js/credit-card/checkout-default' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+			}
+		}
+	}
+
+	/**
+	 * Process webservice payment.
+	 *
+	 * @param  WC_Order $order
+	 *
+	 * @return array
+	 */
+	protected function process_webservice_payment( $order ) {
+		$card_brand = isset( $_POST['cielo_card'] ) ? sanitize_text_field( $_POST['cielo_card'] ) : '';
+
+		// Validate credit card brand.
+		$valid = $this->validate_credit_card_brand( $card_brand );
+
+		// Test the card fields.
+		if ( $valid ) {
+			$valid = $this->validate_card_fields( $_POST );
+		}
+
+		// Test the installments.
+		if ( $valid ) {
+			$valid = $this->validate_installments( $_POST, $order->order_total );
+		}
+
+		if ( $valid ) {
+			$installments = absint( $_POST['cielo_installments'] );
+			$card_data    = array(
+				'name_on_card'    => $_POST['cielo_holder_name'],
+				'card_number'     => $_POST['cielo_card_number'],
+				'card_expiration' => $_POST['cielo_card_expiry'],
+				'card_cvv'        => $_POST['cielo_card_cvc']
+			);
+
+			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments, $card_data );
+
+			// Set the error alert.
+			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+				$this->add_error( (string) $response->mensagem );
+				$valid = false;
+			}
+
+			// Save the tid.
+			if ( isset( $response->tid ) && ! empty( $response->tid ) ) {
+				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
+			}
+
+			$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
+		}
+
+		if ( $valid ) {
+			return array(
+				'result'   => 'success',
+				'redirect' => $payment_url
+			);
+		} else {
+			return array(
+				'result'   => 'fail',
+				'redirect' => ''
+			);
+		}
+	}
+
+	/**
+	 * Process buy page cielo payment.
+	 *
+	 * @param  WC_Order $order
+	 *
+	 * @return array
+	 */
+	protected function process_buypage_cielo_payment( $order ) {
+		$card_brand = isset( $_POST['cielo_card'] ) ? sanitize_text_field( $_POST['cielo_card'] ) : '';
+
+		// Validate credit card brand.
+		$valid = $this->validate_credit_card_brand( $card_brand );
+
+		// Test the installments.
+		if ( $valid ) {
+			$valid = $this->validate_installments( $_POST, $order->order_total );
+		}
+
+		if ( $valid ) {
+			$installments = absint( $_POST['cielo_installments'] );
+			$response     = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments );
+
+			// Set the error alert.
+			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+				$this->add_error( (string) $response->mensagem );
+				$valid = false;
+			}
+
+			// Save the tid.
+			if ( isset( $response->tid ) && ! empty( $response->tid ) ) {
+				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
+			}
+
+			// Set the transaction URL.
+			if ( isset( $response->{'url-autenticacao'} ) && ! empty( $response->{'url-autenticacao'} ) ) {
+				$payment_url = (string) $response->{'url-autenticacao'};
+			}
+		}
+
+		if ( $valid ) {
+			return array(
+				'result'   => 'success',
+				'redirect' => $payment_url
+			);
+		} else {
+			return array(
+				'result'   => 'fail',
+				'redirect' => ''
+			);
+		}
 	}
 }

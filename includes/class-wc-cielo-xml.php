@@ -64,9 +64,9 @@ class WC_Cielo_XML extends SimpleXMLElement {
 	 */
 	public function add_card_data( $card_number, $card_expiry, $card_cvv, $holder_name ) {
 		$card_data =  $this->addChild( 'dados-portador' );
-		$card_data->addChild( 'numero', preg_replace( '([^0-9])', '', $card_number ) );
+		$card_data->addChild( 'numero', preg_replace( '([^0-9])', '', sanitize_text_field( $card_number ) ) );
 
-		$expiry_date = explode( '/', $card_expiry );
+		$expiry_date = explode( '/', sanitize_text_field( $card_expiry ) );
 		$expiry_date = trim( $expiry_date[1] ) . trim( $expiry_date[0] );
 		$expiry_date = ( 4 == strlen( $expiry_date ) ) ? '20' . $expiry_date : $expiry_date;
 		$card_data->addChild( 'validade', $expiry_date );
@@ -74,7 +74,7 @@ class WC_Cielo_XML extends SimpleXMLElement {
 		// For now all the cards must have cvv there for it is always set at 1.
 		// For more information see page 11 of Manual Desenvovedor de Webservice Cielo v. 2.54.
 		$card_data->addChild( 'indicador', 1 );
-		$card_data->addChild( 'codigo-seguranca', preg_replace( '([^0-9])', '', $card_cvv ) );
+		$card_data->addChild( 'codigo-seguranca', preg_replace( '([^0-9])', '', sanitize_text_field( $card_cvv ) ) );
 		$card_data->addChild( 'nome-portador', sanitize_text_field( $holder_name ) );
 	}
 	/**

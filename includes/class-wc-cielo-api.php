@@ -226,25 +226,25 @@ class WC_Cielo_API {
 	 *
 	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
-	public function do_transaction( $order, $id, $card_brand, $installments, $credit_card_data = array() ) {
+	public function do_transaction( $order, $id, $card_brand, $installments = 0, $credit_card_data = array() ) {
 		$account_data    = $this->get_account_data();
 		$payment_product = '1';
 		$order_total     = $order->order_total;
 		$authorization   = $this->gateway->authorization;
 
 		// Set the authorization.
-		if ( in_array( $card_brand, WC_Cielo_Helper::get_accept_authorization() ) && 3 != $authorization ) {
+		if ( in_array( $card_brand, $this->gateway->get_accept_authorization() ) && 3 != $authorization ) {
 			$authorization = 3;
 		}
 
 		// Set the order total with interest.
 		if ( 'client' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
-			$order_total = $order->order_total * ( ( 100 + WC_Cielo_Helper::get_valid_value( $this->gateway->interest_rate ) ) / 100 );
+			$order_total = $order->order_total * ( ( 100 + $this->gateway->get_valid_value( $this->gateway->interest_rate ) ) / 100 );
 		}
 
 		// Set the debit values.
-		if ( in_array( $card_brand, WC_Cielo_Helper::get_debit_methods( $this->gateway->debit_methods ) ) && 0 == $installments ) {
-			$order_total     = $order->order_total * ( ( 100 - WC_Cielo_Helper::get_valid_value( $this->gateway->debit_discount ) ) / 100 );
+		if ( isset( $this->gateway->debit_methods ) && in_array( $card_brand, $this->gateway->get_debit_methods( $this->gateway->debit_methods ) ) && 0 == $installments ) {
+			$order_total     = $order->order_total * ( ( 100 - $this->gateway->get_valid_value( $this->gateway->debit_discount ) ) / 100 );
 			$payment_product = 'A';
 			$installments    = '1';
 			$authorization   = ( 3 == $authorization ) ? 2 : $authorization;
@@ -265,7 +265,7 @@ class WC_Cielo_API {
 		$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language() );
 		$xml->add_payment_data( $card_brand, $payment_product, $installments );
 
-		$xml->add_return_url( WC_Cielo_Helper::get_return_url( $order ) );
+		$xml->add_return_url( $this->gateway->get_api_return_url( $order ) );
 		$xml->add_authorize( $authorization );
 		$xml->add_capture( 'true' );
 		$xml->add_token_generation( 'false' );

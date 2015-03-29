@@ -19,8 +19,8 @@ module.exports = function( grunt ) {
 			},
 			all: [
 				'Gruntfile.js',
-				'<%= dirs.js %>/*/*.js',
-				'!<%= dirs.js %>/*/*.min.js'
+				'<%= dirs.js %>/*/*/*.js',
+				'!<%= dirs.js %>/*/*/*.min.js'
 			]
 		},
 
@@ -29,15 +29,39 @@ module.exports = function( grunt ) {
 			options: {
 				preserveComments: 'some'
 			},
-			dist: {
+			admin: {
 				files: [{
 					expand: true,
-					cwd: '<%= dirs.js %>/',
+					cwd: '<%= dirs.js %>/admin/',
 					src: [
 						'*.js',
 						'!*.min.js'
 					],
-					dest: '<%= dirs.js %>/',
+					dest: '<%= dirs.js %>/admin/',
+					ext: '.min.js'
+				}]
+			},
+			credit: {
+				files: [{
+					expand: true,
+					cwd: '<%= dirs.js %>/credit-card/',
+					src: [
+						'*.js',
+						'!*.min.js'
+					],
+					dest: '<%= dirs.js %>/credit-card/',
+					ext: '.min.js'
+				}]
+			},
+			debit: {
+				files: [{
+					expand: true,
+					cwd: '<%= dirs.js %>/debit-card/',
+					src: [
+						'*.js',
+						'!*.min.js'
+					],
+					dest: '<%= dirs.js %>/debit-card/',
 					ext: '.min.js'
 				}]
 			}
@@ -61,8 +85,8 @@ module.exports = function( grunt ) {
 		watch: {
 			js: {
 				files: [
-					'<%= dirs.js %>/*js',
-					'!<%= dirs.js %>/*.min.js'
+					'<%= dirs.js %>/*/*.js',
+					'!<%= dirs.js %>/*/*.min.js'
 				],
 				tasks: ['jshint', 'uglify']
 			},

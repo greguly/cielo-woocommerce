@@ -52,6 +52,7 @@ class WC_Cielo {
 
 			// Add the gateway.
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateway' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
 
 			// Admin actions.
 			if ( is_admin() ) {
@@ -77,6 +78,15 @@ class WC_Cielo {
 	}
 
 	/**
+	 * Get templates path.
+	 *
+	 * @return string
+	 */
+	public static function get_templates_path() {
+		return plugin_dir_path( __FILE__ ) . 'templates/';
+	}
+
+	/**
 	 * Load the plugin text domain for translation.
 	 */
 	public function load_plugin_textdomain() {
@@ -93,7 +103,6 @@ class WC_Cielo {
 		include_once( 'includes/class-wc-cielo-xml.php' );
 		include_once( 'includes/class-wc-cielo-helper.php' );
 		include_once( 'includes/class-wc-cielo-api.php' );
-		include_once( 'includes/class-wc-cielo-gateway.php' );
 		include_once( 'includes/class-wc-cielo-debit-gateway.php' );
 		include_once( 'includes/class-wc-cielo-credit-gateway.php' );
 	}
@@ -106,7 +115,7 @@ class WC_Cielo {
 	 * @return  array          Payment methods with Cielo.
 	 */
 	public function add_gateway( $methods ) {
-		array_push( $methods,'WC_Cielo_Debit_Gateway','WC_Cielo_Credit_Gateway' );
+		array_push( $methods, 'WC_Cielo_Debit_Gateway', 'WC_Cielo_Credit_Gateway' );
 
 		return $methods;
 	}
@@ -126,7 +135,13 @@ class WC_Cielo {
 			$prefix = __( 'Cielo', 'cielo-woocommerce' ) . ': ';
 
 			if ( 90 > $days ) {
-				$tid      = get_post_meta( $order->id, '_wc_cielo_transaction_tid', true );
+				$tid = get_post_meta( $order->id, '_transaction_id', true );
+
+				// Backward compatibility.
+				if ( ! $tid ) {
+					$tid = get_post_meta( $order->id, '_wc_cielo_transaction_tid', true );
+				}
+
 				$gateway  = new WC_Cielo_Gateway();
 				$response = $gateway->api->do_transaction_cancellation( $order, $tid, $order->id . '-' . time() );
 
@@ -182,6 +197,17 @@ class WC_Cielo {
 				update_option( 'wc_cielo_version', WC_Cielo::VERSION );
 			}
 		}
+	}
+
+	/**
+	 * Register scripts.
+	 */
+	public function register_scripts() {
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		// Styles.
+		wp_register_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', __FILE__ ), array(), WC_Cielo::VERSION );
+		wp_register_style( 'wc-cielo-checkout-webservice', plugins_url( 'assets/css/checkout-webservice' . $suffix . '.css', __FILE__ ), array(), WC_Cielo::VERSION );
 	}
 
 	/**
