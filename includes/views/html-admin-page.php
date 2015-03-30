@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 
 		if ( 'test' != $this->environment && ( empty( $this->number ) || empty( $this->key ) ) ) {
-			include 'notices/html-notice-currency-not-supported.php';
+			include 'notices/html-notice-not-configured.php';
 		}
 
 		if ( 'webservice' == $this->store_contract ) {
