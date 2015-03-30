@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Cielo WooCommerce v3.1.2\n"
+"Project-Id-Version: Cielo WooCommerce v4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-03-30 03:13:57+0000\n"
+"PO-Revision-Date: 2015-03-30 03:55:24+0000\n"
 "Last-Translator: Claudio Sanches <contato@claudiosmweb.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -136,7 +136,7 @@ msgstr "Um erro aconteceu ao processar o seu pagamento, por favor, tente novamen
 msgid "An error occurred while trying to cancel the payment, turn on the Cielo log option and try again."
 msgstr "Um erro aconteceu ao tentar cancelar o pagamento, ative a opção de log do plugin da Cielo e tente novamente."
 
-#: cielo-woocommerce.php:135
+#: includes/class-wc-cielo-admin.php:30
 #: includes/class-wc-cielo-helper.php:591
 #: includes/class-wc-cielo-helper.php:771
 #@ cielo-woocommerce
@@ -455,7 +455,7 @@ msgstr "Adiciona a opção de pagamento pela Cielo ao WooCommerce"
 msgid "http://omniwp.com.br"
 msgstr "http://omniwp.com.br"
 
-#: cielo-woocommerce.php:152
+#: includes/class-wc-cielo-admin.php:47
 #@ cielo-woocommerce
 msgid "Transaction canceled successfully"
 msgstr "Transação cancelada com sucesso"
@@ -530,7 +530,7 @@ msgstr "Ajude-nos a implementar o Checkout Cielo. Contamos com a sua ajuda em fo
 msgid "Vakinha"
 msgstr "Vakinha"
 
-#: cielo-woocommerce.php:156
+#: includes/class-wc-cielo-admin.php:51
 #@ cielo-woocommerce
 msgid "This transaction has been made more than 90 days and therefore it can not be canceled"
 msgstr "Esta transação foi feita à mais de 90 dias e portanto não pode ser cancelada"
@@ -654,6 +654,7 @@ msgstr "Cielo - Cartão de crédito"
 msgid "Enable Cielo Credit Card"
 msgstr "Ativar cartão de crédito da Cielo"
 
+#: cielo-woocommerce.php:144
 #: includes/class-wc-cielo-credit-gateway.php:82
 #: templates/credit-card/default-payment-form.php:16
 #@ cielo-woocommerce
@@ -675,6 +676,7 @@ msgstr "Cielo - Cartão de débito"
 msgid "Enable Cielo Debit Card"
 msgstr "Ativar cartão de débito da Cielo"
 
+#: cielo-woocommerce.php:174
 #: includes/class-wc-cielo-debit-gateway.php:78
 #: templates/debit-card/default-payment-form.php:17
 #@ cielo-woocommerce
@@ -704,16 +706,16 @@ msgstr "Status do Sistema &gt; Logs"
 msgid "Please enter with a valid card brand. The following cards are accepted: %s."
 msgstr "Por favor, digite um cartão com bandeira válida. As seguintes bandeiras de cartão são aceitas: %s"
 
-#: includes/html-notice-not-configured.php:17
 #: includes/views/notices/html-notice-currency-not-supported.php:13
 #: includes/views/notices/html-notice-need-update-woocommerce.php:13
+#: includes/views/notices/html-notice-not-configured.php:17
 #: includes/views/notices/html-notice-ssl-required.php:13
 #: includes/views/notices/html-notice-woocommerce-missing.php:20
 #@ cielo-woocommerce
 msgid "Cielo WooCommerce Disabled"
 msgstr "Cielo WooCommerce desabilitado"
 
-#: includes/html-notice-not-configured.php:17
+#: includes/views/notices/html-notice-not-configured.php:17
 #@ cielo-woocommerce
 msgid "You should inform your Affiliation Number and Key."
 msgstr "Você deve informar o seu número de número e chave de afiliação."

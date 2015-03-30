@@ -136,31 +136,63 @@ class WC_Cielo {
 
 			if ( version_compare( $version, WC_Cielo::VERSION, '<' ) ) {
 
-				$options     = get_option( 'woocommerce_cielo_settings' );
-				$new_options = array();
+				// Upgrade from 3.x.
+				if ( $options = get_option( 'woocommerce_cielo_settings' ) ) {
+					// Credit.
+					$credit_options = array(
+						'enabled'              => $options['enabled'],
+						'title'                => __( 'Credit Card', 'cielo-woocommerce' ),
+						'description'          => $options['description'],
+						'store_contract'       => 'buypage_cielo',
+						'environment'          => $options['environment'],
+						'number'               => $options['number'],
+						'key'                  => $options['key'],
+						'methods'              => $options['methods'],
+						'authorization'        => $options['authorization'],
+						'smallest_installment' => $options['smallest_installment'],
+						'interest_rate'        => $options['interest_rate'],
+						'installments'         => $options['installments'],
+						'interest'             => $options['interest'],
+						'installment_type'     => $options['installment_type'],
+						'design_options'       => $options['design_options'],
+						'design'               => $options['design'],
+						'debug'                => $options['debug']
+					);
 
-				// Upgrade from 2.0.x.
-				if ( isset( $options['mode'] ) ) {
-					$new_options['enabled'] = $options['enabled'];
-					$new_options['title'] = $options['title'];
-					$new_options['description'] = $options['description'];
-					$new_options['environment'] = $options['mode'];
-					$new_options['number'] = $options['numero'];
-					$new_options['key'] = $options['chave'];
-					$new_options['methods'] = $options['meios'];
-					$new_options['authorization'] = $options['autorizar'];
-					$new_options['smallest_installment'] = $options['parcela_minima'];
-					$new_options['interest_rate'] = $options['taxa_juros'];
-					$new_options['interest_rate'] = $options['debit_discount'];
-					$new_options['installments'] = $options['parcelas'];
-					$new_options['interest'] = $options['juros'];
-					$new_options['installment_type'] = ( '2' == $options['parcelamento'] ) ? 'client' : 'store';
-					$new_options['design'] = 'default';
-				} else {
-					$new_options = $options;
+					// Debit.
+					$debit_methods = array();
+					if ( 'mastercard' == $options['debit_methods'] ) {
+						$debit_methods = array( 'maestro' );
+					} else if ( 'all' == $options['debit_methods'] ) {
+						$debit_methods = array( 'visaelectron', 'maestro' );
+					} else {
+						$debit_methods = array( 'visaelectron' );
+					}
+
+					$debit_options  = array(
+						'enabled'        => ( 'none' == $options['debit_methods'] ) ? 'no' : $options['enabled'],
+						'title'          => __( 'Debit Card', 'cielo-woocommerce' ),
+						'description'    => $options['description'],
+						'store_contract' => 'buypage_cielo',
+						'environment'    => $options['environment'],
+						'number'         => $options['number'],
+						'key'            => $options['key'],
+						'methods'        => $debit_methods,
+						'authorization'  => $options['authorization'],
+						'debit_discount' => $options['debit_discount'],
+						'design_options' => $options['design_options'],
+						'design'         => $options['design'],
+						'debug'          => $options['debug']
+					);
+
+					// Save the new options.
+					update_option( 'woocommerce_cielo_credit_settings', $credit_options );
+					update_option( 'woocommerce_cielo_debit_settings', $debit_options );
+
+					// Delete old options.
+					delete_option( 'woocommerce_cielo_settings' );
 				}
 
-				update_option( 'woocommerce_cielo_settings', $new_options );
 				update_option( 'wc_cielo_version', WC_Cielo::VERSION );
 			}
 		}
