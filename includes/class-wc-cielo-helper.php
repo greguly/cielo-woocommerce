@@ -346,9 +346,10 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_installments_html( $order_total = 0, $type = 'select' ) {
-		$html = '';
+		$html         = '';
+		$installments = apply_filters( 'wc_cielo_max_installments', $this->installments, $order_total );
 
-		if ( '1' == $this->installments ) {
+		if ( '1' == $installments ) {
 			return $html;
 		}
 
@@ -356,7 +357,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$html .= '<select id="cielo-installments" name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">';
 		}
 
-		for ( $i = 1; $i <= $this->installments; $i++ ) {
+		for ( $i = 1; $i <= $installments; $i++ ) {
 
 			$interest_rate   = $this->get_valid_value( $this->interest_rate ) / 100;
 			$financial_index = $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $i ) ) );
@@ -520,16 +521,16 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$installments      = absint( $posted['cielo_installments'] );
 			$interest_rate     = $this->get_valid_value( $this->interest_rate ) / 100;
 			$financial_index   = $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) );
-			$installment_total = $order_total  / $installments;
+			$installment_total = $order_total / $installments;
+			$_installments     = apply_filters( 'wc_cielo_max_installments', $this->installments, $order_total );
 
 			if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
 				$interest_total    = $installment_total * $financial_index;
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
-
 			}
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 
-			 if ( $installments > $this->installments || 1 != $installments && $installment_total < $smallest_value ) {
+			if ( $installments > $_installments || 1 != $installments && $installment_total < $smallest_value ) {
 			 	throw new Exception( __( 'Invalid number of installments!', 'cielo-woocommerce' ) );
 			}
 		} catch ( Exception $e ) {
