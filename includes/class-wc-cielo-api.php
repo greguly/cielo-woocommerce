@@ -223,10 +223,11 @@ class WC_Cielo_API {
 	 * @param  string   $card_brand       Card brand slug.
 	 * @param  int      $installments     Number of installments (use 0 for debit).
 	 * @param  array    $credit_card_data Credit card data for the webservice.
+	 * @param  bool     $is_debit         Check if is debit or credit.
 	 *
 	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
-	public function do_transaction( $order, $id, $card_brand, $installments = 0, $credit_card_data = array() ) {
+	public function do_transaction( $order, $id, $card_brand, $installments = 0, $credit_card_data = array(), $is_debit = false ) {
 		$account_data    = $this->get_account_data();
 		$payment_product = '1';
 		$order_total     = $order->order_total;
@@ -238,12 +239,12 @@ class WC_Cielo_API {
 		}
 
 		// Set the order total with interest.
-		if ( 'client' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
+		if ( isset( $this->gateway->installment_type ) && 'client' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
 			$order_total = $order->order_total * ( ( 100 + $this->gateway->get_valid_value( $this->gateway->interest_rate ) ) / 100 );
 		}
 
 		// Set the debit values.
-		if ( isset( $this->gateway->debit_methods ) && in_array( $card_brand, $this->gateway->get_debit_methods( $this->gateway->debit_methods ) ) && 0 == $installments ) {
+		if ( $is_debit ) {
 			$order_total     = $order->order_total * ( ( 100 - $this->gateway->get_valid_value( $this->gateway->debit_discount ) ) / 100 );
 			$payment_product = 'A';
 			$installments    = '1';

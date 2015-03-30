@@ -1,5 +1,3 @@
-/* global wc_cielo_credit_checkout_webservice_params */
-/*jshint devel: true */
 (function( $ ) {
 	'use strict';
 
@@ -76,19 +74,14 @@
 				card_brand = 'diners';
 			}
 
-			// Check the card brand is available.
-			if ( -1 !== $.inArray( card_brand, wc_cielo_credit_checkout_webservice_params.available_brands ) ) {
-				// Remove any brand input.
-				$( 'input.cielo-credit-card-brand', $form ).remove();
+			// Remove any brand input.
+			$( 'input.cielo-credit-card-brand', $form ).remove();
 
-				// Add the hash input.
-				$form.append( $( '<input class="cielo-credit-card-brand" name="cielo_card" type="hidden" />' ).val( card_brand ) );
+			// Add the hash input.
+			$form.append( $( '<input class="cielo-credit-card-brand" name="cielo_credit_card" type="hidden" />' ).val( card_brand ) );
 
-				// Submit the form.
-				return true;
-			}
-
-			return false;
+			// Submit the form.
+			return true;
 		}
 
 		/**

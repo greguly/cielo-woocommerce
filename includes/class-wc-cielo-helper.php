@@ -11,14 +11,19 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 */
 	public function get_payment_methods() {
 		return array(
-			'visa'       => __( 'Visa', 'cielo-woocommerce' ),
-			'mastercard' => __( 'MasterCard', 'cielo-woocommerce' ),
-			'diners'     => __( 'Diners', 'cielo-woocommerce' ),
-			'discover'   => __( 'Discover', 'cielo-woocommerce' ),
-			'elo'        => __( 'Elo', 'cielo-woocommerce' ),
-			'amex'       => __( 'American Express', 'cielo-woocommerce' ),
-			'jcb'        => __( 'JCB', 'cielo-woocommerce' ),
-			'aura'       => __( 'Aura', 'cielo-woocommerce' ),
+			// Credit.
+			'visa'         => __( 'Visa', 'cielo-woocommerce' ),
+			'mastercard'   => __( 'MasterCard', 'cielo-woocommerce' ),
+			'diners'       => __( 'Diners', 'cielo-woocommerce' ),
+			'discover'     => __( 'Discover', 'cielo-woocommerce' ),
+			'elo'          => __( 'Elo', 'cielo-woocommerce' ),
+			'amex'         => __( 'American Express', 'cielo-woocommerce' ),
+			'jcb'          => __( 'JCB', 'cielo-woocommerce' ),
+			'aura'         => __( 'Aura', 'cielo-woocommerce' ),
+
+			// Debit
+			'visaelectron' => __( 'Visa Electron', 'cielo-woocommerce' ),
+			'maestro'      => __( 'Maestro', 'cielo-woocommerce' ),
 		);
 	}
 
@@ -69,7 +74,9 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		foreach ( $methods as $method ) {
 			$name = $this->get_payment_method_name( $method );
 
-			if ( $count == ( $total - 1 ) ) {
+			if ( 1 == $total ) {
+				$list .= $name;
+			} else if ( $count == ( $total - 1 ) ) {
 				$list .= $name . ' ';
 			} else if ( $count == $total ) {
 				$list .= sprintf( __( 'and %s', 'cielo-woocommerce' ), $name );
@@ -318,6 +325,19 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Get debit discount.
+	 *
+	 * @param  float $order_total Order total.
+	 *
+	 * @return float
+	 */
+	public function get_debit_discount( $order_total = 0 ) {
+		$debit_total = $order_total * ( ( 100 - $this->get_valid_value( $this->debit_discount ) ) / 100 );
+
+		return $debit_total;
+	}
+
+	/**
 	 * Get installments HTML.
 	 *
 	 * @param  string $type        'select' or 'radio'.
@@ -325,7 +345,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 *
 	 * @return string
 	 */
-	public function get_installments_html( $type = 'select', $order_total = 0 ) {
+	public function get_installments_html( $order_total = 0, $type = 'select' ) {
 		$html = '';
 
 		if ( '1' == $this->installments ) {
@@ -333,27 +353,13 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		}
 
 		if ( 'select' == $type ) {
-			$html .= '<select id="cielo-installments" data-id="' . $this->id . '" name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">';
+			$html .= '<select id="cielo-installments" name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">';
 		}
-
-		// $debit_methods   = $this->get_debit_methods( $this->debit_methods );
-		// $available_debit = $this->id == 'cielo_debit' ? $debit_methods: array_intersect( $debit_methods, $this->methods );
-
-		// if ( ! empty( $available_debit ) ) {
-		// 	$debit_total    = $order_total * ( ( 100 - $this->get_valid_value( $this->debit_discount ) ) / 100 );
-		// 	$debit_discount = ( $order_total > $debit_total ) ? ' (' . $this->get_valid_value( $this->debit_discount ) . '% ' . _x( 'off', 'price', 'cielo-woocommerce' ) . ')' : '';
-
-		// 	if ( 'select' == $type ) {
-		// 		$html .= '<option value="0" class="cielo-debit" data-debit="' . esc_attr( $this->debit_methods ) . '">' . sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $debit_total ) ), $debit_discount ) . '</option>';
-		// 	} else {
-		// 		$html .= '<label class="cielo-debit" data-debit="' . esc_attr( $this->debit_methods ) . '"><input type="radio" name="cielo_installments" value="0" /> ' . sprintf( __( 'Debit %s%s', 'cielo-woocommerce' ), '<strong>' . sanitize_text_field( woocommerce_price( $debit_total ) ) . '</strong>', $debit_discount ) . '</label>';
-		// 	}
-		// }
 
 		for ( $i = 1; $i <= $this->installments; $i++ ) {
 
 			$interest_rate   = $this->get_valid_value( $this->interest_rate ) / 100;
-			$financial_index = $interest_rate / (1 - ( 1 / pow( 1 + $interest_rate, $i ) ) );
+			$financial_index = $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $i ) ) );
 			$credit_total    = $order_total / $i;
 			$credit_interest = sprintf(__( 'no interest Total: %s', 'cielo-woocommerce' ),sanitize_text_field( woocommerce_price( $order_total ) ));
 			$smallest_value  = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
@@ -441,13 +447,13 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Validate credit card brand.
+	 * Validate credit brand.
 	 *
 	 * @param  string $card_brand
 	 *
 	 * @return bool
 	 */
-	protected function validate_credit_card_brand( $card_brand ) {
+	protected function validate_credit_brand( $card_brand ) {
 		try {
 			// Validate the card brand.
 			if ( ! in_array( $card_brand, $this->methods ) ) {

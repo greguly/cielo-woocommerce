@@ -1,10 +1,17 @@
 <?php
+/**
+ * Debit Card - Webservice checkout form.
+ *
+ * @version 4.0.0
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
+
 ?>
 
-<fieldset id="cielo-payment-form">
+<fieldset id="cielo-debit-payment-form" class="cielo-payment-form">
 	<p class="form-row form-row-first">
 		<label for="cielo-card-holder-name"><?php _e( 'Card Holder Name', 'cielo-woocommerce' ); ?> <small>(<?php _e( 'as recorded on the card', 'cielo-woocommerce' ); ?>)</small> <span class="required">*</span></label>
 		<input id="cielo-card-holder-name" name="cielo_holder_name" class="input-text" type="text" autocomplete="off" style="font-size: 1.5em; padding: 8px;" />
@@ -22,10 +29,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<label for="cielo-card-cvc"><?php _e( 'Security Code', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
 		<input id="cielo-card-cvc" name="cielo_card_cvc" class="input-text wc-credit-card-form-card-cvc" type="tel" autocomplete="off" placeholder="<?php _e( 'CVC', 'cielo-woocommerce' ); ?>" style="font-size: 1.5em; padding: 8px;" />
 	</p>
-	<?php if ( 1 < $this->installments ) : ?>
+	<?php if ( 0 < $discount ) : ?>
 		<p class="form-row form-row-wide">
-			<label for="cielo-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
-			<?php echo $this->helper->get_installments_html( 'select', $order_total ); ?>
+			<?php printf( __( 'Payment by debit have discount of %s. Order Total: %s.', 'cielo-woocommerce' ), $discount . '%', sanitize_text_field( woocommerce_price( $discount_total ) ) ); ?>
 		</p>
 	<?php endif; ?>
 	<div class="clear"></div>

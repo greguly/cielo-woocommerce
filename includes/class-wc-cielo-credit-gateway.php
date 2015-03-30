@@ -254,7 +254,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			'credit-card/' . $model . '-payment-form.php',
 			array(
 				'methods'      => $this->get_available_methods_options(),
-				'installments' => $this->get_installments_html( $installments_type, $order_total )
+				'installments' => $this->get_installments_html( $order_total, $installments_type )
 			),
 			'woocommerce/cielo/',
 			WC_Cielo::get_templates_path()
@@ -278,13 +278,6 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		if ( 'webservice' == $this->store_contract ) {
 			wp_enqueue_style( 'wc-cielo-checkout-webservice' );
 			wp_enqueue_script( 'wc-cielo-credit-checkout-webservice', plugins_url( 'assets/js/credit-card/checkout-webservice' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery', 'wc-credit-card-form' ), WC_Cielo::VERSION, true );
-			wp_localize_script(
-				'wc-cielo-credit-checkout-webservice',
-				'wc_cielo_credit_checkout_webservice_params',
-				array(
-					'available_brands' => array_map( 'sanitize_text_field', $this->methods )
-				)
-			);
 		} else {
 			if ( 'icons' == $this->design ) {
 				wp_enqueue_style( 'wc-cielo-checkout-icons' );
@@ -303,10 +296,10 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_webservice_payment( $order ) {
-		$card_brand = isset( $_POST['cielo_card'] ) ? sanitize_text_field( $_POST['cielo_card'] ) : '';
+		$card_brand = isset( $_POST['cielo_credit_card'] ) ? sanitize_text_field( $_POST['cielo_credit_card'] ) : '';
 
 		// Validate credit card brand.
-		$valid = $this->validate_credit_card_brand( $card_brand );
+		$valid = $this->validate_credit_brand( $card_brand );
 
 		// Test the card fields.
 		if ( $valid ) {
@@ -364,10 +357,10 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_buypage_cielo_payment( $order ) {
-		$card_brand = isset( $_POST['cielo_card'] ) ? sanitize_text_field( $_POST['cielo_card'] ) : '';
+		$card_brand = isset( $_POST['cielo_credit_card'] ) ? sanitize_text_field( $_POST['cielo_credit_card'] ) : '';
 
 		// Validate credit card brand.
-		$valid = $this->validate_credit_card_brand( $card_brand );
+		$valid = $this->validate_credit_brand( $card_brand );
 
 		// Test the installments.
 		if ( $valid ) {

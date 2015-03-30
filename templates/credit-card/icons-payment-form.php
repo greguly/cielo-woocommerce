@@ -16,7 +16,7 @@ $first_method = current( $methods );
 <fieldset id="cielo-credit-payment-form" class="cielo-payment-form">
 	<ul id="cielo-card-brand">
 		<?php foreach ( $methods as $method_key => $method_name ): ?>
-			<li><label title="<?php echo esc_attr( $method_name ); ?>"><i id="cielo-icon-<?php echo esc_attr( $method_key ); ?>"></i><input type="radio" name="cielo_card" value="<?php echo esc_attr( $method_key ); ?>" <?php echo ( $first_method == $method_name ) ? 'checked="checked"' : ''; ?>/><span><?php echo esc_attr( $method_name ); ?></span></label></li>
+			<li><label title="<?php echo esc_attr( $method_name ); ?>"><i id="cielo-icon-<?php echo esc_attr( $method_key ); ?>"></i><input type="radio" name="cielo_credit_card" value="<?php echo esc_attr( $method_key ); ?>" <?php echo ( $first_method == $method_name ) ? 'checked="checked"' : ''; ?>/><span><?php echo esc_attr( $method_name ); ?></span></label></li>
 		<?php endforeach ?>
 	</ul>
 
