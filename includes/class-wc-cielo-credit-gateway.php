@@ -59,6 +59,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		add_action( 'woocommerce_api_wc_cielo_credit_gateway', array( $this, 'check_return' ) );
 		add_action( 'woocommerce_' . $this->id . '_return', array( $this, 'return_handler' ) );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
+		add_action( 'woocommerce_email_after_order_table', array( $this, 'email_instructions' ), 10, 3 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 	}
@@ -296,7 +297,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_webservice_payment( $order ) {
-		$card_brand = isset( $_POST['cielo_credit_card'] ) ? sanitize_text_field( $_POST['cielo_credit_card'] ) : '';
+		$payment_url = '';
+		$card_brand  = isset( $_POST['cielo_credit_card'] ) ? sanitize_text_field( $_POST['cielo_credit_card'] ) : '';
 
 		// Validate credit card brand.
 		$valid = $this->validate_credit_brand( $card_brand );
@@ -334,9 +336,12 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			}
 
 			$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
+
+			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
+			update_post_meta( $order->id, '_wc_cielo_installments', $installments );
 		}
 
-		if ( $valid ) {
+		if ( $valid && $payment_url ) {
 			return array(
 				'result'   => 'success',
 				'redirect' => $payment_url
@@ -357,7 +362,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_buypage_cielo_payment( $order ) {
-		$card_brand = isset( $_POST['cielo_credit_card'] ) ? sanitize_text_field( $_POST['cielo_credit_card'] ) : '';
+		$payment_url = '';
+		$card_brand  = isset( $_POST['cielo_credit_card'] ) ? sanitize_text_field( $_POST['cielo_credit_card'] ) : '';
 
 		// Validate credit card brand.
 		$valid = $this->validate_credit_brand( $card_brand );
@@ -386,9 +392,12 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			if ( isset( $response->{'url-autenticacao'} ) && ! empty( $response->{'url-autenticacao'} ) ) {
 				$payment_url = (string) $response->{'url-autenticacao'};
 			}
+
+			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
+			update_post_meta( $order->id, '_wc_cielo_installments', $installments );
 		}
 
-		if ( $valid ) {
+		if ( $valid && $payment_url ) {
 			return array(
 				'result'   => 'success',
 				'redirect' => $payment_url
@@ -397,6 +406,75 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			return array(
 				'result'   => 'fail',
 				'redirect' => ''
+			);
+		}
+	}
+
+	/**
+	 * Thank you page message.
+	 *
+	 * @return string
+	 */
+	public function thankyou_page( $order_id ) {
+		global $woocommerce;
+
+		$order = new WC_Order( $order_id );
+		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+			$order_url = $order->get_view_order_url();
+		} else {
+			$order_url = add_query_arg( 'order', $order_id, get_permalink( woocommerce_get_page_id( 'view_order' ) ) );
+		}
+
+		$card_brand   = get_post_meta( $order->id, '_wc_cielo_card_brand', true );
+		$card_brand   = get_payment_method_name( $card_brand );
+		$installments = get_post_meta( $order->id, '_wc_cielo_installments', true );
+
+		// @TODO:
+
+		if ( $order->status == 'processing' || $order->status == 'completed' ) {
+			echo '<div class="woocommerce-message"><a href="' . $order_url . '" class="button" style="display: block !important; visibility: visible !important;">' . __( 'View order details', 'cielo-woocommerce' ) . '</a>' . sprintf( __( 'Your payment worth %s was received successfully.', 'cielo-woocommerce' ), woocommerce_price( $order->order_total ) ) . '<br />' . __( 'The authorization code was generated.', 'cielo-woocommerce' ) . '</div>';
+		} else {
+			echo '<div class="woocommerce-info">' . sprintf( __( 'For more information or questions regarding your order, go to the %s.', 'cielo-woocommerce' ), '<a href="' . $order_url . '">' . __( 'order details page', 'cielo-woocommerce' ) . '</a>' ) . '</div>';
+		}
+	}
+
+	/**
+	 * Add content to the WC emails.
+	 *
+	 * @param  object $order         Order object.
+	 * @param  bool   $sent_to_admin Send to admin.
+	 * @param  bool   $plain_text    Plain text or HTML.
+	 *
+	 * @return string                Payment instructions.
+	 */
+	public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
+		if ( $sent_to_admin || ! in_array( $order->status, array( 'processing', 'on-hold' ) ) || $this->id !== $order->payment_method ) {
+			return;
+		}
+
+		$card_brand   = get_post_meta( $order->id, '_wc_cielo_card_brand', true );
+		$card_brand   = get_payment_method_name( $card_brand );
+		$installments = get_post_meta( $order->id, '_wc_cielo_installments', true );
+
+		if ( $plain_text ) {
+			woocommerce_get_template(
+				'debit-card/emails/plain-instructions.php',
+				array(
+					'card_brand'   => $card_brand,
+					'installments' => $installments
+				),
+				'woocommerce/cielo/',
+				WC_Iugu::get_templates_path()
+			);
+		} else {
+			woocommerce_get_template(
+				'debit-card/emails/html-instructions.php',
+				array(
+					'card_brand'   => $card_brand,
+					'installments' => $installments
+				),
+				'woocommerce/cielo/',
+				WC_Cielo::get_templates_path()
 			);
 		}
 	}

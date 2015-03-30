@@ -41,7 +41,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			return $methods[ $slug ];
 		}
 
-		return '';
+		return $slug;
 	}
 
 	/**
@@ -717,28 +717,6 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 
 			wp_redirect( $cart_url );
 			exit;
-		}
-	}
-
-	/**
-	 * Thank you page message.
-	 *
-	 * @return string
-	 */
-	public function thankyou_page( $order_id ) {
-		global $woocommerce;
-
-		$order = new WC_Order( $order_id );
-		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
-			$order_url = $order->get_view_order_url();
-		} else {
-			$order_url = add_query_arg( 'order', $order_id, get_permalink( woocommerce_get_page_id( 'view_order' ) ) );
-		}
-
-		if ( $order->status == 'processing' || $order->status == 'completed' ) {
-			echo '<div class="woocommerce-message"><a href="' . $order_url . '" class="button" style="display: block !important; visibility: visible !important;">' . __( 'View order details', 'cielo-woocommerce' ) . '</a>' . sprintf( __( 'Your payment worth %s was received successfully.', 'cielo-woocommerce' ), woocommerce_price( $order->order_total ) ) . '<br />' . __( 'The authorization code was generated.', 'cielo-woocommerce' ) . '</div>';
-		} else {
-			echo '<div class="woocommerce-info">' . sprintf( __( 'For more information or questions regarding your order, go to the %s.', 'cielo-woocommerce' ), '<a href="' . $order_url . '">' . __( 'order details page', 'cielo-woocommerce' ) . '</a>' ) . '</div>';
 		}
 	}
 
