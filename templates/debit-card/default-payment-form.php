@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php endforeach ?>
 			</select>
 		<?php else : ?>
-			<span><?php printf( __( 'Pay with %s.' ), current( $methods ) ); ?></span>
+			<span><?php printf( __( 'Pay with %s.', 'cielo-woocommerce' ), current( $methods ) ); ?></span>
 			<input type="hidden" name="cielo_debit_card" value="<?php echo esc_attr( key( $methods ) ); ?>" />
 		<?php endif; ?>
 	</p>

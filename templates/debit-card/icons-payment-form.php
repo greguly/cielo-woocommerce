@@ -21,7 +21,7 @@ $first_method = current( $methods );
 			<?php endforeach ?>
 		</ul>
 	<?php else : ?>
-		<p><?php printf( __( 'Pay with %s.' ), current( $methods ) ); ?></p>
+		<p><?php printf( __( 'Pay with %s.', 'cielo-woocommerce' ), current( $methods ) ); ?></p>
 		<input type="hidden" name="cielo_debit_card" value="<?php echo esc_attr( key( $methods ) ); ?>" />
 	<?php endif; ?>
 	<?php if ( 0 < $discount ) : ?>
