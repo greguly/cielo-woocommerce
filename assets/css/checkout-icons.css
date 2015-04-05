@@ -9,8 +9,7 @@
 }
 
 #cielo-card-brand {
-	border-bottom: 1px solid #ccc;
-	margin: 0 0 10px;
+	margin: 0;
 	padding: 0;
 	list-style: none;
 	float: none;
@@ -18,11 +17,16 @@
     *zoom: 1;
 }
 
+#payment .payment_methods #cielo-card-brand li {
+	padding: 0 !important;
+}
+
 #cielo-card-brand li {
 	display: block;
 	float: left;
 	list-style: none;
 	margin: 0 30px 5px 0 !important;
+	border: none !important;
 }
 
 #cielo-card-brand li:last-child {
@@ -90,9 +94,21 @@
 	width: 31px;
 }
 
+#cielo-icon-visaelectron {
+	background-position: -262px 0;
+	width: 31px;
+}
+
+#cielo-icon-maestro {
+	background-position: -293px 0px;
+	width: 32px;
+}
+
 #cielo-select-name {
+	border-top: 1px solid #ccc;
 	font-size: 1.3em;
-	margin: 0 0 5px;
+	margin: 10px 0 5px !important;
+	padding: 10px 0 0;
 }
 
 #cielo-select-name strong {
