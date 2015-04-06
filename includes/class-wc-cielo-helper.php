@@ -358,16 +358,14 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		}
 
 		for ( $i = 1; $i <= $installments; $i++ ) {
-
-			$interest_rate   = $this->get_valid_value( $this->interest_rate ) / 100;
-			$financial_index = $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $i ) ) );
 			$credit_total    = $order_total / $i;
-			$credit_interest = sprintf(__( 'no interest Total: %s', 'cielo-woocommerce' ),sanitize_text_field( woocommerce_price( $order_total ) ));
+			$credit_interest = sprintf( __( 'no interest. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $order_total ) ) );
 			$smallest_value  = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 
 			if ( 'client' == $this->installment_type && $i >= $this->interest ) {
-				$interest_total = $order_total * $financial_index;
-				$interest_order_total = $interest_total*$i;
+				$interest_rate   = $this->get_valid_value( $this->interest_rate ) / 100;
+				$interest_total = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $i ) ) ) );
+				$interest_order_total = $interest_total * $i;
 
 				if ( $credit_total < $interest_total ) {
 					$credit_total    = $interest_total;
@@ -393,6 +391,32 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Get single installment text.
+	 *
+	 * @param  int $quantity
+	 * @param  float $order_total
+	 *
+	 * @return string
+	 */
+	public function get_installment_text( $quantity, $order_total ) {
+		$credit_total    = $order_total / $quantity;
+		$credit_interest = sprintf( __( 'no interest. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $order_total ) ) );
+
+		if ( 'client' == $this->installment_type && $quantity >= $this->interest ) {
+			$interest_rate        = $this->get_valid_value( $this->interest_rate ) / 100;
+			$interest_total       = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $quantity ) ) ) );
+			$interest_order_total = $interest_total * $quantity;
+
+			if ( $credit_total < $interest_total ) {
+				$credit_total    = $interest_total;
+				$credit_interest = sprintf(__( 'with interest of %s%% a.m. Total: %s', 'cielo-woocommerce' ), $this->get_valid_value( $this->interest_rate ), sanitize_text_field( woocommerce_price( $interest_order_total ) ) );
+			}
+		}
+
+		return sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $quantity, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest );
 	}
 
 	/**
@@ -519,13 +543,12 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			}
 
 			$installments      = absint( $posted['cielo_installments'] );
-			$interest_rate     = $this->get_valid_value( $this->interest_rate ) / 100;
-			$financial_index   = $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) );
 			$installment_total = $order_total / $installments;
 			$_installments     = apply_filters( 'wc_cielo_max_installments', $this->installments, $order_total );
 
 			if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
-				$interest_total    = $installment_total * $financial_index;
+				$interest_rate     = $this->get_valid_value( $this->interest_rate ) / 100;
+				$interest_total    = $installment_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) ) );
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
 			}
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
@@ -763,5 +786,27 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Thank you page message.
+	 *
+	 * @return string
+	 */
+	public function thankyou_page( $order_id ) {
+		global $woocommerce;
+
+		$order = new WC_Order( $order_id );
+		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+			$order_url = $order->get_view_order_url();
+		} else {
+			$order_url = add_query_arg( 'order', $order_id, get_permalink( woocommerce_get_page_id( 'view_order' ) ) );
+		}
+
+		if ( $order->status == 'processing' || $order->status == 'completed' ) {
+			echo '<div class="woocommerce-message"><a href="' . $order_url . '" class="button" style="display: block !important; visibility: visible !important;">' . __( 'View order details', 'cielo-woocommerce' ) . '</a>' . sprintf( __( 'Your payment has been received successfully.', 'cielo-woocommerce' ), woocommerce_price( $order->order_total ) ) . '<br />' . __( 'The authorization code was generated.', 'cielo-woocommerce' ) . '</div>';
+		} else {
+			echo '<div class="woocommerce-info">' . sprintf( __( 'For more information or questions regarding your order, go to the %s.', 'cielo-woocommerce' ), '<a href="' . $order_url . '">' . __( 'order details page', 'cielo-woocommerce' ) . '</a>' ) . '</div>';
+		}
 	}
 }
