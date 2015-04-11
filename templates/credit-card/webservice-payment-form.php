@@ -13,12 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <fieldset id="cielo-credit-payment-form" class="cielo-payment-form">
 	<p class="form-row form-row-first">
-		<label for="cielo-card-holder-name"><?php _e( 'Card Holder Name', 'cielo-woocommerce' ); ?> <small>(<?php _e( 'as recorded on the card', 'cielo-woocommerce' ); ?>)</small> <span class="required">*</span></label>
-		<input id="cielo-card-holder-name" name="cielo_holder_name" class="input-text" type="text" autocomplete="off" style="font-size: 1.5em; padding: 8px;" />
-	</p>
-	<p class="form-row form-row-last">
 		<label for="cielo-card-number"><?php _e( 'Card Number', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
 		<input id="cielo-card-number" name="cielo_card_number" class="input-text wc-credit-card-form-card-number" type="tel" maxlength="20" autocomplete="off" placeholder="&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;" style="font-size: 1.5em; padding: 8px;" />
+	</p>
+	<p class="form-row form-row-last">
+		<label for="cielo-card-holder-name"><?php _e( 'Name Printed on the Card', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
+		<input id="cielo-card-holder-name" name="cielo_holder_name" class="input-text" type="text" autocomplete="off" style="font-size: 1.5em; padding: 8px;" />
 	</p>
 	<div class="clear"></div>
 	<p class="form-row form-row-first">
