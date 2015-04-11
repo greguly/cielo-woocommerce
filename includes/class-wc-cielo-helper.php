@@ -266,16 +266,20 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Check for SSL.
+	 * Check settings for webservice solution.
 	 *
 	 * @return bool
 	 */
-	public function check_for_ssl() {
-		if ( 'test' == $this->environment ) {
+	public function checks_for_webservice() {
+		if ( 'webservice' != $this->store_contract ) {
 			return true;
 		}
 
-		if ( 'buypage_cielo' == $this->store_contract ) {
+		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.2.11', '<=' ) ) {
+			return false;
+		}
+
+		if ( 'test' == $this->environment ) {
 			return true;
 		}
 
@@ -295,7 +299,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 					'yes' == $this->get_option( 'enabled' ) &&
 					$this->check_environment() &&
 					$this->using_supported_currency() &&
-					$this->check_for_ssl();
+					$this->checks_for_webservice();
 
 		return $available;
 	}
