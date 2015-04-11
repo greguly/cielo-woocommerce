@@ -1,7 +1,7 @@
-# Cielo WooCommerce #
+# Cielo WooCommerce - Solução Webservice #
 **Contributors:** Gabriel Reguly, claudiosanches, gopaulo  
 **Donate link:** http://claudiosmweb.com/doacoes/  
-**Tags:** woocommerce, payment gateway, cielo  
+**Tags:** woocommerce, cielo, payment gateway  
 **Requires at least:** 3.9  
 **Tested up to:** 4.1.1  
 **Stable tag:** 4.0.0  
@@ -12,7 +12,7 @@ Adds Brazilian payment gateway Cielo to WooCommerce
 
 ## Description ##
 
-Utilize a Cielo em sua loja WooCommerce e permita os seus clientes pagarem com cartão de crédito ou débido.
+Utilize a Solução Webservice da Cielo em sua loja WooCommerce e permita os seus clientes pagarem com cartão de crédito ou débido.
 
 A [Cielo](http://www.cielo.com.br/) é uma empresa líder em soluções de pagamentos eletrônicos na América Latina. Responsável pelo credenciamento de estabelecimentos comerciais, e pela captura, transmissão, processamento e liquidação financeira das transações realizadas com cartões de crédito e débito, capturando transações das maiores bandeiras de cartões do mundo.
 
@@ -29,20 +29,20 @@ Estão disponíveis as seguintes bandeiras:
 
 Com este plugin é possível trabalhar com:
 
-* BuyPage Cielo (antigo e será desativo pela Cielo em breve).
 * Solução Webservice.
+* BuyPage Cielo (antigo e será desativo pela Cielo em breve).
 
 ### Desenvolvimento ###
 
 O plugin **Cielo WooCommerce** foi desenvolvido sem nenhum incentivo da Cielo. Isto quer dizer que nenhum dos desenvolvedores deste plugin possuem vínculos com a Cielo e contamos com a sua ajuda para melhorar o código e o funcionamento deste plugin.
 
-Toda a integração foi desenvolvida a partir da última versão do [kit de integração da Cielo](https://www.cielo.com.br/ecommerce).
+Toda a integração foi desenvolvida a partir da última versão do [Manual do Desenvolvedor da Cielo](https://www.cielo.com.br/ecommerce).
 
 ### Compatibilidade ###
 
-Compatível desde a versão 2.1.x até 2.3.x do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
+Compatível com a versão 2.3 ou super do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
 
-Entretanto a **Solução Webservice** funciona apenas com WooCommerce 2.3.x ou superior.
+Note que o antigo BuyPage Cielo ainda é compatível com as versões 2.1.x, 2.2.x e 2.3.x do WooCommerce.
 
 ### Instalação ###
 
@@ -90,7 +90,7 @@ O plugin funciona com os ambientes de **Teste** e **Produção**, onde você dev
 
 #### Notas sobre o ambiente de testes ####
 
-No ambiente de **Testes** é possível utilizar alguns cartões de teste disponíveis no [kit de integração da Cielo](https://www.cielo.com.br/ecommerce), basta fazer o download do kit e ler o arquivo "Manual_Desenvolvedor_WebService_XXX_vX.pdf".
+No ambiente de **Testes** é possível utilizar alguns cartões de teste disponíveis no [Manual do Desenvolvedor Cielo](https://www.cielo.com.br/ecommerce), basta fazer o download do kit e ler o arquivo "Manual_Desenvolvedor_WebService_XXX_vX.pdf".
 
 Outra coisa importante é saber que o ambiente de **Testes** tem alguns comportamentos peculiares que você deve conhecer para poder utilizá-lo com eficiência:
 
@@ -127,18 +127,18 @@ No momento apenas Real (BRL).
 
 ### Quais são os modelos de checkout disponíveis? ###
 
-* BuyPage Cielo (antigo e será desativo pela Cielo em breve).
 * Solução Webservice.
+* BuyPage Cielo (antigo e será desativo pela Cielo em breve).
+
+### Como funciona a Solução Webservice? ###
+
+Com a Solução Webservice a digitação dos dados do cartão será no ambiente da loja. Ou seja, a própria loja se encarrega do desenvolvimento de uma página segura na Internet (HTTPS), respeitando políticas de segurança, para capturar os dados do cartão do portador.
 
 ### Como funciona a BuyPage Cielo? ###
 
 Na BuyPage Cielo a digitação dos dados do cartão será no ambiente da Cielo. Geralmente é aconselhada a clientes que não queiram lidar com questões de segurança e desejam utilizar a infraestrutura da Cielo.
 
 Entretanto a Cielo esta desativando esta opção em favor do Checkout Cielo, então em breve o BuyPage Cielo não irá mais funcionar.
-
-### Como funciona a Solução Webservice? ###
-
-Com a Solução Webservice a digitação dos dados do cartão será no ambiente da loja. Ou seja, a própria loja se encarrega do desenvolvimento de uma página segura na Internet (HTTPS), respeitando políticas de segurança, para capturar os dados do cartão do portador.
 
 ### É possível usar o pagamento por celular? ###
 
@@ -191,23 +191,24 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 ## Screenshots ##
 
 ### 1. Configurações do plugin. ###
-![1. Configurações do plugin.](http://ps.w.org/cielo-woocommerce/assets/screenshot-1.png)
+![1. Configurações do plugin.](http://ps.w.org/cielo-woocommerce---solução-webservice/assets/screenshot-1.png)
 
 ### 2. Checkout com o formulário padrão. ###
-![2. Checkout com o formulário padrão.](http://ps.w.org/cielo-woocommerce/assets/screenshot-2.png)
+![2. Checkout com o formulário padrão.](http://ps.w.org/cielo-woocommerce---solução-webservice/assets/screenshot-2.png)
 
 ### 2. Checkout com o formulário utilizando ícones dos cartões. ###
-![2. Checkout com o formulário utilizando ícones dos cartões.](http://ps.w.org/cielo-woocommerce/assets/screenshot-3.png)
+![2. Checkout com o formulário utilizando ícones dos cartões.](http://ps.w.org/cielo-woocommerce---solução-webservice/assets/screenshot-3.png)
 
 
 ## Changelog ##
 
-### 4.0.0 - 2015/02/08 ###
+### 4.0.0 - 2015/04/xx ###
 
 * Implementada a Solução Webservice.
 * Adicionado esquema de templates para tornar possível a manipulação dos formulários de checkout.
 * Depreciado o filtro `wc_cielo_form_path`.
 * Refatorado todo o código do plugin dividindo em dois gateways, uma para crédito e outro para débito.
+* Alterado nome do plugin para "Cielo WooCommerce - Solução Webservice".
 
 ### 3.1.2 - 2015/02/08 ###
 
@@ -303,6 +304,7 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 * Adicionado esquema de templates para tornar possível a manipulação dos formulários de checkout.
 * Depreciado o filtro `wc_cielo_form_path`.
 * Refatorado todo o código do plugin dividindo em dois gateways, uma para crédito e outro para débito.
+* Alterado nome do plugin para "Cielo WooCommerce - Solução Webservice".
 
 ## License ##
 

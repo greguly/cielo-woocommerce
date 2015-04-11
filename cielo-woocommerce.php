@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Cielo WooCommerce
+ * Plugin Name: Cielo WooCommerce - Solução Webservice
  * Plugin URI: http://omniwp.com.br/plugins/
- * Description: Adiciona a opção de pagamento pela Cielo ao WooCommerce
+ * Description: Works using the Cielo Webservice Solution to receive payments on WooCommerce.
  * Author: Gabriel Reguly, Claudio Sanches, Paulo Vieira
  * Author URI: http://omniwp.com.br
  * Version: 4.0.0

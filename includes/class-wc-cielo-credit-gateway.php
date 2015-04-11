@@ -95,10 +95,10 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'type'        => 'select',
 				'description' => __( 'Select the store contract method with cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => 'buypage_cielo',
+				'default'     => 'webservice',
 				'options'     => array(
-					'buypage_cielo' => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
-					'webservice'    => __( 'Webservice Solution', 'cielo-woocommerce' )
+					'webservice'    => __( 'Webservice Solution', 'cielo-woocommerce' ),
+					'buypage_cielo' => __( 'BuyPage Cielo', 'cielo-woocommerce' )
 				)
 			),
 			'environment' => array(

@@ -1,7 +1,7 @@
 {
   "name": "cielo-woocommerce",
   "version": "4.0.0",
-  "title": "Cielo WooCommerce",
+  "title": "Cielo WooCommerce - Solução Webservice",
   "description": "Integra a Cielo com o WooCommerce",
   "homepage": "",
   "main": "Gruntfile.js",
