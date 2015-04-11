@@ -91,6 +91,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 				'type'        => 'select',
 				'description' => __( 'Select the store contract method with cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
+				'class'       => 'wc-enhanced-select',
 				'default'     => 'webservice',
 				'options'     => array(
 					'webservice'    => __( 'Webservice Solution', 'cielo-woocommerce' ),
@@ -100,6 +101,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 			'environment' => array(
 				'title'       => __( 'Environment', 'cielo-woocommerce' ),
 				'type'        => 'select',
+				'class'       => 'wc-enhanced-select',
 				'description' => __( 'Select the environment type (test or production).', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => 'test',
@@ -127,7 +129,8 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 				'type'        => 'multiselect',
 				'description' => __( 'Select the card brands that will be accepted as payment. Press the Ctrl key to select more than one brand.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => array( 'visa' ),
+				'class'       => 'wc-enhanced-select',
+				'default'     => array( 'visaelectron' ),
 				'options'     => array(
 					'visaelectron' => __( 'Visa Electron', 'cielo-woocommerce' ),
 					'maestro'      => __( 'Maestro', 'cielo-woocommerce' ),
@@ -138,6 +141,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 				'type'        => 'select',
 				'description' => __( 'Select the authorization type.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
+				'class'       => 'wc-enhanced-select',
 				'default'     => '2',
 				'options'     => array(
 					'2' => __( 'Allow authorization for authenticated transaction and non-authenticated', 'cielo-woocommerce' ),
@@ -160,6 +164,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 			'design' => array(
 				'title'   => __( 'Payment Form Design', 'cielo-woocommerce' ),
 				'type'    => 'select',
+				'class'       => 'wc-enhanced-select',
 				'default' => 'default',
 				'options' => array(
 					'default' => __( 'Default', 'cielo-woocommerce' ),

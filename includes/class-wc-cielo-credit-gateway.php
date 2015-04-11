@@ -95,6 +95,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'type'        => 'select',
 				'description' => __( 'Select the store contract method with cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
+				'class'       => 'wc-enhanced-select',
 				'default'     => 'webservice',
 				'options'     => array(
 					'webservice'    => __( 'Webservice Solution', 'cielo-woocommerce' ),
@@ -106,6 +107,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'type'        => 'select',
 				'description' => __( 'Select the environment type (test or production).', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
+				'class'       => 'wc-enhanced-select',
 				'default'     => 'test',
 				'options'     => array(
 					'test'       => __( 'Test', 'cielo-woocommerce' ),
@@ -131,14 +133,25 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'type'        => 'multiselect',
 				'description' => __( 'Select the card brands that will be accepted as payment. Press the Ctrl key to select more than one brand.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
+				'class'       => 'wc-enhanced-select',
 				'default'     => array( 'visa', 'mastercard' ),
-				'options'     => $this->get_payment_methods()
+				'options'     => array(
+					'visa'       => __( 'Visa', 'cielo-woocommerce' ),
+					'mastercard' => __( 'MasterCard', 'cielo-woocommerce' ),
+					'diners'     => __( 'Diners', 'cielo-woocommerce' ),
+					'discover'   => __( 'Discover', 'cielo-woocommerce' ),
+					'elo'        => __( 'Elo', 'cielo-woocommerce' ),
+					'amex'       => __( 'American Express', 'cielo-woocommerce' ),
+					'jcb'        => __( 'JCB', 'cielo-woocommerce' ),
+					'aura'       => __( 'Aura', 'cielo-woocommerce' ),
+				)
 			),
 			'authorization' => array(
 				'title'       => __( 'Automatic Authorization (MasterCard and Visa only)', 'cielo-woocommerce' ),
 				'type'        => 'select',
 				'description' => __( 'Select the authorization type.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
+				'class'       => 'wc-enhanced-select',
 				'default'     => '2',
 				'options'     => array(
 					'3' => __( 'Direct authorization', 'cielo-woocommerce' ),
@@ -166,6 +179,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'type'        => 'select',
 				'description' => __( 'Maximum number of installments for orders in your store.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
+				'class'       => 'wc-enhanced-select',
 				'default'     => '1',
 				'options'     => array(
 					'1'  => '1x',
@@ -187,6 +201,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'type'        => 'select',
 				'description' => __( 'Indicate from which installment should be charged interest.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
+				'class'       => 'wc-enhanced-select',
 				'default'     => '6',
 				'options'     => array(
 					'1'  => '1x',
@@ -208,6 +223,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'type'         => 'select',
 				'description'  => __( 'Client adds interest installments on the order total.', 'cielo-woocommerce' ),
 				'desc_tip'     => true,
+				'class'        => 'wc-enhanced-select',
 				'default'      => 'client',
 				'options'      => array(
 					'client' => __( 'Client', 'cielo-woocommerce' ),
@@ -222,6 +238,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			'design' => array(
 				'title'   => __( 'Payment Form Design', 'cielo-woocommerce' ),
 				'type'    => 'select',
+				'class'   => 'wc-enhanced-select',
 				'default' => 'default',
 				'options' => array(
 					'default' => __( 'Default', 'cielo-woocommerce' ),
