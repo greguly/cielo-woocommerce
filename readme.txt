@@ -190,9 +190,9 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Screenshots ==
 
-1. Configurações do plugin.
-2. Checkout com o formulário padrão.
-2. Checkout com o formulário utilizando ícones dos cartões.
+1. Configurações para cartão de crédito.
+1. Configurações para cartão de débito.
+2. Página de finalização utilizando o tema Storefront, mostrando as opções de crédito e débito na Solução Webservice.
 
 == Changelog ==
 

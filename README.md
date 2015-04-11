@@ -190,14 +190,14 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 ## Screenshots ##
 
-### 1. Configurações do plugin. ###
-![1. Configurações do plugin.](http://ps.w.org/cielo-woocommerce---solução-webservice/assets/screenshot-1.png)
+### 1. Configurações para cartão de crédito. ###
+![1. Configurações para cartão de crédito.](http://ps.w.org/cielo-woocommerce---solução-webservice/assets/screenshot-1.png)
 
-### 2. Checkout com o formulário padrão. ###
-![2. Checkout com o formulário padrão.](http://ps.w.org/cielo-woocommerce---solução-webservice/assets/screenshot-2.png)
+### 1. Configurações para cartão de débito. ###
+![1. Configurações para cartão de débito.](http://ps.w.org/cielo-woocommerce---solução-webservice/assets/screenshot-2.png)
 
-### 2. Checkout com o formulário utilizando ícones dos cartões. ###
-![2. Checkout com o formulário utilizando ícones dos cartões.](http://ps.w.org/cielo-woocommerce---solução-webservice/assets/screenshot-3.png)
+### 2. Página de finalização utilizando o tema Storefront, mostrando as opções de crédito e débito na Solução Webservice. ###
+![2. Página de finalização utilizando o tema Storefront, mostrando as opções de crédito e débito na Solução Webservice.](http://ps.w.org/cielo-woocommerce---solução-webservice/assets/screenshot-3.png)
 
 
 ## Changelog ##
