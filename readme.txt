@@ -198,7 +198,7 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 = 4.0.0 - 2015/04/xx =
 
-* Implementada a Solução Webservice.
+* Implementada a Solução Webservice (funciona apenas para WooCommerce 2.3 ou superior).
 * Adicionado esquema de templates para tornar possível a manipulação dos formulários de checkout.
 * Depreciado o filtro `wc_cielo_form_path`.
 * Refatorado todo o código do plugin dividindo em dois gateways, uma para crédito e outro para débito.
@@ -294,7 +294,7 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 = 4.0.0 =
 
-* Implementada a Solução Webservice.
+* Implementada a Solução Webservice (funciona apenas para WooCommerce 2.3 ou superior).
 * Adicionado esquema de templates para tornar possível a manipulação dos formulários de checkout.
 * Depreciado o filtro `wc_cielo_form_path`.
 * Refatorado todo o código do plugin dividindo em dois gateways, uma para crédito e outro para débito.
