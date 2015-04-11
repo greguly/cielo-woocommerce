@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Cielo WooCommerce - Solução Webservice v4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-04-11 00:44:47+0000\n"
+"PO-Revision-Date: 2015-04-11 00:52:39+0000\n"
 "Last-Translator: Claudio Sanches <contato@claudiosmweb.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -364,7 +364,7 @@ msgstr "Ativar logs"
 #, php-format
 #@ cielo-woocommerce
 msgid "Log Cielo events, such as API requests, inside %s"
-msgstr "Grava eventos da Cielo, como por exemplo solicitações a API, dentro de %s"
+msgstr "Grava eventos da Cielo, como por exemplo solicitações a API, você pode encontrar o log em %s"
 
 #: includes/class-wc-cielo-helper.php:546
 #@ cielo-woocommerce
@@ -522,7 +522,7 @@ msgstr "e %s"
 #: includes/class-wc-cielo-debit-gateway.php:90
 #@ cielo-woocommerce
 msgid "Store Solution"
-msgstr "Solução CIELO"
+msgstr "Solução de integração"
 
 #: includes/class-wc-cielo-credit-gateway.php:96
 #: includes/class-wc-cielo-debit-gateway.php:92
@@ -560,12 +560,12 @@ msgstr "Por favor digite o código verificador do cartão."
 #: includes/views/notices/html-notice-need-update-woocommerce.php:13
 #@ cielo-woocommerce
 msgid "Webservice Cielo Store Solution will only work for Woocommerce 2.3.x and up."
-msgstr "A Solução Webservice Cielo apenas funcionará para as versões 2.3.x ou superior do Woocommerce. "
+msgstr "A Solução Webservice Cielo apenas funcionará para as versões 2.3.x ou superior do Woocommerce."
 
 #: includes/views/notices/html-notice-ssl-required.php:13
 #@ cielo-woocommerce
 msgid "A SSL Certificate is required for Webservice Solution. Please verify if a certificate is installed on your server."
-msgstr "Um certificado SSL é obrigatório para a solução Webservice. Por favor verifique se existe algum certificado instalado em seu servidor. "
+msgstr "Um certificado SSL é obrigatório para a solução Webservice. Por favor verifique se existe algum certificado instalado em seu servidor."
 
 #: templates/credit-card/webservice-payment-form.php:16
 #: templates/debit-card/webservice-payment-form.php:16
