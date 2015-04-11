@@ -208,6 +208,7 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 * Adicionado esquema de templates para tornar possível a manipulação dos formulários de checkout.
 * Depreciado o filtro `wc_cielo_form_path`.
 * Refatorado todo o código do plugin dividindo em dois gateways, uma para crédito e outro para débito.
+* Corrigido do parcelamento, agora funciona corretamente com o juros por mês.
 * Alterado nome do plugin para "Cielo WooCommerce - Solução Webservice".
 
 ### 3.1.2 - 2015/02/08 ###
@@ -304,6 +305,7 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 * Adicionado esquema de templates para tornar possível a manipulação dos formulários de checkout.
 * Depreciado o filtro `wc_cielo_form_path`.
 * Refatorado todo o código do plugin dividindo em dois gateways, uma para crédito e outro para débito.
+* Corrigido do parcelamento, agora funciona corretamente com o juros por mês.
 * Alterado nome do plugin para "Cielo WooCommerce - Solução Webservice".
 
 ## License ##
