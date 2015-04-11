@@ -30,7 +30,7 @@ Estão disponíveis as seguintes bandeiras:
 Com este plugin é possível trabalhar com:
 
 * Solução Webservice.
-* BuyPage Cielo (antigo e será desativo pela Cielo em breve).
+* BuyPage Cielo (antigo e será desativado pela Cielo em breve).
 
 ### Desenvolvimento ###
 
@@ -128,7 +128,7 @@ No momento apenas Real (BRL).
 ### Quais são os modelos de checkout disponíveis? ###
 
 * Solução Webservice.
-* BuyPage Cielo (antigo e será desativo pela Cielo em breve).
+* BuyPage Cielo (antigo e será desativado pela Cielo em breve).
 
 ### Como funciona a Solução Webservice? ###
 
