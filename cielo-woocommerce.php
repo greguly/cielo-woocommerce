@@ -57,6 +57,8 @@ class WC_Cielo {
 			// Admin actions.
 			if ( is_admin() ) {
 				$this->admin_includes();
+
+				add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 			}
 		} else {
 			add_action( 'admin_notices', array( $this, 'woocommerce_missing_notice' ) );
@@ -216,6 +218,23 @@ class WC_Cielo {
 	 */
 	public function woocommerce_missing_notice() {
 		include_once 'includes/views/notices/html-notice-woocommerce-missing.php';
+	}
+
+	/**
+	 * Action links.
+	 *
+	 * @param  array $links
+	 *
+	 * @return array
+	 */
+	public function plugin_action_links( $links ) {
+		$plugin_links = array();
+
+		$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_credit_gateway' ) ) . '">' . __( 'Credit Card Settings', 'cielo-woocommerce' ) . '</a>';
+
+		$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_debit_gateway' ) ) . '">' . __( 'Debit Card Settings', 'cielo-woocommerce' ) . '</a>';
+
+		return array_merge( $plugin_links, $links );
 	}
 }
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Cielo WooCommerce - Solução Webservice v4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-04-11 01:17:33+0000\n"
+"PO-Revision-Date: 2015-04-11 01:40:17+0000\n"
 "Last-Translator: Claudio Sanches <contato@claudiosmweb.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -622,7 +622,7 @@ msgstr "Cielo - Cartão de crédito"
 msgid "Enable Cielo Credit Card"
 msgstr "Ativar cartão de crédito da Cielo"
 
-#: cielo-woocommerce.php:144
+#: cielo-woocommerce.php:146
 #: includes/class-wc-cielo-credit-gateway.php:84
 #: templates/credit-card/default-payment-form.php:16
 #@ cielo-woocommerce
@@ -644,7 +644,7 @@ msgstr "Cielo - Cartão de débito"
 msgid "Enable Cielo Debit Card"
 msgstr "Ativar cartão de débito da Cielo"
 
-#: cielo-woocommerce.php:174
+#: cielo-woocommerce.php:176
 #: includes/class-wc-cielo-debit-gateway.php:80
 #: templates/debit-card/default-payment-form.php:17
 #@ cielo-woocommerce
@@ -774,4 +774,14 @@ msgstr "Você gostaria de utilizar o Checkout Cielo? O plugin já esta pronto! E
 #@ cielo-woocommerce
 msgid "Name Printed on the Card"
 msgstr "Nome impresso no cartão"
+
+#: cielo-woocommerce.php:233
+#@ cielo-woocommerce
+msgid "Credit Card Settings"
+msgstr "Configurações de crédito"
+
+#: cielo-woocommerce.php:235
+#@ cielo-woocommerce
+msgid "Debit Card Settings"
+msgstr "Configurações de débito"
 
