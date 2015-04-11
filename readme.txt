@@ -196,7 +196,7 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Changelog ==
 
-= 4.0.0 - 2015/04/xx =
+= 4.0.0 - 2015/04/10 =
 
 * Implementada a Solução Webservice (funciona apenas para WooCommerce 2.3 ou superior).
 * Adicionado esquema de templates para tornar possível a manipulação dos formulários de checkout.
