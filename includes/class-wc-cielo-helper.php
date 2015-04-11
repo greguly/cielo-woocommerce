@@ -754,7 +754,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @param  float  $amount
 	 * @param  string $reason
 	 *
-	 * @return bool|wp_error True or false based on success, or a WP_Error object.
+	 * @return bool|WP_Error True or false based on success, or a WP_Error object.
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		$order = new WC_Order( $order_id );
