@@ -540,7 +540,13 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @return bool
 	 */
 	protected function validate_installments( $posted, $order_total ) {
+		// Stop if don't have installments.
+		if ( ! isset( $posted['cielo_installments'] ) && 1 == $this->installments ) {
+			return true;
+		}
+
 		try {
+
 			// Validate the installments field.
 			if ( ! isset( $posted['cielo_installments'] ) || '' === $posted['cielo_installments'] ) {
 				throw new Exception( __( 'Please select a number of installments.', 'cielo-woocommerce' ) );
