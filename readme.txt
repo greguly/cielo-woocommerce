@@ -4,7 +4,7 @@ Donate link: http://claudiosmweb.com/doacoes/
 Tags: woocommerce, cielo, payment gateway
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 4.0.0
+Stable tag: 4.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -196,6 +196,10 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Changelog ==
 
+= 4.0.1 - 2015/04/11 =
+
+* Corrigida a validação das parcelas quando configurado o número de parcelas como 1.
+
 = 4.0.0 - 2015/04/10 =
 
 * Implementada a Solução Webservice (funciona apenas para WooCommerce 2.3 ou superior).
@@ -293,7 +297,7 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Upgrade Notice ==
 
-= 4.0.0 =
+= 4.0.1 =
 
 * Implementada a Solução Webservice (funciona apenas para WooCommerce 2.3 ou superior).
 * Adicionado esquema de templates para tornar possível a manipulação dos formulários de checkout.
@@ -301,6 +305,7 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 * Refatorado todo o código do plugin dividindo em dois gateways, uma para crédito e outro para débito.
 * Corrigido do parcelamento, agora funciona corretamente com o juros por mês.
 * Alterado nome do plugin para "Cielo WooCommerce - Solução Webservice".
+* Corrigida a validação das parcelas quando configurado o número de parcelas como 1.
 
 == License ==
 
