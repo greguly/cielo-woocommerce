@@ -2,7 +2,7 @@
 /**
  * Credit Card - Icons checkout form.
  *
- * @version 4.0.0
+ * @version 4.0.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,13 +22,15 @@ $first_method = current( $methods );
 
 	<div class="clear"></div>
 
-	<p id="cielo-select-name"><?php _e( 'Pay with', 'cielo-woocommerce' ); ?> <strong><?php echo esc_attr( $first_method ); ?></strong></p>
+	<?php if ( ! empty( $installments ) ) : ?>
+		<p id="cielo-select-name"><?php _e( 'Pay with', 'cielo-woocommerce' ); ?> <strong><?php echo esc_attr( $first_method ); ?></strong></p>
 
-	<div id="cielo-installments">
-		<p class="form-row">
-			<?php echo $installments; ?>
-		</p>
-	</div>
+		<div id="cielo-installments">
+			<p class="form-row">
+				<?php echo $installments; ?>
+			</p>
+		</div>
+	<?php endif; ?>
 
 	<div class="clear"></div>
 </fieldset>

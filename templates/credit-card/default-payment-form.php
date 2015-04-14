@@ -2,7 +2,7 @@
 /**
  * Credit Card - Default checkout form.
  *
- * @version 4.0.0
+ * @version 4.0.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,9 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php endforeach ?>
 		</select>
 	</p>
-	<p class="form-row form-row-last">
-		<label for="cielo-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
-		<?php echo $installments; ?>
-	</p>
+	<?php if ( ! empty( $installments ) ) : ?>
+		<p class="form-row form-row-last">
+			<label for="cielo-installments"><?php _e( 'Installments', 'cielo-woocommerce' ); ?> <span class="required">*</span></label>
+			<?php echo $installments; ?>
+		</p>
+	<?php endif; ?>
 	<div class="clear"></div>
 </fieldset>

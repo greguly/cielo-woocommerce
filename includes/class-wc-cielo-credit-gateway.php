@@ -332,7 +332,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		}
 
 		if ( $valid ) {
-			$installments = absint( $_POST['cielo_installments'] );
+			$installments = isset( $_POST['cielo_installments'] ) ? absint( $_POST['cielo_installments'] ) : 1;
 			$card_data    = array(
 				'name_on_card'    => $_POST['cielo_holder_name'],
 				'card_number'     => $_POST['cielo_card_number'],
@@ -392,7 +392,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		}
 
 		if ( $valid ) {
-			$installments = absint( $_POST['cielo_installments'] );
+			$installments = isset( $_POST['cielo_installments'] ) ? absint( $_POST['cielo_installments'] ) : 1;
 			$response     = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments );
 
 			// Set the error alert.
