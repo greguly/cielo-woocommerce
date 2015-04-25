@@ -283,7 +283,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			return true;
 		}
 
-		return 'yes' == get_option( 'woocommerce_force_ssl_checkout' ) && class_exists( 'WordPressHTTPS' );
+		return 'yes' == get_option( 'woocommerce_force_ssl_checkout' ) && is_ssl();
 	}
 
 	/**
