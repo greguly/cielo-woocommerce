@@ -769,10 +769,11 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			return false;
 		}
 
-		$diff = ( strtotime( $order->order_date ) - strtotime( current_time( 'mysql' ) ) );
-		$days = absint( $diff / ( 60 * 60 * 24 ) );
+		$diff  = ( strtotime( $order->order_date ) - strtotime( current_time( 'mysql' ) ) );
+		$days  = absint( $diff / ( 60 * 60 * 24 ) );
+		$limit = 120;
 
-		if ( 90 > $days ) {
+		if ( $limit > $days ) {
 			$tid      = $order->get_transaction_id();
 			$gateway  = new WC_Cielo_Gateway();
 			$amount   = number_format( wc_format_decimal( $amount ), 2, '', '' );
@@ -792,7 +793,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			}
 
 		} else {
-			return new WP_Error( 'cielo_refund_error', __( 'This transaction has been made ​​more than 90 days and therefore it can not be canceled', 'cielo-woocommerce' ) );
+			return new WP_Error( 'cielo_refund_error', sprintf( __( 'This transaction has been made ​​more than %s days and therefore it can not be canceled', 'cielo-woocommerce' ), $limit ) );
 		}
 
 		return false;
