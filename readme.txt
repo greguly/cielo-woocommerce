@@ -3,8 +3,8 @@ Contributors: Gabriel Reguly, claudiosanches, gopaulo
 Donate link: http://claudiosmweb.com/doacoes/
 Tags: woocommerce, cielo, payment gateway
 Requires at least: 3.9
-Tested up to: 4.1.1
-Stable tag: 4.0.2
+Tested up to: 4.2
+Stable tag: 4.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Utilize a Solução Webservice da Cielo em sua loja WooCommerce e permita os seu
 
 A [Cielo](http://www.cielo.com.br/) é uma empresa líder em soluções de pagamentos eletrônicos na América Latina. Responsável pelo credenciamento de estabelecimentos comerciais, e pela captura, transmissão, processamento e liquidação financeira das transações realizadas com cartões de crédito e débito, capturando transações das maiores bandeiras de cartões do mundo.
 
-Estão disponíveis as seguintes bandeiras:
+= Estão disponíveis as seguintes bandeiras: =
 
 * Visa (crédito e débido)
 * MasterCard (crédito e débido)
@@ -27,10 +27,12 @@ Estão disponíveis as seguintes bandeiras:
 * JCB
 * Aura
 
-Com este plugin é possível trabalhar com:
+= Com este plugin é possível trabalhar com: =
 
 * Solução Webservice.
 * BuyPage Cielo (antigo e será desativado pela Cielo em breve).
+
+Nota: O Checkout Cielo esta disponível no plugin [WooCommerce Checkout Cielo](https://wordpress.org/plugins/woocommerce-checkout-cielo/).
 
 = Desenvolvimento =
 
@@ -40,7 +42,7 @@ Toda a integração foi desenvolvida a partir da última versão do [Manual do D
 
 = Compatibilidade =
 
-Compatível com a versão 2.3 ou super do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
+Compatível com a versão 2.3 ou mais recente do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
 
 Note que o antigo BuyPage Cielo ainda é compatível com as versões 2.1.x, 2.2.x e 2.3.x do WooCommerce.
 
@@ -158,7 +160,7 @@ Para produtos baixáveis a configuração padrão do WooCommerce é permitir o a
 
 = É possível cancelar o pagamento/devolver o dinheiro do cliente pelo plugin? =
 
-Sim é possível fazer reembolsos do valor total ou parcial, entretanto apenas para transações feitas em menos de 90 dias, 
+Sim é possível fazer reembolsos do valor total ou parcial, entretanto apenas para transações feitas em menos de 120 dias, 
 
 **Reembolso total**
 
@@ -195,6 +197,11 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 2. Página de finalização utilizando o tema Storefront, mostrando as opções de crédito e débito na Solução Webservice.
 
 == Changelog ==
+
+= 4.0.3 - 2015/04/26 =
+
+* Corrigida verificação de SSL no checkout, este erro estava impedindo de exibir as opções em produção para a Solução Webservice.
+* Alterado o limite para cancelamento/reembolso de 90 dias para 120 dias, como manda a nova documentação da Cielo.
 
 = 4.0.2 - 2015/04/13 =
 
@@ -301,16 +308,10 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Upgrade Notice ==
 
-= 4.0.2 =
+= 4.0.3 =
 
-* Implementada a Solução Webservice (funciona apenas para WooCommerce 2.3 ou superior).
-* Adicionado esquema de templates para tornar possível a manipulação dos formulários de checkout.
-* Depreciado o filtro `wc_cielo_form_path`.
-* Refatorado todo o código do plugin dividindo em dois gateways, uma para crédito e outro para débito.
-* Corrigido do parcelamento, agora funciona corretamente com o juros por mês.
-* Alterado nome do plugin para "Cielo WooCommerce - Solução Webservice".
-* Corrigida a validação das parcelas quando configurado o número de parcelas como 1.
-* Corrigida a finalização com cartão de crédito quando as parcelas é configurada como 1.
+* Corrigida verificação de SSL no checkout, este erro estava impedindo de exibir as opções em produção para a Solução Webservice.
+* Alterado o limite para cancelamento/reembolso de 90 dias para 120 dias, como manda a nova documentação da Cielo.
 
 == License ==
 
