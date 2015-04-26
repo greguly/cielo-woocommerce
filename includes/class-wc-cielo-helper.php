@@ -739,7 +739,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				}
 			}
 
-			wp_redirect( $return_url );
+			wp_redirect( esc_url_raw( $return_url ) );
 			exit;
 		} else {
 			if ( function_exists( 'wc_get_page_id' ) ) {
@@ -748,7 +748,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				$cart_url = get_permalink( woocommerce_get_page_id( 'cart' ) );
 			}
 
-			wp_redirect( $cart_url );
+			wp_redirect( esc_url_raw( $cart_url ) );
 			exit;
 		}
 	}
@@ -815,9 +815,9 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		}
 
 		if ( $order->status == 'processing' || $order->status == 'completed' ) {
-			echo '<div class="woocommerce-message"><a href="' . $order_url . '" class="button" style="display: block !important; visibility: visible !important;">' . __( 'View order details', 'cielo-woocommerce' ) . '</a>' . sprintf( __( 'Your payment has been received successfully.', 'cielo-woocommerce' ), woocommerce_price( $order->order_total ) ) . '<br />' . __( 'The authorization code was generated.', 'cielo-woocommerce' ) . '</div>';
+			echo '<div class="woocommerce-message"><a href="' . esc_url( $order_url ) . '" class="button" style="display: block !important; visibility: visible !important;">' . __( 'View order details', 'cielo-woocommerce' ) . '</a>' . sprintf( __( 'Your payment has been received successfully.', 'cielo-woocommerce' ), woocommerce_price( $order->order_total ) ) . '<br />' . __( 'The authorization code was generated.', 'cielo-woocommerce' ) . '</div>';
 		} else {
-			echo '<div class="woocommerce-info">' . sprintf( __( 'For more information or questions regarding your order, go to the %s.', 'cielo-woocommerce' ), '<a href="' . $order_url . '">' . __( 'order details page', 'cielo-woocommerce' ) . '</a>' ) . '</div>';
+			echo '<div class="woocommerce-info">' . sprintf( __( 'For more information or questions regarding your order, go to the %s.', 'cielo-woocommerce' ), '<a href="' . esc_url( $order_url ) . '">' . __( 'order details page', 'cielo-woocommerce' ) . '</a>' ) . '</div>';
 		}
 	}
 }
