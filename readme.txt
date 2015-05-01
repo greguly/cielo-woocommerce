@@ -4,7 +4,7 @@ Donate link: https://claudiosmweb.com/doacoes/
 Tags: woocommerce, cielo, payment gateway
 Requires at least: 3.9
 Tested up to: 4.2.1
-Stable tag: 4.0.4
+Stable tag: 4.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -198,6 +198,10 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Changelog ==
 
+= 4.0.5 - 2015/05/01 =
+
+* Correção da tradução.
+
 = 4.0.4 - 2015/04/30 =
 
 * Corrigida validação de parcelas.
@@ -313,10 +317,11 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Upgrade Notice ==
 
-= 4.0.4 =
+= 4.0.5 =
 
 * Corrigida validação de parcelas.
 * Adicionado método em PHP para detectar a bandeira do cartão de crédito e removido o método antigo em JavaScript.
+* Correção da tradução.
 
 == License ==
 
