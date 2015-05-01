@@ -62,6 +62,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 
+		// Filters.
 		add_filter( 'woocommerce_get_order_item_totals', array( $this, 'order_items_payment_details' ), 10, 2 );
 	}
 
@@ -316,7 +317,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 */
 	protected function process_webservice_payment( $order ) {
 		$payment_url = '';
-		$card_brand  = isset( $_POST['cielo_credit_card'] ) ? sanitize_text_field( $_POST['cielo_credit_card'] ) : '';
+		$card_number = isset( $_POST['cielo_card_number'] ) ? sanitize_text_field( $_POST['cielo_card_number'] ) : '';
+		$card_brand  = $this->api->get_card_brand( $card_number );
 
 		// Validate credit card brand.
 		$valid = $this->validate_credit_brand( $card_brand );

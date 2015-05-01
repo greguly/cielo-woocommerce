@@ -58,6 +58,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ), 999 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 
+		// Filters.
 		add_filter( 'woocommerce_get_order_item_totals', array( $this, 'order_items_payment_details' ), 10, 2 );
 	}
 
@@ -217,15 +218,8 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 			return;
 		}
 
-		if ( 'webservice' == $this->store_contract ) {
-			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-			wp_enqueue_style( 'wc-cielo-checkout-webservice' );
-			wp_enqueue_script( 'wc-cielo-debit-checkout-webservice', plugins_url( 'assets/js/debit-card/checkout-webservice' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery', 'wc-credit-card-form' ), WC_Cielo::VERSION, true );
-		} else {
-			if ( 'icons' == $this->design ) {
-				wp_enqueue_style( 'wc-cielo-checkout-icons' );
-			}
+		if ( 'icons' == $this->design ) {
+			wp_enqueue_style( 'wc-cielo-checkout-icons' );
 		}
 	}
 
@@ -238,7 +232,8 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 	 */
 	protected function process_webservice_payment( $order ) {
 		$payment_url = '';
-		$card_brand  = isset( $_POST['cielo_debit_card'] ) ? sanitize_text_field( $_POST['cielo_debit_card'] ) : '';
+		$card_number = isset( $_POST['cielo_card_number'] ) ? sanitize_text_field( $_POST['cielo_card_number'] ) : '';
+		$card_brand  = $this->api->get_card_brand( $card_number );
 
 		// Validate credit card brand.
 		$valid = $this->validate_credit_brand( $card_brand );
@@ -249,7 +244,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		}
 
 		if ( $valid ) {
-			$card_brand   = ( 'visaelectron' == $card_brand ) ? 'visa' : 'mastercard';
+			$card_brand   = ( 'maestro' == $card_brand ) ? 'mastercard' : 'visa';
 			$installments = absint( $_POST['cielo_installments'] );
 			$card_data    = array(
 				'name_on_card'    => $_POST['cielo_holder_name'],

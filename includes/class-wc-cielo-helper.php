@@ -91,31 +91,6 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Get debit methods.
-	 *
-	 * @return array
-	 */
-	public function get_debit_methods( $debit_methods ) {
-		switch ( $debit_methods ) {
-			case 'all' :
-				$methods = array( 'visa', 'mastercard' );
-				break;
-			case 'visa' :
-				$methods = array( 'visa' );
-				break;
-			case 'mastercard' :
-				$methods = array( 'mastercard' );
-				break;
-
-			default :
-				$methods = array();
-				break;
-		}
-
-		return $methods;
-	}
-
-	/**
 	 * Get methods who accepts authorization.
 	 *
 	 * @return array

@@ -36,54 +36,6 @@
 			}
 		}
 
-		$( 'form.checkout' ).on( 'checkout_place_order_cielo_credit', function() {
-			return formHandler();
-		});
-
-		$( 'form#order_review' ).submit( function() {
-			return formHandler();
-		});
-
-		$( 'body' ).on( 'checkout_error', function() {
-			$( 'input.cielo-credit-card-brand' ).remove();
-		});
-		$( 'form.checkout, form#order_review' ).on( 'change', '#cielo-credit-payment-form input', function() {
-			$( 'input.cielo-credit-card-brand' ).remove();
-		});
-
-		/**
-		 * Form Handler.
-		 *
-		 * @return {bool}
-		 */
-		function formHandler() {
-			if ( ! $( '#payment_method_cielo_credit' ).is( ':checked' ) ) {
-				return true;
-			}
-
-			if ( 1 === jQuery( 'input.cielo-credit-card-brand' ).size() ) {
-				return true;
-			}
-
-			var $form       = $( 'form.checkout, form#order_review' ),
-				card_number = $( '#cielo-card-number', $form ).val(),
-				card_brand  = $.payment.cardType( card_number );
-
-			// Fixed some brand names for Cielo.
-			if ( 'dinersclub' === card_brand ) {
-				card_brand = 'diners';
-			}
-
-			// Remove any brand input.
-			$( 'input.cielo-credit-card-brand', $form ).remove();
-
-			// Add the hash input.
-			$form.append( $( '<input class="cielo-credit-card-brand" name="cielo_credit_card" type="hidden" />' ).val( card_brand ) );
-
-			// Submit the form.
-			return true;
-		}
-
 		/**
 		 * Set the installment fields.
 		 *
