@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Cielo WooCommerce - Solução Webservice v4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: Sun Apr 26 2015 13:46:06 GMT-0300 (BRT)\n"
+"PO-Revision-Date: Fri May 01 2015 00:53:39 GMT-0300 (BRT)\n"
 "Last-Translator: Claudio Sanches <contato@claudiosmweb.com>\n"
 "Language-Team: \n"
 "Language: Portuguese (Brazil)\n"
@@ -27,12 +27,12 @@ msgstr ""
 "X-Loco-Target-Locale: pt_BR"
 
 #: ../cielo-woocommerce.php:146 ../templates/credit-card/default-payment-form.php:
-#: 16 ../includes/class-wc-cielo-credit-gateway.php:84
+#: 16 ../includes/class-wc-cielo-credit-gateway.php:85
 msgid "Credit Card"
 msgstr "Cartão de crédito"
 
 #: ../cielo-woocommerce.php:176 ../templates/debit-card/default-payment-form.php:
-#: 17 ../includes/class-wc-cielo-debit-gateway.php:80
+#: 17 ../includes/class-wc-cielo-debit-gateway.php:81
 msgid "Debit Card"
 msgstr "Cartão de débito"
 
@@ -61,12 +61,12 @@ msgstr "Nome impresso no cartão"
 #: ../templates/credit-card/webservice-payment-form.php:25 ../templates/debit-
 #: card/webservice-payment-form.php:25
 msgid "Expiry (MM/YYYY)"
-msgstr "Validade (MM/YYYYY)"
+msgstr "Validade (MM/AAAA)"
 
 #: ../templates/credit-card/webservice-payment-form.php:26 ../templates/debit-
 #: card/webservice-payment-form.php:26
 msgid "MM / YYYY"
-msgstr "MM/YYYY"
+msgstr "MM/AAAA"
 
 #: ../templates/credit-card/webservice-payment-form.php:29 ../templates/debit-
 #: card/webservice-payment-form.php:29
@@ -100,107 +100,107 @@ msgstr "Pagamento com debito possui desconto de %s. Total do pedido: %s."
 msgid "Cielo - Debit Card"
 msgstr "Cielo - Cartão de débito"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:70 ../includes/class-wc-cielo-
-#: credit-gateway.php:74
+#: ../includes/class-wc-cielo-debit-gateway.php:71 ../includes/class-wc-cielo-
+#: credit-gateway.php:75
 msgid "Enable/Disable"
 msgstr "Habilitar/Desabilitar"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:72
+#: ../includes/class-wc-cielo-debit-gateway.php:73
 msgid "Enable Cielo Debit Card"
 msgstr "Ativar cartão de débito da Cielo"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:76 ../includes/class-wc-cielo-
-#: credit-gateway.php:80
+#: ../includes/class-wc-cielo-debit-gateway.php:77 ../includes/class-wc-cielo-
+#: credit-gateway.php:81
 msgid "Title"
 msgstr "Título"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:78 ../includes/class-wc-cielo-
-#: credit-gateway.php:82
+#: ../includes/class-wc-cielo-debit-gateway.php:79 ../includes/class-wc-cielo-
+#: credit-gateway.php:83
 msgid "This controls the title which the user sees during checkout."
 msgstr "Isto controla o título que o usuário vê durante a finalização da compra."
 
-#: ../includes/class-wc-cielo-debit-gateway.php:83 ../includes/class-wc-cielo-
-#: credit-gateway.php:87
+#: ../includes/class-wc-cielo-debit-gateway.php:84 ../includes/class-wc-cielo-
+#: credit-gateway.php:88
 msgid "Description"
 msgstr "Descrição"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:85 ../includes/class-wc-cielo-
-#: credit-gateway.php:89
+#: ../includes/class-wc-cielo-debit-gateway.php:86 ../includes/class-wc-cielo-
+#: credit-gateway.php:90
 msgid "This controls the description which the user sees during checkout."
 msgstr "Isto controla a descrição que o usuário vê durante a finalização do pedido."
 
-#: ../includes/class-wc-cielo-debit-gateway.php:87 ../includes/class-wc-cielo-
-#: credit-gateway.php:91
+#: ../includes/class-wc-cielo-debit-gateway.php:88 ../includes/class-wc-cielo-
+#: credit-gateway.php:92
 msgid "Pay using the secure method of Cielo"
 msgstr "Pague usando o método seguro da Cielo"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:90 ../includes/class-wc-cielo-
-#: credit-gateway.php:94
+#: ../includes/class-wc-cielo-debit-gateway.php:91 ../includes/class-wc-cielo-
+#: credit-gateway.php:95
 msgid "Store Solution"
 msgstr "Solução de integração"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:92 ../includes/class-wc-cielo-
-#: credit-gateway.php:96
+#: ../includes/class-wc-cielo-debit-gateway.php:93 ../includes/class-wc-cielo-
+#: credit-gateway.php:97
 msgid "Select the store contract method with cielo."
 msgstr "Selecione a solução junto a Cielo"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:97 ../includes/class-wc-cielo-
-#: credit-gateway.php:101
+#: ../includes/class-wc-cielo-debit-gateway.php:98 ../includes/class-wc-cielo-
+#: credit-gateway.php:102
 msgid "Webservice Solution"
 msgstr "Solução Webservice"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:98 ../includes/class-wc-cielo-
-#: credit-gateway.php:102
+#: ../includes/class-wc-cielo-debit-gateway.php:99 ../includes/class-wc-cielo-
+#: credit-gateway.php:103
 msgid "BuyPage Cielo"
 msgstr "BuyPage Cielo"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:102 ../includes/class-wc-cielo-
-#: credit-gateway.php:106
+#: ../includes/class-wc-cielo-debit-gateway.php:103 ../includes/class-wc-cielo-
+#: credit-gateway.php:107
 msgid "Environment"
 msgstr "Ambiente"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:105 ../includes/class-wc-cielo-
-#: credit-gateway.php:108
+#: ../includes/class-wc-cielo-debit-gateway.php:106 ../includes/class-wc-cielo-
+#: credit-gateway.php:109
 msgid "Select the environment type (test or production)."
 msgstr "Selecione o tipo de ambiente (teste ou produção)."
 
-#: ../includes/class-wc-cielo-debit-gateway.php:109 ../includes/class-wc-cielo-
-#: credit-gateway.php:113
+#: ../includes/class-wc-cielo-debit-gateway.php:110 ../includes/class-wc-cielo-
+#: credit-gateway.php:114
 msgid "Test"
 msgstr "Teste"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:110 ../includes/class-wc-cielo-
-#: credit-gateway.php:114
+#: ../includes/class-wc-cielo-debit-gateway.php:111 ../includes/class-wc-cielo-
+#: credit-gateway.php:115
 msgid "Production"
 msgstr "Produção"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:114 ../includes/class-wc-cielo-
-#: credit-gateway.php:118
+#: ../includes/class-wc-cielo-debit-gateway.php:115 ../includes/class-wc-cielo-
+#: credit-gateway.php:119
 msgid "Affiliation Number"
 msgstr "Número de afiliação"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:116 ../includes/class-wc-cielo-
-#: credit-gateway.php:120
+#: ../includes/class-wc-cielo-debit-gateway.php:117 ../includes/class-wc-cielo-
+#: credit-gateway.php:121
 msgid "Store affiliation number with Cielo."
 msgstr "Número de afiliação com a Cielo."
 
-#: ../includes/class-wc-cielo-debit-gateway.php:121 ../includes/class-wc-cielo-
-#: credit-gateway.php:125
+#: ../includes/class-wc-cielo-debit-gateway.php:122 ../includes/class-wc-cielo-
+#: credit-gateway.php:126
 msgid "Affiliation Key"
 msgstr "Chave de afiliação"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:123 ../includes/class-wc-cielo-
-#: credit-gateway.php:127
+#: ../includes/class-wc-cielo-debit-gateway.php:124 ../includes/class-wc-cielo-
+#: credit-gateway.php:128
 msgid "Store access key assigned by Cielo."
 msgstr "Chave de acesso da loja atribuída pela Cielo."
 
-#: ../includes/class-wc-cielo-debit-gateway.php:128 ../includes/class-wc-cielo-
-#: credit-gateway.php:132
+#: ../includes/class-wc-cielo-debit-gateway.php:129 ../includes/class-wc-cielo-
+#: credit-gateway.php:133
 msgid "Accepted Card Brands"
 msgstr "Bandeiras aceitas"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:130 ../includes/class-wc-cielo-
-#: credit-gateway.php:134
+#: ../includes/class-wc-cielo-debit-gateway.php:131 ../includes/class-wc-cielo-
+#: credit-gateway.php:135
 msgid ""
 "Select the card brands that will be accepted as payment. Press the Ctrl key "
 "to select more than one brand."
@@ -208,93 +208,93 @@ msgstr ""
 "Selecione as bandeiras que serão aceitas para pagamento. Pressione o botão "
 "CTRL para selecionar mais de uma bandeira."
 
-#: ../includes/class-wc-cielo-debit-gateway.php:135 ../includes/class-wc-cielo-
+#: ../includes/class-wc-cielo-debit-gateway.php:136 ../includes/class-wc-cielo-
 #: helper.php:25
 msgid "Visa Electron"
 msgstr "Visa Electron"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:136 ../includes/class-wc-cielo-
+#: ../includes/class-wc-cielo-debit-gateway.php:137 ../includes/class-wc-cielo-
 #: helper.php:26
 msgid "Maestro"
 msgstr "Maestro"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:140 ../includes/class-wc-cielo-
-#: credit-gateway.php:150
+#: ../includes/class-wc-cielo-debit-gateway.php:141 ../includes/class-wc-cielo-
+#: credit-gateway.php:151
 msgid "Automatic Authorization (MasterCard and Visa only)"
 msgstr "Autorizar automaticamente (apenas MasterCard e Visa)"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:142 ../includes/class-wc-cielo-
-#: credit-gateway.php:152
+#: ../includes/class-wc-cielo-debit-gateway.php:143 ../includes/class-wc-cielo-
+#: credit-gateway.php:153
 msgid "Select the authorization type."
 msgstr "Selecione o tipo de autorização."
 
-#: ../includes/class-wc-cielo-debit-gateway.php:147 ../includes/class-wc-cielo-
-#: credit-gateway.php:158
+#: ../includes/class-wc-cielo-debit-gateway.php:148 ../includes/class-wc-cielo-
+#: credit-gateway.php:159
 msgid "Allow authorization for authenticated transaction and non-authenticated"
 msgstr "Autorizar transação autenticada e não-autenticada"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:148 ../includes/class-wc-cielo-
-#: credit-gateway.php:159
+#: ../includes/class-wc-cielo-debit-gateway.php:149 ../includes/class-wc-cielo-
+#: credit-gateway.php:160
 msgid "Authorization transaction only if is authenticated"
 msgstr "Autorizar transação somente se autenticada"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:149 ../includes/class-wc-cielo-
-#: credit-gateway.php:160
+#: ../includes/class-wc-cielo-debit-gateway.php:150 ../includes/class-wc-cielo-
+#: credit-gateway.php:161
 msgid "Only authenticate the transaction"
 msgstr "Somente autenticar a transação"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:153
+#: ../includes/class-wc-cielo-debit-gateway.php:154
 msgid "Debit Discount (%)"
 msgstr "Desconto débito (%)"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:155
+#: ../includes/class-wc-cielo-debit-gateway.php:156
 msgid "Percentage discount for payments made ​​by debit card."
 msgstr "Porcentagem de desconto para pagamentos feito por débito."
 
-#: ../includes/class-wc-cielo-debit-gateway.php:160 ../includes/class-wc-cielo-
-#: credit-gateway.php:234
+#: ../includes/class-wc-cielo-debit-gateway.php:161 ../includes/class-wc-cielo-
+#: credit-gateway.php:235
 msgid "Design"
 msgstr "Modelo"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:165 ../includes/class-wc-cielo-
-#: credit-gateway.php:239
+#: ../includes/class-wc-cielo-debit-gateway.php:166 ../includes/class-wc-cielo-
+#: credit-gateway.php:240
 msgid "Payment Form Design"
 msgstr "Modelo do formulário"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:170 ../includes/class-wc-cielo-
-#: credit-gateway.php:244
+#: ../includes/class-wc-cielo-debit-gateway.php:171 ../includes/class-wc-cielo-
+#: credit-gateway.php:245
 msgid "Default"
 msgstr "Padrão"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:171 ../includes/class-wc-cielo-
-#: credit-gateway.php:245
+#: ../includes/class-wc-cielo-debit-gateway.php:172 ../includes/class-wc-cielo-
+#: credit-gateway.php:246
 msgid "With card icons"
 msgstr "Com ícones"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:175 ../includes/class-wc-cielo-
-#: credit-gateway.php:249
+#: ../includes/class-wc-cielo-debit-gateway.php:176 ../includes/class-wc-cielo-
+#: credit-gateway.php:250
 msgid "Gateway Testing"
 msgstr "Testes de Gateway"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:180 ../includes/class-wc-cielo-
-#: credit-gateway.php:254
+#: ../includes/class-wc-cielo-debit-gateway.php:181 ../includes/class-wc-cielo-
+#: credit-gateway.php:255
 msgid "Debug Log"
 msgstr "Log de depuração"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:182 ../includes/class-wc-cielo-
-#: credit-gateway.php:256
+#: ../includes/class-wc-cielo-debit-gateway.php:183 ../includes/class-wc-cielo-
+#: credit-gateway.php:257
 msgid "Enable logging"
 msgstr "Ativar logs"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:184 ../includes/class-wc-cielo-
-#: credit-gateway.php:258
+#: ../includes/class-wc-cielo-debit-gateway.php:185 ../includes/class-wc-cielo-
+#: credit-gateway.php:259
 #, php-format
 msgid "Log Cielo events, such as API requests, inside %s"
 msgstr ""
 "Grava eventos da Cielo, como por exemplo solicitações a API, você pode "
 "encontrar o log em %s"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:363
+#: ../includes/class-wc-cielo-debit-gateway.php:358
 #, php-format
 msgid "with discount of %s. Order Total: %s."
 msgstr "com desconto de %s. Total: %s."
@@ -303,67 +303,67 @@ msgstr "com desconto de %s. Total: %s."
 msgid "Cielo - Credit Card"
 msgstr "Cielo - Cartão de crédito"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:76
+#: ../includes/class-wc-cielo-credit-gateway.php:77
 msgid "Enable Cielo Credit Card"
 msgstr "Ativar cartão de crédito da Cielo"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:139 ../includes/class-wc-cielo-
+#: ../includes/class-wc-cielo-credit-gateway.php:140 ../includes/class-wc-cielo-
 #: helper.php:15
 msgid "Visa"
 msgstr "Visa"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:140 ../includes/class-wc-cielo-
+#: ../includes/class-wc-cielo-credit-gateway.php:141 ../includes/class-wc-cielo-
 #: helper.php:16
 msgid "MasterCard"
 msgstr "MasterCard"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:141 ../includes/class-wc-cielo-
+#: ../includes/class-wc-cielo-credit-gateway.php:142 ../includes/class-wc-cielo-
 #: helper.php:17
 msgid "Diners"
 msgstr "Diners"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:142 ../includes/class-wc-cielo-
+#: ../includes/class-wc-cielo-credit-gateway.php:143 ../includes/class-wc-cielo-
 #: helper.php:18
 msgid "Discover"
 msgstr "Discover"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:143 ../includes/class-wc-cielo-
+#: ../includes/class-wc-cielo-credit-gateway.php:144 ../includes/class-wc-cielo-
 #: helper.php:19
 msgid "Elo"
 msgstr "Elo"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:144 ../includes/class-wc-cielo-
+#: ../includes/class-wc-cielo-credit-gateway.php:145 ../includes/class-wc-cielo-
 #: helper.php:20
 msgid "American Express"
 msgstr "American Express"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:145 ../includes/class-wc-cielo-
+#: ../includes/class-wc-cielo-credit-gateway.php:146 ../includes/class-wc-cielo-
 #: helper.php:21
 msgid "JCB"
 msgstr "JCB"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:146 ../includes/class-wc-cielo-
+#: ../includes/class-wc-cielo-credit-gateway.php:147 ../includes/class-wc-cielo-
 #: helper.php:22
 msgid "Aura"
 msgstr "Aura"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:157
+#: ../includes/class-wc-cielo-credit-gateway.php:158
 msgid "Direct authorization"
 msgstr "Autorização direta"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:164
+#: ../includes/class-wc-cielo-credit-gateway.php:165
 msgid "Smallest Installment"
 msgstr "Parcela mínima"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:166
+#: ../includes/class-wc-cielo-credit-gateway.php:167
 msgid "Smallest value of each installment, cannot be less than 5."
 msgstr "O melhor valor de cada parcela, não pode ser menor do que 5."
 
-#: ../includes/class-wc-cielo-credit-gateway.php:171
+#: ../includes/class-wc-cielo-credit-gateway.php:172
 msgid "Interest Rate (%)"
 msgstr "Taxa de juros (%)"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:173
+#: ../includes/class-wc-cielo-credit-gateway.php:174
 msgid ""
 "Percentage of interest that will be charged to the customer in the "
 "installment where there is interest rate to be charged."
@@ -371,47 +371,47 @@ msgstr ""
 "Porcentagem de juros que será cobrado do cliente por parcela quando há taxa "
 "de juros a ser cobrada."
 
-#: ../includes/class-wc-cielo-credit-gateway.php:178
+#: ../includes/class-wc-cielo-credit-gateway.php:179
 msgid "Installment Within"
 msgstr "Parcelar em até"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:180
+#: ../includes/class-wc-cielo-credit-gateway.php:181
 msgid "Maximum number of installments for orders in your store."
 msgstr "Número máximo de parcelas que a sua loja irá aceitar."
 
-#: ../includes/class-wc-cielo-credit-gateway.php:200
+#: ../includes/class-wc-cielo-credit-gateway.php:201
 msgid "Charge Interest Since"
 msgstr "Cobrar juros a partir de"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:202
+#: ../includes/class-wc-cielo-credit-gateway.php:203
 msgid "Indicate from which installment should be charged interest."
 msgstr "Indique a partir de qual parcela deve ser cobrado juros."
 
-#: ../includes/class-wc-cielo-credit-gateway.php:222
+#: ../includes/class-wc-cielo-credit-gateway.php:223
 msgid "Installment Type"
 msgstr "Tipo de parcelamento"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:224
+#: ../includes/class-wc-cielo-credit-gateway.php:225
 msgid "Client adds interest installments on the order total."
 msgstr ""
-"Quando selecionado \\\"Cliente\\\" é adicionado valor do juros no valor total do "
+"Quando selecionado \"Cliente\" é adicionado valor do juros no valor total do "
 "pedido."
 
-#: ../includes/class-wc-cielo-credit-gateway.php:229
+#: ../includes/class-wc-cielo-credit-gateway.php:230
 msgid "Client"
 msgstr "Cliente"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:230
+#: ../includes/class-wc-cielo-credit-gateway.php:231
 msgid "Store"
 msgstr "Loja"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:447
+#: ../includes/class-wc-cielo-credit-gateway.php:449
 #, php-format
 msgid "%s in %s."
 msgstr "%s em %s."
 
 #: ../includes/class-wc-cielo-admin.php:30 ../includes/class-wc-cielo-helper.php:
-#: 625 ../includes/class-wc-cielo-helper.php:784
+#: 599 ../includes/class-wc-cielo-helper.php:758
 msgid "Cielo"
 msgstr "Cielo"
 
@@ -425,7 +425,7 @@ msgid ""
 "canceled"
 msgstr "Esta transação foi feita à mais de 90 dias e portanto não pode ser cancelada"
 
-#: ../includes/class-wc-cielo-api.php:187
+#: ../includes/class-wc-cielo-api.php:222
 msgid ""
 "An error has occurred while processing your payment, please try again or "
 "contact us for assistance."
@@ -433,7 +433,7 @@ msgstr ""
 "Um erro aconteceu ao processar o seu pagamento, por favor, tente novamente "
 "ou entre em contato para conseguir assistência."
 
-#: ../includes/class-wc-cielo-api.php:403
+#: ../includes/class-wc-cielo-api.php:438
 msgid ""
 "An error occurred while trying to cancel the payment, turn on the Cielo log "
 "option and try again."
@@ -446,141 +446,141 @@ msgstr ""
 msgid "and %s"
 msgstr "e %s"
 
-#: ../includes/class-wc-cielo-helper.php:171
+#: ../includes/class-wc-cielo-helper.php:146
 msgctxt "Transaction Status"
 msgid "Transaction created"
 msgstr "Transação criada"
 
-#: ../includes/class-wc-cielo-helper.php:172
+#: ../includes/class-wc-cielo-helper.php:147
 msgctxt "Transaction Status"
 msgid "Transaction ongoing"
 msgstr "Transação em andamento"
 
-#: ../includes/class-wc-cielo-helper.php:173
+#: ../includes/class-wc-cielo-helper.php:148
 msgctxt "Transaction Status"
 msgid "Transaction authenticated"
 msgstr "Transação autenticada"
 
-#: ../includes/class-wc-cielo-helper.php:174
+#: ../includes/class-wc-cielo-helper.php:149
 msgctxt "Transaction Status"
 msgid "Transaction not authenticated"
 msgstr "Transação não autenticada"
 
-#: ../includes/class-wc-cielo-helper.php:175
+#: ../includes/class-wc-cielo-helper.php:150
 msgctxt "Transaction Status"
 msgid "Transaction authorized"
 msgstr "Transação autorizada"
 
-#: ../includes/class-wc-cielo-helper.php:176
+#: ../includes/class-wc-cielo-helper.php:151
 msgctxt "Transaction Status"
 msgid "Transaction not authorized"
 msgstr "Transação não autorizada"
 
-#: ../includes/class-wc-cielo-helper.php:177
+#: ../includes/class-wc-cielo-helper.php:152
 msgctxt "Transaction Status"
 msgid "Transaction captured"
 msgstr "Transação capturada"
 
-#: ../includes/class-wc-cielo-helper.php:178
+#: ../includes/class-wc-cielo-helper.php:153
 msgctxt "Transaction Status"
 msgid "Transaction cancelled"
 msgstr "Transação cancelada"
 
-#: ../includes/class-wc-cielo-helper.php:179
+#: ../includes/class-wc-cielo-helper.php:154
 msgctxt "Transaction Status"
 msgid "Transaction in authentication"
 msgstr "Transação em autenticação"
 
-#: ../includes/class-wc-cielo-helper.php:180
+#: ../includes/class-wc-cielo-helper.php:155
 msgctxt "Transaction Status"
 msgid "Transaction in cancellation"
 msgstr "Transação em cancelamento"
 
-#: ../includes/class-wc-cielo-helper.php:187
+#: ../includes/class-wc-cielo-helper.php:162
 msgctxt "Transaction Status"
 msgid "Transaction failed"
 msgstr "A transação falhou"
 
-#: ../includes/class-wc-cielo-helper.php:239
+#: ../includes/class-wc-cielo-helper.php:214
 msgid "System Status &gt; Logs"
 msgstr "Status do Sistema &gt; Logs"
 
-#: ../includes/class-wc-cielo-helper.php:366 ../includes/class-wc-cielo-helper.
-#: php:410
+#: ../includes/class-wc-cielo-helper.php:340 ../includes/class-wc-cielo-helper.
+#: php:384
 #, php-format
 msgid "no interest. Total: %s"
 msgstr "sem juros. Total: %s"
 
-#: ../includes/class-wc-cielo-helper.php:376 ../includes/class-wc-cielo-helper.
-#: php:419
+#: ../includes/class-wc-cielo-helper.php:350 ../includes/class-wc-cielo-helper.
+#: php:393
 #, php-format
 msgid "with interest of %s%% a.m. Total: %s"
 msgstr "com juros de %s%% a.m. Total: %s"
 
-#: ../includes/class-wc-cielo-helper.php:387 ../includes/class-wc-cielo-helper.
-#: php:389 ../includes/class-wc-cielo-helper.php:423
+#: ../includes/class-wc-cielo-helper.php:361 ../includes/class-wc-cielo-helper.
+#: php:363 ../includes/class-wc-cielo-helper.php:397
 #, php-format
 msgid "%sx of %s %s"
 msgstr "%sx de %s %s"
 
-#: ../includes/class-wc-cielo-helper.php:489
+#: ../includes/class-wc-cielo-helper.php:463
 #, php-format
 msgid "Please enter with a valid card brand. The following cards are accepted: %s."
 msgstr ""
 "Por favor, digite um cartão com bandeira válida. As seguintes bandeiras de "
 "cartão são aceitas: %s"
 
-#: ../includes/class-wc-cielo-helper.php:512
+#: ../includes/class-wc-cielo-helper.php:486
 msgid "Please type the name of the card holder."
 msgstr "Por favor digite o nome do responsável pelo cartão."
 
-#: ../includes/class-wc-cielo-helper.php:517
+#: ../includes/class-wc-cielo-helper.php:491
 msgid "Please type the card expiry date."
 msgstr "Por favor digite a data de validade do cartão."
 
-#: ../includes/class-wc-cielo-helper.php:522
+#: ../includes/class-wc-cielo-helper.php:496
 msgid "Please type the cvv code for the card"
 msgstr "Por favor digite o código de segurança do cartão."
 
-#: ../includes/class-wc-cielo-helper.php:552
+#: ../includes/class-wc-cielo-helper.php:526
 msgid "Please select a number of installments."
 msgstr "Por favor, selecione o número de parcelas."
 
-#: ../includes/class-wc-cielo-helper.php:567
+#: ../includes/class-wc-cielo-helper.php:541
 msgid "Invalid number of installments!"
 msgstr "O número de parcelas é inválido!"
 
-#: ../includes/class-wc-cielo-helper.php:661
+#: ../includes/class-wc-cielo-helper.php:635
 msgid "Invalid request"
 msgstr "Requisição inválida"
 
-#: ../includes/class-wc-cielo-helper.php:703
+#: ../includes/class-wc-cielo-helper.php:677
 msgid "Paid with"
 msgstr "Pago com"
 
-#: ../includes/class-wc-cielo-helper.php:709
+#: ../includes/class-wc-cielo-helper.php:683
 msgid "debit"
 msgstr "débito"
 
-#: ../includes/class-wc-cielo-helper.php:711
+#: ../includes/class-wc-cielo-helper.php:685
 msgid "credit at sight"
 msgstr "crédito à vista"
 
-#: ../includes/class-wc-cielo-helper.php:713
+#: ../includes/class-wc-cielo-helper.php:687
 #, php-format
 msgid "credit %dx"
 msgstr "crédito em %d vezes"
 
-#: ../includes/class-wc-cielo-helper.php:728
+#: ../includes/class-wc-cielo-helper.php:702
 msgid "Order canceled successfully."
 msgstr "Pedido cancelado com sucesso."
 
-#: ../includes/class-wc-cielo-helper.php:789
+#: ../includes/class-wc-cielo-helper.php:763
 #, php-format
 msgid "Cielo: %s - Refunded amount: %s."
 msgstr "Cielo: %s - Total reembolsado: %s."
 
-#: ../includes/class-wc-cielo-helper.php:796
+#: ../includes/class-wc-cielo-helper.php:770
 #, php-format
 msgid ""
 "This transaction has been made ​​more than %s days and therefore it can not "
@@ -589,24 +589,24 @@ msgstr ""
 "Esta transação foi feita a mais do que %s dias e por isso não pode mais ser "
 "cancelada."
 
-#: ../includes/class-wc-cielo-helper.php:818
+#: ../includes/class-wc-cielo-helper.php:792
 msgid "View order details"
 msgstr "Ver detalhes do pedido"
 
-#: ../includes/class-wc-cielo-helper.php:818
+#: ../includes/class-wc-cielo-helper.php:792
 msgid "Your payment has been received successfully."
 msgstr "O seu pagamento foi recebido com sucesso."
 
-#: ../includes/class-wc-cielo-helper.php:818
+#: ../includes/class-wc-cielo-helper.php:792
 msgid "The authorization code was generated."
 msgstr "O código de autorização foi gerado."
 
-#: ../includes/class-wc-cielo-helper.php:820
+#: ../includes/class-wc-cielo-helper.php:794
 #, php-format
 msgid "For more information or questions regarding your order, go to the %s."
 msgstr "Para mais informações ou dúvidas a respeito do seu pedido, vá para a %s."
 
-#: ../includes/class-wc-cielo-helper.php:820
+#: ../includes/class-wc-cielo-helper.php:794
 msgid "order details page"
 msgstr "página de detalhes do pedido"
 
