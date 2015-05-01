@@ -1,10 +1,10 @@
 === Cielo WooCommerce - Solução Webservice ===
 Contributors: Gabriel Reguly, claudiosanches, gopaulo
-Donate link: http://claudiosmweb.com/doacoes/
+Donate link: https://claudiosmweb.com/doacoes/
 Tags: woocommerce, cielo, payment gateway
 Requires at least: 3.9
-Tested up to: 4.2
-Stable tag: 4.0.3
+Tested up to: 4.2.1
+Stable tag: 4.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -198,6 +198,11 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Changelog ==
 
+= 4.0.4 - 2015/04/30 =
+
+* Corrigida validação de parcelas.
+* Adicionado método em PHP para detectar a bandeira do cartão de crédito e removido o método antigo em JavaScript.
+
 = 4.0.3 - 2015/04/26 =
 
 * Corrigida verificação de SSL no checkout, este erro estava impedindo de exibir as opções em produção para a Solução Webservice.
@@ -308,10 +313,10 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Upgrade Notice ==
 
-= 4.0.3 =
+= 4.0.4 =
 
-* Corrigida verificação de SSL no checkout, este erro estava impedindo de exibir as opções em produção para a Solução Webservice.
-* Alterado o limite para cancelamento/reembolso de 90 dias para 120 dias, como manda a nova documentação da Cielo.
+* Corrigida validação de parcelas.
+* Adicionado método em PHP para detectar a bandeira do cartão de crédito e removido o método antigo em JavaScript.
 
 == License ==
 
