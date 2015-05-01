@@ -230,7 +230,7 @@ class WC_Cielo_API {
 	public function do_transaction( $order, $id, $card_brand, $installments = 0, $credit_card_data = array(), $is_debit = false ) {
 		$account_data    = $this->get_account_data();
 		$payment_product = '1';
-		$order_total     = $order->order_total;
+		$order_total     = (float) $order->get_total();
 		$authorization   = $this->gateway->authorization;
 
 		// Set the authorization.
@@ -240,12 +240,12 @@ class WC_Cielo_API {
 
 		// Set the order total with interest.
 		if ( isset( $this->gateway->installment_type ) && 'client' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
-			$order_total = $order->order_total * ( ( 100 + $this->gateway->get_valid_value( $this->gateway->interest_rate ) ) / 100 );
+			$order_total = $order_total * ( ( 100 + $this->gateway->get_valid_value( $this->gateway->interest_rate ) ) / 100 );
 		}
 
 		// Set the debit values.
 		if ( $is_debit ) {
-			$order_total     = $order->order_total * ( ( 100 - $this->gateway->get_valid_value( $this->gateway->debit_discount ) ) / 100 );
+			$order_total     = $order_total * ( ( 100 - $this->gateway->get_valid_value( $this->gateway->debit_discount ) ) / 100 );
 			$payment_product = 'A';
 			$installments    = '1';
 			$authorization   = ( 3 == $authorization ) ? 2 : $authorization;
