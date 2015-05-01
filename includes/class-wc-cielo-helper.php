@@ -296,7 +296,6 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	public function is_available() {
 		// Test if is valid for use.
 		$available = parent::is_available() &&
-					'yes' == $this->get_option( 'enabled' ) &&
 					$this->check_environment() &&
 					$this->using_supported_currency() &&
 					$this->checks_for_webservice();
@@ -344,8 +343,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	/**
 	 * Get installments HTML.
 	 *
-	 * @param  string $type        'select' or 'radio'.
 	 * @param  float  $order_total Order total.
+	 * @param  string $type        'select' or 'radio'.
 	 *
 	 * @return string
 	 */
@@ -558,7 +557,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 
 			if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
 				$interest_rate     = $this->get_valid_value( $this->interest_rate ) / 100;
-				$interest_total    = $installment_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) ) );
+				$interest_total    = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) ) );
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
 			}
 			$smallest_value = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
