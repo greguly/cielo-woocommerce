@@ -236,7 +236,14 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		$card_brand  = $this->api->get_card_brand( $card_number );
 
 		// Validate credit card brand.
-		$valid = $this->validate_credit_brand( $card_brand );
+		if ( 'mastercard' == $card_brand ) {
+			$_card_brand = 'maestro';
+		} else if ( 'visa' == $card_brand ) {
+			$_card_brand = 'visaelectron';
+		} else {
+			$_card_brand = $card_brand;
+		}
+		$valid = $this->validate_credit_brand( $_card_brand );
 
 		// Test the card fields.
 		if ( $valid ) {
@@ -244,7 +251,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		}
 
 		if ( $valid ) {
-			$card_brand   = ( 'maestro' == $card_brand ) ? 'mastercard' : 'visa';
+			$card_brand   = ( 'maestro' == $card_brand ) ? 'mastercard' : $card_brand;
 			$installments = absint( $_POST['cielo_installments'] );
 			$card_data    = array(
 				'name_on_card'    => $_POST['cielo_holder_name'],
