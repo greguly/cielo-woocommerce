@@ -198,6 +198,10 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Changelog ==
 
+= 4.0.6 - 2015/05/03 =
+
+* Correção da validação de bandeira dos cartões de débito para a Solução Webservice.
+
 = 4.0.5 - 2015/05/01 =
 
 * Correção da tradução.
@@ -317,11 +321,9 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Upgrade Notice ==
 
-= 4.0.5 =
+= 4.0.6 =
 
-* Corrigida validação de parcelas.
-* Adicionado método em PHP para detectar a bandeira do cartão de crédito e removido o método antigo em JavaScript.
-* Correção da tradução.
+* Correção da validação de bandeira dos cartões de débito para a Solução Webservice.
 
 == License ==
 

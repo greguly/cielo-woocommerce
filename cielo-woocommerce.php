@@ -5,7 +5,7 @@
  * Description: Works using the Cielo Webservice Solution to receive payments on WooCommerce.
  * Author: Gabriel Reguly, Claudio Sanches, Paulo Vieira
  * Author URI: http://omniwp.com.br
- * Version: 4.0.5
+ * Version: 4.0.6
  * License: GPLv2 or later
  * Text Domain: cielo-woocommerce
  * Domain Path: /languages/
@@ -29,7 +29,7 @@ class WC_Cielo {
 	 *
 	 * @var string
 	 */
-	const VERSION = '4.0.5';
+	const VERSION = '4.0.6';
 
 	/**
 	 * Instance of this class.
