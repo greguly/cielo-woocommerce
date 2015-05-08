@@ -3,8 +3,8 @@
 **Donate link:** https://claudiosmweb.com/doacoes/  
 **Tags:** woocommerce, cielo, payment gateway  
 **Requires at least:** 3.9  
-**Tested up to:** 4.2.1  
-**Stable tag:** 4.0.5  
+**Tested up to:** 4.2.2  
+**Stable tag:** 4.0.7  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -204,6 +204,11 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 ## Changelog ##
 
+### 4.0.7 - 2015/05/08 ###
+
+* Alterado os atributos "name" dos campos de débito e crédito para a Solução Webservice.
+* Corrigido erros na identificação da bandeira de cartões com a Solução Webservice.
+
 ### 4.0.6 - 2015/05/03 ###
 
 * Correção da validação de bandeira dos cartões de débito para a Solução Webservice.
@@ -327,9 +332,10 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 ## Upgrade Notice ##
 
-### 4.0.6 ###
+### 4.0.7 ###
 
-* Correção da validação de bandeira dos cartões de débito para a Solução Webservice.
+* Alterado os atributos "name" dos campos de débito e crédito para a Solução Webservice.
+* Corrigido erros na identificação da bandeira de cartões com a Solução Webservice.
 
 ## License ##
 
