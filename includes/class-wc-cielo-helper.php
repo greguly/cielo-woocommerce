@@ -332,7 +332,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		}
 
 		if ( 'select' == $type ) {
-			$html .= '<select id="cielo-installments" name="cielo_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">';
+			$html .= '<select id="cielo-installments" name="cielo_credit_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">';
 		}
 
 		for ( $i = 1; $i <= $installments; $i++ ) {
@@ -360,7 +360,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			if ( 'select' == $type ) {
 				$html .= '<option value="' . $i . '" class="' . $at_sight . '">' . sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest ) . '</option>';
 			} else {
-				$html .= '<label class="' . $at_sight . '"><input type="radio" name="cielo_installments" value="' . $i . '" /> ' . sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, '<strong>' . sanitize_text_field( woocommerce_price( $credit_total ) ) . '</strong>', $credit_interest ) . '</label>';
+				$html .= '<label class="' . $at_sight . '"><input type="radio" name="cielo_credit_installments" value="' . $i . '" /> ' . sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, '<strong>' . sanitize_text_field( woocommerce_price( $credit_total ) ) . '</strong>', $credit_interest ) . '</label>';
 			}
 		}
 
@@ -482,17 +482,17 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	protected function validate_card_fields( $posted ) {
 		try {
 			// Validate name typed for the card.
-			if ( ! isset( $posted['cielo_holder_name'] ) || '' === $posted['cielo_holder_name'] ) {
+			if ( ! isset( $posted[ $this->id . '_holder_name' ] ) || '' === $posted[ $this->id . '_holder_name' ] ) {
 				throw new Exception( __( 'Please type the name of the card holder.', 'cielo-woocommerce' ) );
 			}
 
 			// Validate the expiration date.
-			if ( ! isset( $posted['cielo_card_expiry'] ) || '' === $posted['cielo_card_expiry'] ) {
+			if ( ! isset( $posted[ $this->id . '_expiry' ] ) || '' === $posted[ $this->id . '_expiry' ] ) {
 				throw new Exception( __( 'Please type the card expiry date.', 'cielo-woocommerce' ) );
 			}
 
 			// Validate the cvv for the card.
-			if ( ! isset( $posted['cielo_card_cvc'] ) || '' === $posted['cielo_card_cvc'] ) {
+			if ( ! isset( $posted[ $this->id . '_cvc' ] ) || '' === $posted[ $this->id . '_cvc' ] ) {
 				throw new Exception( __( 'Please type the cvv code for the card', 'cielo-woocommerce' ) );
 			}
 
@@ -515,18 +515,18 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 */
 	protected function validate_installments( $posted, $order_total ) {
 		// Stop if don't have installments.
-		if ( ! isset( $posted['cielo_installments'] ) && 1 == $this->installments ) {
+		if ( ! isset( $posted['cielo_credit_installments'] ) && 1 == $this->installments ) {
 			return true;
 		}
 
 		try {
 
 			// Validate the installments field.
-			if ( ! isset( $posted['cielo_installments'] ) || '' === $posted['cielo_installments'] ) {
+			if ( ! isset( $posted['cielo_credit_installments'] ) || '' === $posted['cielo_credit_installments'] ) {
 				throw new Exception( __( 'Please select a number of installments.', 'cielo-woocommerce' ) );
 			}
 
-			$installments      = absint( $posted['cielo_installments'] );
+			$installments      = absint( $posted['cielo_credit_installments'] );
 			$installment_total = $order_total / $installments;
 			$_installments     = apply_filters( 'wc_cielo_max_installments', $this->installments, $order_total );
 

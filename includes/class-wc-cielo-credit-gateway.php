@@ -317,7 +317,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 */
 	protected function process_webservice_payment( $order ) {
 		$payment_url = '';
-		$card_number = isset( $_POST['cielo_card_number'] ) ? sanitize_text_field( $_POST['cielo_card_number'] ) : '';
+		$card_number = isset( $_POST['cielo_credit_number'] ) ? sanitize_text_field( $_POST['cielo_credit_number'] ) : '';
 		$card_brand  = $this->api->get_card_brand( $card_number );
 
 		// Validate credit card brand.
@@ -334,12 +334,12 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		}
 
 		if ( $valid ) {
-			$installments = isset( $_POST['cielo_installments'] ) ? absint( $_POST['cielo_installments'] ) : 1;
+			$installments = isset( $_POST['cielo_credit_installments'] ) ? absint( $_POST['cielo_credit_installments'] ) : 1;
 			$card_data    = array(
-				'name_on_card'    => $_POST['cielo_holder_name'],
-				'card_number'     => $_POST['cielo_card_number'],
-				'card_expiration' => $_POST['cielo_card_expiry'],
-				'card_cvv'        => $_POST['cielo_card_cvc']
+				'name_on_card'    => $_POST['cielo_credit_number'],
+				'card_number'     => $_POST['cielo_credit_holder_name'],
+				'card_expiration' => $_POST['cielo_credit_expiry'],
+				'card_cvv'        => $_POST['cielo_credit_cvc']
 			);
 
 			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments, $card_data );
@@ -394,7 +394,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		}
 
 		if ( $valid ) {
-			$installments = isset( $_POST['cielo_installments'] ) ? absint( $_POST['cielo_installments'] ) : 1;
+			$installments = isset( $_POST['cielo_credit_installments'] ) ? absint( $_POST['cielo_credit_installments'] ) : 1;
 			$response     = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments );
 
 			// Set the error alert.

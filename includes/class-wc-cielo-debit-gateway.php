@@ -232,7 +232,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 	 */
 	protected function process_webservice_payment( $order ) {
 		$payment_url = '';
-		$card_number = isset( $_POST['cielo_card_number'] ) ? sanitize_text_field( $_POST['cielo_card_number'] ) : '';
+		$card_number = isset( $_POST['cielo_debit_number'] ) ? sanitize_text_field( $_POST['cielo_debit_number'] ) : '';
 		$card_brand  = $this->api->get_card_brand( $card_number );
 
 		// Validate credit card brand.
@@ -251,13 +251,12 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		}
 
 		if ( $valid ) {
-			$card_brand   = ( 'maestro' == $card_brand ) ? 'mastercard' : $card_brand;
-			$installments = absint( $_POST['cielo_installments'] );
-			$card_data    = array(
-				'name_on_card'    => $_POST['cielo_holder_name'],
-				'card_number'     => $_POST['cielo_card_number'],
-				'card_expiration' => $_POST['cielo_card_expiry'],
-				'card_cvv'        => $_POST['cielo_card_cvc']
+			$card_brand = ( 'maestro' == $card_brand ) ? 'mastercard' : $card_brand;
+			$card_data  = array(
+				'name_on_card'    => $_POST['cielo_debit_number'],
+				'card_number'     => $_POST['cielo_debit_holder_name'],
+				'card_expiration' => $_POST['cielo_debit_expiry'],
+				'card_cvv'        => $_POST['cielo_debit_cvc']
 			);
 
 			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 0, $card_data, true );
