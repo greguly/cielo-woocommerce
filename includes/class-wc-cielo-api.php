@@ -413,7 +413,7 @@ class WC_Cielo_API {
 	 *
 	 * @return array
 	 */
-	public function do_transaction_cancellation( $order, $tid, $id, $amount = null ) {
+	public function do_transaction_cancellation( $order, $tid, $id, $amount = 0 ) {
 		$account_data = $this->get_account_data();
 		$xml          = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-cancelamento id="' . $id . '" versao="' . self::VERSION . '"></requisicao-cancelamento>' );
 		$xml->add_tid( $tid );
@@ -427,7 +427,7 @@ class WC_Cielo_API {
 		$data = $xml->render();
 
 		if ( 'yes' == $this->gateway->debug ) {
-			$this->gateway->log->add( $this->gateway->id, 'Canceling the transaction for the order ' . $order->get_order_number() . '...' );
+			$this->gateway->log->add( $this->gateway->id, 'Refunding ' . $amount . ' from order ' . $order->get_order_number() . '...' );
 		}
 
 		// Do the request.
@@ -462,7 +462,7 @@ class WC_Cielo_API {
 		}
 
 		if ( 'yes' == $this->gateway->debug ) {
-			$this->gateway->log->add( $this->gateway->id, 'Order ' . $order->get_order_number() . ' canceled successfully' );
+			$this->gateway->log->add( $this->gateway->id, 'Refunded ' . $amount . ' from order ' . $order->get_order_number() . ' successfully!' );
 		}
 
 		return $body;

@@ -56,8 +56,6 @@ class WC_Cielo {
 
 			// Admin actions.
 			if ( is_admin() ) {
-				$this->admin_includes();
-
 				add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 			}
 		} else {
@@ -107,13 +105,6 @@ class WC_Cielo {
 		include_once( 'includes/class-wc-cielo-api.php' );
 		include_once( 'includes/class-wc-cielo-debit-gateway.php' );
 		include_once( 'includes/class-wc-cielo-credit-gateway.php' );
-	}
-
-	/**
-	 * Admin includes.
-	 */
-	private function admin_includes() {
-		include_once( 'includes/class-wc-cielo-admin.php' );
 	}
 
 	/**

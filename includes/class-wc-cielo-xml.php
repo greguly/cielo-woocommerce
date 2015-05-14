@@ -142,7 +142,7 @@ class WC_Cielo_XML extends SimpleXMLElement {
 	 * @param string $value.
 	 */
 	public function add_value( $value ) {
-		$this->addChild( 'valor', $value );
+		$this->addChild( 'valor', number_format( $value, 2, '', '' ) );
 	}
 
 	/**
