@@ -355,8 +355,14 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
 			}
 
-			$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
+			// Set the transaction URL.
+			if ( isset( $response->{'url-autenticacao'} ) && ! empty( $response->{'url-autenticacao'} ) ) {
+				$payment_url = (string) $response->{'url-autenticacao'};
+			} else {
+				$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
+			}
 
+			// Save payment data.
 			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
 			update_post_meta( $order->id, '_wc_cielo_installments', $installments );
 		}

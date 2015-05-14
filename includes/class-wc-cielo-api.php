@@ -269,7 +269,7 @@ class WC_Cielo_API {
 		$authorization   = $this->gateway->authorization;
 
 		// Set the authorization.
-		if ( in_array( $card_brand, $this->gateway->get_accept_authorization() ) && 3 != $authorization ) {
+		if ( in_array( $card_brand, $this->gateway->get_accept_authorization() ) && 3 != $authorization && ! $is_debit ) {
 			$authorization = 3;
 		}
 
@@ -289,7 +289,6 @@ class WC_Cielo_API {
 			$order_total     = $order_total * ( ( 100 - $this->gateway->get_valid_value( $this->gateway->debit_discount ) ) / 100 );
 			$payment_product = 'A';
 			$installments    = '1';
-			$authorization   = ( 3 == $authorization ) ? 2 : $authorization;
 		}
 
 		// Set the product when has installments.
