@@ -275,7 +275,13 @@ class WC_Cielo_API {
 
 		// Set the order total with interest.
 		if ( isset( $this->gateway->installment_type ) && 'client' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
-			$order_total = $order_total * ( ( 100 + $this->gateway->get_valid_value( $this->gateway->interest_rate ) ) / 100 );
+			$interest_rate        = $this->gateway->get_valid_value( $this->gateway->interest_rate ) / 100;
+			$interest_total       = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) ) );
+			$interest_order_total = $interest_total * $installments;
+
+			if ( $order_total < $interest_order_total ) {
+				$order_total = round( $interest_order_total, 2 );
+			}
 		}
 
 		// Set the debit values.
