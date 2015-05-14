@@ -4,7 +4,7 @@ Donate link: https://claudiosmweb.com/doacoes/
 Tags: woocommerce, cielo, payment gateway
 Requires at least: 3.9
 Tested up to: 4.2.2
-Stable tag: 4.0.8
+Stable tag: 4.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -160,21 +160,11 @@ Para produtos baixáveis a configuração padrão do WooCommerce é permitir o a
 
 = É possível cancelar o pagamento/devolver o dinheiro do cliente pelo plugin? =
 
-Sim é possível fazer reembolsos do valor total ou parcial, entretanto apenas para transações feitas em menos de 120 dias, 
+Sim é possível fazer reembolsos do valor total ou parcial, entretanto apenas para transações feitas em menos de 120 dias, além de que é necessário utilizar WooCommerce 2.2 ou superior.
 
-**Reembolso total**
+Os reembolsos devem ser feito dentro da página do pedido na tela de administração do WordPress em "WooCommerce > Pedidos", sendo possível encontrar a opção para isso clicando no botão "Reembolso" na tabela de itens do pedido.
 
-Basta mudar o status do pedido para "reembolsado", desta forma é enviado um sinal para a Cielo dizendo que a transação deve ser cancelada e o valor reembolsado.
-
-* Nota: Isto irá funcionar apenas para pagamentos feitos depois de instalada a versão 3.0.0 deste plugin.
-
-**Reembolso parcial**
-
-A partir do WooCommerce 2.2 foi implementada uma API e uma interface para fazer reembolsos parciais e este plugin a partir da versão 3.1.0 esta totalmente integrado com esta nova API.
-
-Desta forma basta fazer o reembolso na tela do pedido, assim será enviado um sinal para a Cielo dizendo qual o valor deve ser reembolsado.
-
-* Nota: Para reembolsos parciais você deve utilizar o WooCommerce 2.2 ou superior, além de que os pedidos devem ter sido feitos nesta versão e também com o Cielo WooCommerce na versão 3.1.0 ou superior.
+**Nota:** Para pagamentos com débito e para cartão de crédito da bandeira Discover é possível apenas realizar o reembolso do valor total do pedido.
 
 = Aconteceu um erro, o que eu faço? =
 
@@ -197,6 +187,13 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 2. Página de finalização utilizando o tema Storefront, mostrando as opções de crédito e débito na Solução Webservice.
 
 == Changelog ==
+
+= 4.0.9 - 2015/05/14 =
+
+* Correção do método de reembolsos.
+* Removido código antigo que fazia reembolsos quando alterado o pédido para cancelado (veja a documentação do plugin para mais detalhes).
+* Correção das opções de autenticação.
+* Correção da autenticação para cartão de débito.
 
 = 4.0.8 - 2015/05/08 =
 
@@ -330,9 +327,12 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Upgrade Notice ==
 
-= 4.0.8 =
+= 4.0.9 =
 
-* Corrigido os dados enviados para a Solução Webservice de débito e crédito.
+* Correção do método de reembolsos.
+* Removido código antigo que fazia reembolsos quando alterado o pédido para cancelado (veja a documentação do plugin para mais detalhes).
+* Correção das opções de autenticação.
+* Correção da autenticação para cartão de débito.
 
 == License ==
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Cielo WooCommerce - Solução Webservice v4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: Fri May 01 2015 00:53:39 GMT-0300 (BRT)\n"
+"PO-Revision-Date: Thu May 14 2015 01:17:08 GMT-0300 (BRT)\n"
 "Last-Translator: Claudio Sanches <contato@claudiosmweb.com>\n"
 "Language-Team: \n"
 "Language: Portuguese (Brazil)\n"
@@ -26,21 +26,21 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Loco-Target-Locale: pt_BR"
 
-#: ../cielo-woocommerce.php:146 ../templates/credit-card/default-payment-form.php:
+#: ../cielo-woocommerce.php:137 ../templates/credit-card/default-payment-form.php:
 #: 16 ../includes/class-wc-cielo-credit-gateway.php:85
 msgid "Credit Card"
 msgstr "Cartão de crédito"
 
-#: ../cielo-woocommerce.php:176 ../templates/debit-card/default-payment-form.php:
+#: ../cielo-woocommerce.php:167 ../templates/debit-card/default-payment-form.php:
 #: 17 ../includes/class-wc-cielo-debit-gateway.php:81
 msgid "Debit Card"
 msgstr "Cartão de débito"
 
-#: ../cielo-woocommerce.php:233
+#: ../cielo-woocommerce.php:224
 msgid "Credit Card Settings"
 msgstr "Configurações de crédito"
 
-#: ../cielo-woocommerce.php:235
+#: ../cielo-woocommerce.php:226
 msgid "Debit Card Settings"
 msgstr "Configurações de débito"
 
@@ -294,7 +294,7 @@ msgstr ""
 "Grava eventos da Cielo, como por exemplo solicitações a API, você pode "
 "encontrar o log em %s"
 
-#: ../includes/class-wc-cielo-debit-gateway.php:358
+#: ../includes/class-wc-cielo-debit-gateway.php:370
 #, php-format
 msgid "with discount of %s. Order Total: %s."
 msgstr "com desconto de %s. Total: %s."
@@ -405,25 +405,10 @@ msgstr "Cliente"
 msgid "Store"
 msgstr "Loja"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:449
+#: ../includes/class-wc-cielo-credit-gateway.php:455
 #, php-format
 msgid "%s in %s."
 msgstr "%s em %s."
-
-#: ../includes/class-wc-cielo-admin.php:30 ../includes/class-wc-cielo-helper.php:
-#: 599 ../includes/class-wc-cielo-helper.php:758
-msgid "Cielo"
-msgstr "Cielo"
-
-#: ../includes/class-wc-cielo-admin.php:47
-msgid "Transaction canceled successfully"
-msgstr "Transação cancelada com sucesso"
-
-#: ../includes/class-wc-cielo-admin.php:51
-msgid ""
-"This transaction has been made more than 90 days and therefore it can not be "
-"canceled"
-msgstr "Esta transação foi feita à mais de 90 dias e portanto não pode ser cancelada"
 
 #: ../includes/class-wc-cielo-api.php:222
 msgid ""
@@ -433,7 +418,7 @@ msgstr ""
 "Um erro aconteceu ao processar o seu pagamento, por favor, tente novamente "
 "ou entre em contato para conseguir assistência."
 
-#: ../includes/class-wc-cielo-api.php:438
+#: ../includes/class-wc-cielo-api.php:443
 msgid ""
 "An error occurred while trying to cancel the payment, turn on the Cielo log "
 "option and try again."
@@ -550,6 +535,11 @@ msgstr "Por favor, selecione o número de parcelas."
 msgid "Invalid number of installments!"
 msgstr "O número de parcelas é inválido!"
 
+#: ../includes/class-wc-cielo-helper.php:599 ../includes/class-wc-cielo-helper.
+#: php:757
+msgid "Cielo"
+msgstr "Cielo"
+
 #: ../includes/class-wc-cielo-helper.php:635
 msgid "Invalid request"
 msgstr "Requisição inválida"
@@ -575,12 +565,12 @@ msgstr "crédito em %d vezes"
 msgid "Order canceled successfully."
 msgstr "Pedido cancelado com sucesso."
 
-#: ../includes/class-wc-cielo-helper.php:763
+#: ../includes/class-wc-cielo-helper.php:762
 #, php-format
 msgid "Cielo: %s - Refunded amount: %s."
 msgstr "Cielo: %s - Total reembolsado: %s."
 
-#: ../includes/class-wc-cielo-helper.php:770
+#: ../includes/class-wc-cielo-helper.php:769
 #, php-format
 msgid ""
 "This transaction has been made ​​more than %s days and therefore it can not "
@@ -589,24 +579,24 @@ msgstr ""
 "Esta transação foi feita a mais do que %s dias e por isso não pode mais ser "
 "cancelada."
 
-#: ../includes/class-wc-cielo-helper.php:792
+#: ../includes/class-wc-cielo-helper.php:791
 msgid "View order details"
 msgstr "Ver detalhes do pedido"
 
-#: ../includes/class-wc-cielo-helper.php:792
+#: ../includes/class-wc-cielo-helper.php:791
 msgid "Your payment has been received successfully."
 msgstr "O seu pagamento foi recebido com sucesso."
 
-#: ../includes/class-wc-cielo-helper.php:792
+#: ../includes/class-wc-cielo-helper.php:791
 msgid "The authorization code was generated."
 msgstr "O código de autorização foi gerado."
 
-#: ../includes/class-wc-cielo-helper.php:794
+#: ../includes/class-wc-cielo-helper.php:793
 #, php-format
 msgid "For more information or questions regarding your order, go to the %s."
 msgstr "Para mais informações ou dúvidas a respeito do seu pedido, vá para a %s."
 
-#: ../includes/class-wc-cielo-helper.php:794
+#: ../includes/class-wc-cielo-helper.php:793
 msgid "order details page"
 msgstr "página de detalhes do pedido"
 
