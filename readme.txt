@@ -3,8 +3,8 @@ Contributors: Gabriel Reguly, claudiosanches, gopaulo
 Donate link: https://claudiosmweb.com/doacoes/
 Tags: woocommerce, cielo, payment gateway
 Requires at least: 3.9
-Tested up to: 4.2.2
-Stable tag: 4.0.9
+Tested up to: 4.3
+Stable tag: 4.0.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,9 +42,9 @@ Toda a integração foi desenvolvida a partir da última versão do [Manual do D
 
 = Compatibilidade =
 
-Compatível com a versão 2.3 ou mais recente do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
+Compatível com a versão 2.3.x ou 2.4.x do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
 
-Note que o antigo BuyPage Cielo ainda é compatível com as versões 2.1.x, 2.2.x e 2.3.x do WooCommerce.
+Note que o antigo BuyPage Cielo ainda é compatível com as versões 2.1.x, 2.2.x, 2.3.x e 2.4.x do WooCommerce.
 
 = Instalação =
 
@@ -188,6 +188,11 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Changelog ==
 
+= 4.0.10 - 2015/08/09 =
+
+* Corrigido limite de caracteres para o campo de cartão (não estava funcionando para cartão Aura).
+* Suporte confirmado para WooCommerce 2.4.
+
 = 4.0.9 - 2015/05/14 =
 
 * Correção do método de reembolsos.
@@ -327,12 +332,10 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Upgrade Notice ==
 
-= 4.0.9 =
+= 4.0.10 =
 
-* Correção do método de reembolsos.
-* Removido código antigo que fazia reembolsos quando alterado o pédido para cancelado (veja a documentação do plugin para mais detalhes).
-* Correção das opções de autenticação.
-* Correção da autenticação para cartão de débito.
+* Corrigido limite de caracteres para o campo de cartão (não estava funcionando para cartão Aura).
+* Suporte confirmado para WooCommerce 2.4.
 
 == License ==
 
