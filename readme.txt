@@ -3,7 +3,7 @@ Contributors: Gabriel Reguly, claudiosanches, gopaulo
 Donate link: https://claudiosmweb.com/doacoes/
 Tags: woocommerce, cielo, payment gateway
 Requires at least: 3.9
-Tested up to: 4.3
+Tested up to: 4.5
 Stable tag: 4.0.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -42,9 +42,7 @@ Toda a integração foi desenvolvida a partir da última versão do [Manual do D
 
 = Compatibilidade =
 
-Compatível com a versão 2.3.x ou 2.4.x do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
-
-Note que o antigo BuyPage Cielo ainda é compatível com as versões 2.1.x, 2.2.x, 2.3.x e 2.4.x do WooCommerce.
+Compatível desde a versão 2.3.x até 2.6.x do [WooCommerce](http://wordpress.org/plugins/woocommerce/).
 
 = Instalação =
 
@@ -59,7 +57,7 @@ Você pode esclarecer suas dúvidas usando:
 * O fórum de suporte do [WordPress Brasil](http://br.forums.wordpress.org/forum/plugins-e-codigos) utilizando as tags "cielo" e "woocommerce".
 * O nosso fórum de suporte no [GitHub](https://github.com/greguly/cielo-woocommerce/issues).
 
-= Coloborar =
+= Colaborar =
 
 Você pode contribuir com código-fonte em nossa página no [GitHub](https://github.com/greguly/cielo-woocommerce).
 
@@ -244,92 +242,6 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 * Corrigido do parcelamento, agora funciona corretamente com o juros por mês.
 * Alterado nome do plugin para "Cielo WooCommerce - Solução Webservice".
 
-= 3.1.2 - 2015/02/08 =
-
-* Correção do SSL da Cielo.
-
-= 3.1.1 - 2014/09/07 =
-
-* Melhorada a integração com o `_transaction_id` para o WooCommerce 2.2.
-
-= 3.1.0 - 2014/09/07 =
-
-* Adicionado suporte para reembolsos parciais do WooCommerce 2.2.
-* Melhorada a compatibilidade com o WordPress 4.0.
-
-= 3.0.3 - 2014/06/25 =
-
-* Adicionada opção para selecionar os métodos de débito disponíveis.
-
-= 3.0.2 - 2014/06/22 =
-
-* Melhorada a exibição das notas do pedido com as informações sobre o pagamento.
-* Corrigido o script que atualiza as opções do plugin ao utilizar uma versão mais nova.
-
-= 3.0.1 - 2014/06/22 =
-
-* Permitido valores inferiores a R$ 5,00 para pagamento à vista em cartão de crédito.
-* Quando cancelado o pagamento na tela da Cielo o cliente é redirecionado para o caralogo do WooCommerce.
-
-= 3.0.0 - 2014/06/22 =
-
-* Refatorado todo o código do plugin.
-* Adicionado completo suporte para as versões 2.0.x e 2.1.x do WooCommerce
-* Atualizada a versão da API da Cielo para 1.3.0.
-* Adicionada ação de cancelar a transação (devolver o dinheiro) ao marcar o pedido como "reembolsado".
-* Adicionada novas formas de exibir o formulário com os cartões de crédito e parcelas disponíveis.
-* Removida a opção de captura (não tinha utilidade e a melhor forma de trabalhar é capturar automaticamente sempre).
-* Adicionado suporte para os cartões JBC e Aura.
-* Adicionado opção de pagamento por débito para o MasterCard.
-* Adicionada uma mensagem informando o cartão, forma de pagamento (crédito ou débito) e quantidade de parcelas nas notas do pedido ao concluir o pagamento.
-* Adicionado filtro `wc_cielo_form_path`, que torna possível customizar o formulário de seleção do cartão e de parcelas.
-
-= 2.0.10 - 2014/06/17 =
-
-* Corrigido a finalização e a URL de retorno para versões 2.0.x do WooCommerce.
-
-= 2.0.9 - 2014/06/17 =
-
-* Correção dos valores padrões das opções.
-
-= 2.0.8 - 2014/06/12 =
-
-* Correção do retorno do pagamento para as versões 2.1.x do WooCommerce.
-
-= 2.0.7 - 2014/06/11 =
-
-* Suporte inicial para as versões 2.1.x do WooCommerce.
-
-= 2.0.5 =
-
-* Adicionadas mensagens de erro para quando as bandeiras de cartão não foram selecionadas.
-* Removido o template customizado review-order.php
-
-= 2.0.4 =
-
-* Adicionada opção de reduzir o estoque quando o pagamento é completado com sucesso.
-
-= 2.0.3 =
-
-* Corrigida falha com a página de retorno da Cielo.
-
-= 2.0.2 =
-
-* Fixed a bug with as_is()/PHP < 5.3 where it hang at payment page.
-* Added a direct settings link on plugins page list.
-
-= 2.0.1 =
-
-* Fixed a bug, thanks for Claudio Sanches who reported it.
-
-= 2.0 =
-
-* Updated to WooCommerce 2.0
-
-= 1.0 =
-
-* Initial plugin release.
-
 == Upgrade Notice ==
 
 = 4.0.10 =
@@ -337,10 +249,3 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 * Corrigido limite de caracteres para o campo de cartão (não estava funcionando para cartão Aura).
 * Suporte confirmado para WooCommerce 2.4.
 
-== License ==
-
-Cielo WooCommerce is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-Cielo WooCommerce is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with Cielo WooCommerce. If not, see <http://www.gnu.org/licenses/>.
