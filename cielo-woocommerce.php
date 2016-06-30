@@ -19,120 +19,117 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WC_Cielo' ) ) :
 
-/**
- * WooCommerce WC_Cielo main class.
- */
-class WC_Cielo {
-
 	/**
-	 * Plugin version.
-	 *
-	 * @var string
+	 * WooCommerce WC_Cielo main class.
 	 */
-	const VERSION = '4.0.10';
+	class WC_Cielo {
 
-	/**
-	 * Instance of this class.
-	 *
-	 * @var object
-	 */
-	protected static $instance = null;
+		/**
+		 * Plugin version.
+		 *
+		 * @var string
+		 */
+		const VERSION = '4.0.10';
 
-	/**
-	 * Initialize the plugin public actions.
-	 */
-	private function __construct() {
-		// Load plugin text domain
-		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+		/**
+		 * Instance of this class.
+		 *
+		 * @var object
+		 */
+		protected static $instance = null;
 
-		// Checks with WooCommerce and WooCommerce is installed.
-		if ( class_exists( 'WC_Payment_Gateway' ) ) {
-			$this->upgrade();
-			$this->includes();
+		/**
+		 * Initialize the plugin public actions.
+		 */
+		private function __construct() {
+			// Load plugin text domain.
+			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
-			// Add the gateway.
-			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateway' ) );
-			add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
+			// Checks with WooCommerce and WooCommerce is installed.
+			if ( class_exists( 'WC_Payment_Gateway' ) ) {
+				$this->upgrade();
+				$this->includes();
 
-			// Admin actions.
-			if ( is_admin() ) {
-				add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
+				// Add the gateway.
+				add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateway' ) );
+				add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
+
+				// Admin actions.
+				if ( is_admin() ) {
+					add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
+				}
+			} else {
+				add_action( 'admin_notices', array( $this, 'woocommerce_missing_notice' ) );
 			}
-		} else {
-			add_action( 'admin_notices', array( $this, 'woocommerce_missing_notice' ) );
-		}
-	}
-
-	/**
-	 * Return an instance of this class.
-	 *
-	 * @return object A single instance of this class.
-	 */
-	public static function get_instance() {
-		// If the single instance hasn't been set, set it now.
-		if ( null == self::$instance ) {
-			self::$instance = new self;
 		}
 
-		return self::$instance;
-	}
+		/**
+		 * Return an instance of this class.
+		 *
+		 * @return object A single instance of this class.
+		 */
+		public static function get_instance() {
+			// If the single instance hasn't been set, set it now.
+			if ( null == self::$instance ) {
+				self::$instance = new self;
+			}
 
-	/**
-	 * Get templates path.
-	 *
-	 * @return string
-	 */
-	public static function get_templates_path() {
-		return plugin_dir_path( __FILE__ ) . 'templates/';
-	}
+			return self::$instance;
+		}
 
-	/**
-	 * Load the plugin text domain for translation.
-	 */
-	public function load_plugin_textdomain() {
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'cielo-woocommerce' );
+		/**
+		 * Get templates path.
+		 *
+		 * @return string
+		 */
+		public static function get_templates_path() {
+			return plugin_dir_path( __FILE__ ) . 'templates/';
+		}
 
-		load_textdomain( 'cielo-woocommerce', trailingslashit( WP_LANG_DIR ) . 'cielo-woocommerce/cielo-woocommerce-' . $locale . '.mo' );
-		load_plugin_textdomain( 'cielo-woocommerce', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-	}
+		/**
+		 * Load the plugin text domain for translation.
+		 */
+		public function load_plugin_textdomain() {
+			load_plugin_textdomain( 'cielo-woocommerce', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		}
 
-	/**
-	 * Includes.
-	 */
-	private function includes() {
-		include_once( 'includes/class-wc-cielo-xml.php' );
-		include_once( 'includes/class-wc-cielo-helper.php' );
-		include_once( 'includes/class-wc-cielo-api.php' );
-		include_once( 'includes/class-wc-cielo-debit-gateway.php' );
-		include_once( 'includes/class-wc-cielo-credit-gateway.php' );
-	}
+		/**
+		 * Includes.
+		 */
+		private function includes() {
+			include_once( 'includes/class-wc-cielo-xml.php' );
+			include_once( 'includes/class-wc-cielo-helper.php' );
+			include_once( 'includes/class-wc-cielo-api.php' );
+			include_once( 'includes/class-wc-cielo-debit-gateway.php' );
+			include_once( 'includes/class-wc-cielo-credit-gateway.php' );
+		}
 
-	/**
-	 * Add the gateway to WooCommerce.
-	 *
-	 * @param   array $methods WooCommerce payment methods.
-	 *
-	 * @return  array          Payment methods with Cielo.
-	 */
-	public function add_gateway( $methods ) {
-		array_push( $methods, 'WC_Cielo_Debit_Gateway', 'WC_Cielo_Credit_Gateway' );
+		/**
+		 * Add the gateway to WooCommerce.
+		 *
+		 * @param   array $methods WooCommerce payment methods.
+		 *
+		 * @return  array          Payment methods with Cielo.
+		 */
+		public function add_gateway( $methods ) {
+			array_push( $methods, 'WC_Cielo_Debit_Gateway', 'WC_Cielo_Credit_Gateway' );
 
-		return $methods;
-	}
+			return $methods;
+		}
 
-	/**
-	 * Upgrade plugin options.
-	 */
-	private function upgrade() {
-		if ( is_admin() ) {
-			$version = get_option( 'wc_cielo_version', '0' );
+		/**
+		 * Upgrade plugin options.
+		 */
+		private function upgrade() {
+			if ( is_admin() ) {
+				$version = get_option( 'wc_cielo_version', '0' );
 
-			if ( version_compare( $version, WC_Cielo::VERSION, '<' ) ) {
+				if ( version_compare( $version, WC_Cielo::VERSION, '<' ) ) {
 
-				// Upgrade from 3.x.
-				if ( $options = get_option( 'woocommerce_cielo_settings' ) ) {
-					// Credit.
-					$credit_options = array(
+					// Upgrade from 3.x.
+					if ( $options = get_option( 'woocommerce_cielo_settings' ) ) {
+						// Credit.
+						$credit_options = array(
 						'enabled'              => $options['enabled'],
 						'title'                => __( 'Credit Card', 'cielo-woocommerce' ),
 						'description'          => $options['description'],
@@ -149,20 +146,20 @@ class WC_Cielo {
 						'installment_type'     => $options['installment_type'],
 						'design_options'       => $options['design_options'],
 						'design'               => $options['design'],
-						'debug'                => $options['debug']
-					);
+						'debug'                => $options['debug'],
+						);
 
-					// Debit.
-					$debit_methods = array();
-					if ( 'mastercard' == $options['debit_methods'] ) {
-						$debit_methods = array( 'maestro' );
-					} else if ( 'all' == $options['debit_methods'] ) {
-						$debit_methods = array( 'visaelectron', 'maestro' );
-					} else {
-						$debit_methods = array( 'visaelectron' );
-					}
+						// Debit.
+						$debit_methods = array();
+						if ( 'mastercard' == $options['debit_methods'] ) {
+							$debit_methods = array( 'maestro' );
+						} else if ( 'all' == $options['debit_methods'] ) {
+							$debit_methods = array( 'visaelectron', 'maestro' );
+						} else {
+							$debit_methods = array( 'visaelectron' );
+						}
 
-					$debit_options  = array(
+						$debit_options  = array(
 						'enabled'        => ( 'none' == $options['debit_methods'] ) ? 'no' : $options['enabled'],
 						'title'          => __( 'Debit Card', 'cielo-woocommerce' ),
 						'description'    => $options['description'],
@@ -175,60 +172,60 @@ class WC_Cielo {
 						'debit_discount' => $options['debit_discount'],
 						'design_options' => $options['design_options'],
 						'design'         => $options['design'],
-						'debug'          => $options['debug']
-					);
+						'debug'          => $options['debug'],
+						);
 
-					// Save the new options.
-					update_option( 'woocommerce_cielo_credit_settings', $credit_options );
-					update_option( 'woocommerce_cielo_debit_settings', $debit_options );
+						// Save the new options.
+						update_option( 'woocommerce_cielo_credit_settings', $credit_options );
+						update_option( 'woocommerce_cielo_debit_settings', $debit_options );
 
-					// Delete old options.
-					delete_option( 'woocommerce_cielo_settings' );
+						// Delete old options.
+						delete_option( 'woocommerce_cielo_settings' );
+					}
+
+					update_option( 'wc_cielo_version', WC_Cielo::VERSION );
 				}
-
-				update_option( 'wc_cielo_version', WC_Cielo::VERSION );
 			}
+		}
+
+		/**
+		 * Register scripts.
+		 */
+		public function register_scripts() {
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+			// Styles.
+			wp_register_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', __FILE__ ), array(), WC_Cielo::VERSION );
+			wp_register_style( 'wc-cielo-checkout-webservice', plugins_url( 'assets/css/checkout-webservice' . $suffix . '.css', __FILE__ ), array(), WC_Cielo::VERSION );
+		}
+
+		/**
+		 * WooCommerce fallback notice.
+		 *
+		 * @return string
+		 */
+		public function woocommerce_missing_notice() {
+			include_once 'includes/views/notices/html-notice-woocommerce-missing.php';
+		}
+
+		/**
+		 * Action links.
+		 *
+		 * @param  array $links
+		 *
+		 * @return array
+		 */
+		public function plugin_action_links( $links ) {
+			$plugin_links = array();
+
+			$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_credit_gateway' ) ) . '">' . __( 'Credit Card Settings', 'cielo-woocommerce' ) . '</a>';
+
+			$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_debit_gateway' ) ) . '">' . __( 'Debit Card Settings', 'cielo-woocommerce' ) . '</a>';
+
+			return array_merge( $plugin_links, $links );
 		}
 	}
 
-	/**
-	 * Register scripts.
-	 */
-	public function register_scripts() {
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		// Styles.
-		wp_register_style( 'wc-cielo-checkout-icons', plugins_url( 'assets/css/checkout-icons' . $suffix . '.css', __FILE__ ), array(), WC_Cielo::VERSION );
-		wp_register_style( 'wc-cielo-checkout-webservice', plugins_url( 'assets/css/checkout-webservice' . $suffix . '.css', __FILE__ ), array(), WC_Cielo::VERSION );
-	}
-
-	/**
-	 * WooCommerce fallback notice.
-	 *
-	 * @return string
-	 */
-	public function woocommerce_missing_notice() {
-		include_once 'includes/views/notices/html-notice-woocommerce-missing.php';
-	}
-
-	/**
-	 * Action links.
-	 *
-	 * @param  array $links
-	 *
-	 * @return array
-	 */
-	public function plugin_action_links( $links ) {
-		$plugin_links = array();
-
-		$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_credit_gateway' ) ) . '">' . __( 'Credit Card Settings', 'cielo-woocommerce' ) . '</a>';
-
-		$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_debit_gateway' ) ) . '">' . __( 'Debit Card Settings', 'cielo-woocommerce' ) . '</a>';
-
-		return array_merge( $plugin_links, $links );
-	}
-}
-
-add_action( 'plugins_loaded', array( 'WC_Cielo', 'get_instance' ), 0 );
+	add_action( 'plugins_loaded', array( 'WC_Cielo', 'get_instance' ), 0 );
 
 endif;

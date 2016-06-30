@@ -63,7 +63,7 @@ class WC_Cielo_XML extends SimpleXMLElement {
 	 * @param string $holder_name
 	 */
 	public function add_card_data( $card_number, $card_expiry, $card_cvv, $holder_name ) {
-		$card_data =  $this->addChild( 'dados-portador' );
+		$card_data = $this->addChild( 'dados-portador' );
 		$card_data->addChild( 'numero', preg_replace( '([^0-9])', '', sanitize_text_field( $card_number ) ) );
 
 		$expiry_date = explode( '/', sanitize_text_field( $card_expiry ) );

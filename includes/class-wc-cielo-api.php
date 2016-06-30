@@ -102,18 +102,18 @@ class WC_Cielo_API {
 		if ( 'production' == $this->gateway->environment ) {
 			return array(
 				'number' => $this->gateway->number,
-				'key'    => $this->gateway->key
+				'key'    => $this->gateway->key,
 			);
 		} else {
 			if ( 'webservice' == $this->gateway->store_contract ) {
 				return array(
 					'number' => $this->test_store_number,
-					'key'    => $this->test_store_key
+					'key'    => $this->test_store_key,
 				);
 			} else {
 				return array(
 					'number' => $this->test_cielo_number,
-					'key'    => $this->test_cielo_key
+					'key'    => $this->test_cielo_key,
 				);
 			}
 		}
@@ -239,8 +239,8 @@ class WC_Cielo_API {
 			'timeout'         => 40,
 			'sslcertificates' => $this->get_certificate(),
 			'headers'         => array(
-				'Content-Type' => 'application/x-www-form-urlencoded'
-			)
+				'Content-Type' => 'application/x-www-form-urlencoded',
+			),
 		);
 
 		add_action( 'http_api_curl', array( $this, 'curl_settings' ), 10, 3 );
@@ -357,8 +357,8 @@ class WC_Cielo_API {
 	 * Get transaction data.
 	 *
 	 * @param  WC_Order $order Order data.
-	 * @param  string $tid     Transaction ID.
-	 * @param  string $id      Request ID.
+	 * @param  string   $tid     Transaction ID.
+	 * @param  string   $id      Request ID.
 	 *
 	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
@@ -412,9 +412,9 @@ class WC_Cielo_API {
 	 * Do transaction cancellation.
 	 *
 	 * @param  WC_Order $order Order data.
-	 * @param  string $tid     Transaction ID.
-	 * @param  string $id      Request ID.
-	 * @param  float  $amount  Amount for refund.
+	 * @param  string   $tid     Transaction ID.
+	 * @param  string   $id      Request ID.
+	 * @param  float    $amount  Amount for refund.
 	 *
 	 * @return array
 	 */

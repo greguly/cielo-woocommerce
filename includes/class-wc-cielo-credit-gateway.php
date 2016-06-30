@@ -74,21 +74,21 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Enable Cielo Credit Card', 'cielo-woocommerce' ),
-				'default' => 'yes'
+				'default' => 'yes',
 			),
 			'title' => array(
 				'title'       => __( 'Title', 'cielo-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'This controls the title which the user sees during checkout.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => __( 'Credit Card', 'cielo-woocommerce' )
+				'default'     => __( 'Credit Card', 'cielo-woocommerce' ),
 			),
 			'description' => array(
 				'title'       => __( 'Description', 'cielo-woocommerce' ),
 				'type'        => 'textarea',
 				'description' => __( 'This controls the description which the user sees during checkout.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => __( 'Pay using the secure method of Cielo', 'cielo-woocommerce' )
+				'default'     => __( 'Pay using the secure method of Cielo', 'cielo-woocommerce' ),
 			),
 			'store_contract' => array(
 				'title'       => __( 'Store Solution', 'cielo-woocommerce' ),
@@ -99,8 +99,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'default'     => 'webservice',
 				'options'     => array(
 					'webservice'    => __( 'Webservice Solution', 'cielo-woocommerce' ),
-					'buypage_cielo' => __( 'BuyPage Cielo', 'cielo-woocommerce' )
-				)
+					'buypage_cielo' => __( 'BuyPage Cielo', 'cielo-woocommerce' ),
+				),
 			),
 			'environment' => array(
 				'title'       => __( 'Environment', 'cielo-woocommerce' ),
@@ -111,22 +111,22 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'default'     => 'test',
 				'options'     => array(
 					'test'       => __( 'Test', 'cielo-woocommerce' ),
-					'production' => __( 'Production', 'cielo-woocommerce' )
-				)
+					'production' => __( 'Production', 'cielo-woocommerce' ),
+				),
 			),
 			'number' => array(
 				'title'       => __( 'Affiliation Number', 'cielo-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Store affiliation number with Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => ''
+				'default'     => '',
 			),
 			'key' => array(
 				'title'       => __( 'Affiliation Key', 'cielo-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Store access key assigned by Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => ''
+				'default'     => '',
 			),
 			'methods' => array(
 				'title'       => __( 'Accepted Card Brands', 'cielo-woocommerce' ),
@@ -144,7 +144,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 					'amex'       => __( 'American Express', 'cielo-woocommerce' ),
 					'jcb'        => __( 'JCB', 'cielo-woocommerce' ),
 					'aura'       => __( 'Aura', 'cielo-woocommerce' ),
-				)
+				),
 			),
 			'authorization' => array(
 				'title'       => __( 'Automatic Authorization (MasterCard and Visa only)', 'cielo-woocommerce' ),
@@ -157,22 +157,22 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 					'3' => __( 'Direct authorization', 'cielo-woocommerce' ),
 					'2' => __( 'Allow authorization for authenticated transaction and non-authenticated', 'cielo-woocommerce' ),
 					'1' => __( 'Authorization transaction only if is authenticated', 'cielo-woocommerce' ),
-					'0' => __( 'Only authenticate the transaction', 'cielo-woocommerce' )
-				)
+					'0' => __( 'Only authenticate the transaction', 'cielo-woocommerce' ),
+				),
 			),
 			'smallest_installment' => array(
 				'title'       => __( 'Smallest Installment', 'cielo-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Smallest value of each installment, cannot be less than 5.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => '5'
+				'default'     => '5',
 			),
 			'interest_rate' => array(
 				'title'       => __( 'Interest Rate (%)', 'cielo-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Percentage of interest that will be charged to the customer in the installment where there is interest rate to be charged.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => '2'
+				'default'     => '2',
 			),
 			'installments' => array(
 				'title'       => __( 'Installment Within', 'cielo-woocommerce' ),
@@ -193,8 +193,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 					'9'  => '9x',
 					'10' => '10x',
 					'11' => '11x',
-					'12' => '12x'
-				)
+					'12' => '12x',
+				),
 			),
 			'interest' => array(
 				'title'       => __( 'Charge Interest Since', 'cielo-woocommerce' ),
@@ -215,8 +215,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 					'9'  => '9x',
 					'10' => '10x',
 					'11' => '11x',
-					'12' => '12x'
-				)
+					'12' => '12x',
+				),
 			),
 			'installment_type' => array(
 				'title'        => __( 'Installment Type', 'cielo-woocommerce' ),
@@ -227,13 +227,13 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'default'      => 'client',
 				'options'      => array(
 					'client' => __( 'Client', 'cielo-woocommerce' ),
-					'store'  => __( 'Store', 'cielo-woocommerce' )
-				)
+					'store'  => __( 'Store', 'cielo-woocommerce' ),
+				),
 			),
 			'design_options' => array(
 				'title'       => __( 'Design', 'cielo-woocommerce' ),
 				'type'        => 'title',
-				'description' => ''
+				'description' => '',
 			),
 			'design' => array(
 				'title'   => __( 'Payment Form Design', 'cielo-woocommerce' ),
@@ -242,21 +242,21 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'default' => 'default',
 				'options' => array(
 					'default' => __( 'Default', 'cielo-woocommerce' ),
-					'icons'   => __( 'With card icons', 'cielo-woocommerce' )
-				)
+					'icons'   => __( 'With card icons', 'cielo-woocommerce' ),
+				),
 			),
 			'testing' => array(
 				'title'       => __( 'Gateway Testing', 'cielo-woocommerce' ),
 				'type'        => 'title',
-				'description' => ''
+				'description' => '',
 			),
 			'debug' => array(
 				'title'       => __( 'Debug Log', 'cielo-woocommerce' ),
 				'type'        => 'checkbox',
 				'label'       => __( 'Enable logging', 'cielo-woocommerce' ),
 				'default'     => 'no',
-				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside %s', 'cielo-woocommerce' ), $this->get_log_file_path() )
-			)
+				'description' => sprintf( __( 'Log Cielo events, such as API requests, inside %s', 'cielo-woocommerce' ), $this->get_log_file_path() ),
+			),
 		);
 	}
 
@@ -273,7 +273,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			'credit-card/' . $model . '-payment-form.php',
 			array(
 				'methods'      => $this->get_available_methods_options(),
-				'installments' => $this->get_installments_html( $order_total, $installments_type )
+				'installments' => $this->get_installments_html( $order_total, $installments_type ),
 			),
 			'woocommerce/cielo/',
 			WC_Cielo::get_templates_path()
@@ -338,7 +338,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'name_on_card'    => $_POST['cielo_credit_holder_name'],
 				'card_number'     => $_POST['cielo_credit_number'],
 				'card_expiration' => $_POST['cielo_credit_expiry'],
-				'card_cvv'        => $_POST['cielo_credit_cvc']
+				'card_cvv'        => $_POST['cielo_credit_cvc'],
 			);
 
 			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments, $card_data );
@@ -369,12 +369,12 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		if ( $valid && $payment_url ) {
 			return array(
 				'result'   => 'success',
-				'redirect' => $payment_url
+				'redirect' => $payment_url,
 			);
 		} else {
 			return array(
 				'result'   => 'fail',
-				'redirect' => ''
+				'redirect' => '',
 			);
 		}
 	}
@@ -425,12 +425,12 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		if ( $valid && $payment_url ) {
 			return array(
 				'result'   => 'success',
-				'redirect' => $payment_url
+				'redirect' => $payment_url,
 			);
 		} else {
 			return array(
 				'result'   => 'fail',
-				'redirect' => ''
+				'redirect' => '',
 			);
 		}
 	}
@@ -438,7 +438,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	/**
 	 * Payment details.
 	 *
-	 * @param  array $items
+	 * @param  array    $items
 	 * @param  WC_Order $order
 	 *
 	 * @return array

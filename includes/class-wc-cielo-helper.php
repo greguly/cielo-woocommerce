@@ -182,7 +182,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$order      = new WC_Order( $order_id );
 			$order_total = (float) $order->get_total();
 
-		// Gets order total from cart/checkout.
+			// Gets order total from cart/checkout.
 		} elseif ( 0 < $woocommerce->cart->total ) {
 			$order_total = (float) $woocommerce->cart->total;
 		}
@@ -351,7 +351,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 
 				if ( $credit_total < $interest_total ) {
 					$credit_total    = $interest_total;
-					$credit_interest = sprintf(__( 'with interest of %s%% a.m. Total: %s', 'cielo-woocommerce' ), $this->get_valid_value( $this->interest_rate ), sanitize_text_field( woocommerce_price( $interest_order_total ) ) );
+					$credit_interest = sprintf( __( 'with interest of %s%% a.m. Total: %s', 'cielo-woocommerce' ), $this->get_valid_value( $this->interest_rate ), sanitize_text_field( woocommerce_price( $interest_order_total ) ) );
 				}
 			}
 
@@ -378,7 +378,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	/**
 	 * Get single installment text.
 	 *
-	 * @param  int $quantity
+	 * @param  int   $quantity
 	 * @param  float $order_total
 	 *
 	 * @return string
@@ -394,7 +394,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 
 			if ( $credit_total < $interest_total ) {
 				$credit_total    = $interest_total;
-				$credit_interest = sprintf(__( 'with interest of %s%% a.m. Total: %s', 'cielo-woocommerce' ), $this->get_valid_value( $this->interest_rate ), sanitize_text_field( woocommerce_price( $interest_order_total ) ) );
+				$credit_interest = sprintf( __( 'with interest of %s%% a.m. Total: %s', 'cielo-woocommerce' ), $this->get_valid_value( $this->interest_rate ), sanitize_text_field( woocommerce_price( $interest_order_total ) ) );
 			}
 		}
 
@@ -453,7 +453,6 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			if ( ! in_array( $card_brand, $this->methods ) ) {
 				throw new Exception( sprintf( __( 'Please enter with a valid card brand. The following cards are accepted: %s.', 'cielo-woocommerce' ), $this->get_accepted_brands_list( $this->methods ) ) );
 			}
-
 		} catch ( Exception $e ) {
 			$this->add_error( $e->getMessage() );
 
@@ -486,7 +485,6 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			if ( ! isset( $posted[ $this->id . '_cvc' ] ) || '' === $posted[ $this->id . '_cvc' ] ) {
 				throw new Exception( __( 'Please type the cvv code for the card', 'cielo-woocommerce' ) );
 			}
-
 		} catch ( Exception $e ) {
 			$this->add_error( $e->getMessage() );
 
@@ -565,7 +563,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	/**
 	 * Process the payment and return the result.
 	 *
-	 * @param int    $order_id Order ID.
+	 * @param int $order_id Order ID.
 	 *
 	 * @return array           Redirect.
 	 */
@@ -593,11 +591,11 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		if ( 9 == $status ) {
 			$order->update_status( 'cancelled', $status_note );
 
-		// Order failed.
+			// Order failed.
 		} elseif ( ( 1 != $status && 4 != $status && 6 != $status ) || -1 == $status ) {
 			$order->update_status( 'failed', $status_note );
 
-		// Order paid.
+			// Order paid.
 		} else {
 			$order->add_order_note( $status_note . '. ' . $note );
 
@@ -671,7 +669,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				$order_note .= ' ';
 
 				if ( 'A' == $payment_method->produto ) {
-					$order_note .=  __( 'debit', 'cielo-woocommerce' );
+					$order_note .= __( 'debit', 'cielo-woocommerce' );
 				} elseif ( '1' == $payment_method->produto ) {
 					$order_note .= __( 'credit at sight', 'cielo-woocommerce' );
 				} else {
@@ -694,7 +692,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				if ( function_exists( 'wc_add_notice' ) ) {
 					wc_add_notice( $message );
 				} else {
-					$woocommerce->add_message( $message);
+					$woocommerce->add_message( $message );
 				}
 
 				if ( function_exists( 'wc_get_page_id' ) ) {
@@ -755,7 +753,6 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 
 				return true;
 			}
-
 		} else {
 			return new WP_Error( 'cielo_refund_error', sprintf( __( 'This transaction has been made ​​more than %s days and therefore it can not be canceled', 'cielo-woocommerce' ), $limit ) );
 		}
