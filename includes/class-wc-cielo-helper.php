@@ -594,7 +594,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$order->update_status( 'cancelled', $status_note );
 
 		// Order failed.
-		} elseif ( ( 4 != $status && 6 != $status ) || -1 == $status ) {
+		} elseif ( ( 1 != $status && 4 != $status && 6 != $status ) || -1 == $status ) {
 			$order->update_status( 'failed', $status_note );
 
 		// Order paid.
