@@ -13,7 +13,7 @@ class WC_Cielo_XML extends SimpleXMLElement {
 		$node = dom_import_simplexml( $this );
 		$no   = $node->ownerDocument;
 
-		$node->appendChild( $no->createCDATASection( $string ) );
+		$node->appendChild( $no->createCDATASection( trim( $string ) ) );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class WC_Cielo_XML extends SimpleXMLElement {
 	 * @param string $url wc-api URL.
 	 */
 	public function add_return_url( $url ) {
-		$this->addChild( 'url-retorno', $url );
+		$this->addChild( 'url-retorno' )->add_cdata( $url );
 	}
 
 	/**

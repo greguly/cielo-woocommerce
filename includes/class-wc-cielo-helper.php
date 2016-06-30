@@ -131,7 +131,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$url = $woocommerce->api_request_url( get_class( $this ) );
 		}
 
-		return urlencode( htmlentities( add_query_arg( array( 'key' => $order->order_key, 'order' => $order->id ), $url ), ENT_QUOTES ) );
+		return urlencode( add_query_arg( array( 'key' => $order->order_key, 'order' => $order->id ), $url ) );
 	}
 
 	/**
