@@ -13,26 +13,39 @@
 				cards.push( val.type );
 			});
 
-			if ( -1 === $.inArray( 'elo', cards ) ) {
-				$.payment.cards.push({
-					type: 'elo',
-					pattern: /^(636[2-3])/,
-					format: /(\d{1,4})/g,
-					length: [16],
-					cvcLength: [3],
-					luhn: true
-				});
-			}
+			if ( typeof $.payment.cards[0].pattern === 'undefined' ) {
+				if ( -1 === $.inArray( 'aura', cards ) ) {
+					$.payment.cards.unshift({
+						type: 'aura',
+						patterns: [5078],
+						format: /(\d{1,6})(\d{1,2})?(\d{1,11})?/,
+						length: [19],
+						cvcLength: [3],
+						luhn: true
+					});
+				}
+			} else {
+				if ( -1 === $.inArray( 'elo', cards ) ) {
+					$.payment.cards.push({
+						type: 'elo',
+						pattern: /^(636[2-3])/,
+						format: /(\d{1,4})/g,
+						length: [16],
+						cvcLength: [3],
+						luhn: true
+					});
+				}
 
-			if ( -1 === $.inArray( 'aura', cards ) ) {
-				$.payment.cards.unshift({
-					type: 'aura',
-					pattern: /^5078/,
-					format: /(\d{1,6})(\d{1,2})?(\d{1,11})?/,
-					length: [19],
-					cvcLength: [3],
-					luhn: true
-				});
+				if ( -1 === $.inArray( 'aura', cards ) ) {
+					$.payment.cards.unshift({
+						type: 'aura',
+						pattern: /^5078/,
+						format: /(\d{1,6})(\d{1,2})?(\d{1,11})?/,
+						length: [19],
+						cvcLength: [3],
+						luhn: true
+					});
+				}
 			}
 		}
 
