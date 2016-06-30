@@ -286,7 +286,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 
 		wp_enqueue_script( 'wc-cielo-admin', plugins_url( 'assets/js/admin/admin' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
 
-		include 'views/html-admin-page.php';
+		include dirname( __FILE__ ) . '/views/html-admin-page.php';
 	}
 
 	/**

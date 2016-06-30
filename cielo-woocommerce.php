@@ -97,11 +97,11 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 		 * Includes.
 		 */
 		private function includes() {
-			include_once( 'includes/class-wc-cielo-xml.php' );
-			include_once( 'includes/class-wc-cielo-helper.php' );
-			include_once( 'includes/class-wc-cielo-api.php' );
-			include_once( 'includes/class-wc-cielo-debit-gateway.php' );
-			include_once( 'includes/class-wc-cielo-credit-gateway.php' );
+			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-xml.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-helper.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-api.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-debit-gateway.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-credit-gateway.php';
 		}
 
 		/**
@@ -205,7 +205,7 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 		 * @return string
 		 */
 		public function woocommerce_missing_notice() {
-			include_once 'includes/views/notices/html-notice-woocommerce-missing.php';
+			include_once dirname( __FILE__ ) . '/includes/views/notices/html-notice-woocommerce-missing.php';
 		}
 
 		/**
