@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php echo wpautop( $this->method_description ); ?>
 
 <?php if ( apply_filters( 'cielo_woocommerce_help_message', true ) ) : ?>
-	<div class="updated woocommerce-message">
+	<div class="updated woocommerce-message inline">
 		<p><?php printf( __( 'Help us keep the %s plugin free making a %s or rate %s on %s. Thank you in advance!', 'cielo-woocommerce' ), '<strong>' . __( 'Cielo WooCommerce', 'cielo-woocommerce' ) . '</strong>', '<a href="http://claudiosmweb.com/doacoes/">' . __( 'donation', 'cielo-woocommerce' ) . '</a>', '<a href="https://wordpress.org/support/view/plugin-reviews/cielo-woocommerce?filter=5#postform" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a>', '<a href="https://wordpress.org/support/view/plugin-reviews/cielo-woocommerce?filter=5#postform" target="_blank">' . __( 'WordPress.org', 'cielo-woocommerce' ) . '</a>' ); ?></p>
 	</div>
 <?php endif; ?>
