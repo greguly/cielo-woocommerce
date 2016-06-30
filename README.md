@@ -4,7 +4,7 @@
 **Tags:** woocommerce, cielo, payment gateway  
 **Requires at least:** 3.9  
 **Tested up to:** 4.5  
-**Stable tag:** 4.0.10  
+**Stable tag:** 4.0.11  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -174,7 +174,7 @@ Não é um problema caso você não consiga entender o arquivo de log, pois voc�
 * O fórum de suporte do [WordPress Brasil](http://br.forums.wordpress.org/forum/plugins-e-codigos) utilizando as tags "cielo" e "woocommerce".
 * O nosso fórum de suporte no [GitHub](https://github.com/greguly/cielo-woocommerce/issues).
 
-### O que fazer quando tentar finalizar a compra aparece a mensagem "Cielo: Um erro aconteceu ao processar o seu pagamento, por favor, tente novamente ou entre em contato para conseguir assistência" ? ###
+### O que fazer quando tentar finalizar a compra aparece a mensagem "Cielo: Um erro aconteceu ao processar o seu pagamento, por favor, tente novamente ou entre em contato para conseguir assistência"? ###
 
 Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas para fazer a conexão com a Cielo. Mas é possível saber com certeza o que aconteceu de errado utilizando a opção de log do plugin como descrito na sessão acima.
 
@@ -191,6 +191,12 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 
 ## Changelog ##
+
+### 4.0.11 - 2016/06/30 ###
+
+* Suporte para WooCommerce 2.6.
+* Melhorada a URL de retorno que em alguns servidores não funcionava.
+* Corrigido método de débito sendo recusado mesmo quando o pagamento esta em andamento.
 
 ### 4.0.10 - 2015/08/09 ###
 
@@ -250,8 +256,9 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 ## Upgrade Notice ##
 
-### 4.0.10 ###
+### 4.0.11 ###
 
-* Corrigido limite de caracteres para o campo de cartão (não estava funcionando para cartão Aura).
-* Suporte confirmado para WooCommerce 2.4.
+* Suporte para WooCommerce 2.6.
+* Melhorada a URL de retorno que em alguns servidores não funcionava.
+* Corrigido método de débito sendo recusado mesmo quando o pagamento esta em andamento.
 
