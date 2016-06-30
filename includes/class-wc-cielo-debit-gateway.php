@@ -56,7 +56,6 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		add_action( 'woocommerce_' . $this->id . '_return', array( $this, 'return_handler' ) );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ), 999 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 
 		// Filters.
 		add_filter( 'woocommerce_get_order_item_totals', array( $this, 'order_items_payment_details' ), 10, 2 );

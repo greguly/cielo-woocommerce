@@ -282,6 +282,10 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * Admin page.
 	 */
 	public function admin_options() {
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		wp_enqueue_script( 'wc-cielo-admin', plugins_url( 'assets/js/admin/admin' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+
 		include 'views/html-admin-page.php';
 	}
 
@@ -395,19 +399,6 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		}
 
 		return sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $quantity, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest );
-	}
-
-	/**
-	 * Admin scripts.
-	 *
-	 * @param string $hook Page slug.
-	 */
-	public function admin_scripts( $hook ) {
-		if ( in_array( $hook, array( 'woocommerce_page_wc-settings', 'woocommerce_page_woocommerce_settings' ) ) && ( isset( $_GET['section'] ) && strtolower( $_GET['section'] ) === strtolower( get_class( $this ) ) ) ) {
-			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-			wp_enqueue_script( 'wc-cielo-admin', plugins_url( 'assets/js/admin/admin' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
-		}
 	}
 
 	/**
