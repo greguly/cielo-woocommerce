@@ -235,9 +235,9 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		$card_brand  = $this->api->get_card_brand( $card_number );
 
 		// Validate credit card brand.
-		if ( 'mastercard' == $card_brand ) {
+		if ( 'mastercard' === $card_brand ) {
 			$_card_brand = 'maestro';
-		} else if ( 'visa' == $card_brand ) {
+		} else if ( 'visa' === $card_brand ) {
 			$_card_brand = 'visaelectron';
 		} else {
 			$_card_brand = $card_brand;
@@ -250,7 +250,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		}
 
 		if ( $valid ) {
-			$card_brand = ( 'maestro' == $card_brand ) ? 'mastercard' : $card_brand;
+			$card_brand = ( 'maestro' === $card_brand ) ? 'mastercard' : $card_brand;
 			$card_data  = array(
 				'name_on_card'    => $_POST['cielo_debit_holder_name'],
 				'card_number'     => $_POST['cielo_debit_number'],
@@ -261,18 +261,18 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 0, $card_data, true );
 
 			// Set the error alert.
-			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+			if ( ! empty( $response->mensagem ) ) {
 				$this->add_error( (string) $response->mensagem );
 				$valid = false;
 			}
 
 			// Save the tid.
-			if ( isset( $response->tid ) && ! empty( $response->tid ) ) {
+			if ( ! empty( $response->tid ) ) {
 				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
 			}
 
 			// Set the transaction URL.
-			if ( isset( $response->{'url-autenticacao'} ) && ! empty( $response->{'url-autenticacao'} ) ) {
+			if ( ! empty( $response->{'url-autenticacao'} ) ) {
 				$payment_url = (string) $response->{'url-autenticacao'};
 			} else {
 				$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
@@ -310,22 +310,22 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		$valid = $this->validate_credit_brand( $card_brand );
 
 		if ( $valid ) {
-			$card_brand = ( 'visaelectron' == $card_brand ) ? 'visa' : 'mastercard';
+			$card_brand = ( 'visaelectron' === $card_brand ) ? 'visa' : 'mastercard';
 			$response   = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 0, array(), true );
 
 			// Set the error alert.
-			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+			if ( ! empty( $response->mensagem ) ) {
 				$this->add_error( (string) $response->mensagem );
 				$valid = false;
 			}
 
 			// Save the tid.
-			if ( isset( $response->tid ) && ! empty( $response->tid ) ) {
+			if ( ! empty( $response->tid ) ) {
 				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
 			}
 
 			// Set the transaction URL.
-			if ( isset( $response->{'url-autenticacao'} ) && ! empty( $response->{'url-autenticacao'} ) ) {
+			if ( ! empty( $response->{'url-autenticacao'} ) ) {
 				$payment_url = (string) $response->{'url-autenticacao'};
 			}
 

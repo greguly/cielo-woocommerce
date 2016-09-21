@@ -344,18 +344,18 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments, $card_data );
 
 			// Set the error alert.
-			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+			if ( ! empty( $response->mensagem ) ) {
 				$this->add_error( (string) $response->mensagem );
 				$valid = false;
 			}
 
 			// Save the tid.
-			if ( isset( $response->tid ) && ! empty( $response->tid ) ) {
+			if ( ! empty( $response->tid ) ) {
 				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
 			}
 
 			// Set the transaction URL.
-			if ( isset( $response->{'url-autenticacao'} ) && ! empty( $response->{'url-autenticacao'} ) ) {
+			if ( ! empty( $response->{'url-autenticacao'} ) ) {
 				$payment_url = (string) $response->{'url-autenticacao'};
 			} else {
 				$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
@@ -403,18 +403,18 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			$response     = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments );
 
 			// Set the error alert.
-			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+			if ( ! empty( $response->mensagem ) ) {
 				$this->add_error( (string) $response->mensagem );
 				$valid = false;
 			}
 
 			// Save the tid.
-			if ( isset( $response->tid ) && ! empty( $response->tid ) ) {
+			if ( ! empty( $response->tid ) ) {
 				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
 			}
 
 			// Set the transaction URL.
-			if ( isset( $response->{'url-autenticacao'} ) && ! empty( $response->{'url-autenticacao'} ) ) {
+			if ( ! empty( $response->{'url-autenticacao'} ) ) {
 				$payment_url = (string) $response->{'url-autenticacao'};
 			}
 

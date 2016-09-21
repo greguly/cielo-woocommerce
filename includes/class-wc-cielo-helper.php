@@ -638,7 +638,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$response = $this->api->get_transaction_data( $order, $tid, $order->id . '-' . time() );
 
 			// Set the error alert.
-			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+			if ( ! empty( $response->mensagem ) ) {
 				if ( 'yes' == $this->debug ) {
 					$this->log->add( $this->id, 'Cielo payment error: ' . print_r( $response->mensagem, true ) );
 				}
@@ -647,7 +647,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			}
 
 			// Update the order status.
-			$status = ( isset( $response->status ) && ! empty( $response->status ) ) ? intval( $response->status ) : -1;
+			$status     = ! empty( $response->status ) ? intval( $response->status ) : -1;
 			$order_note = "\n";
 
 			if ( 'yes' == $this->debug ) {
@@ -659,7 +659,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				$order_note = "\n" . 'TID: ' . $tid . '.';
 			}
 
-			if ( isset( $response->{'forma-pagamento'} ) ) {
+			if ( ! empty( $response->{'forma-pagamento'} ) ) {
 				$payment_method = $response->{'forma-pagamento'};
 
 				$order_note .= "\n";
@@ -742,7 +742,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$response = $this->api->do_transaction_cancellation( $order, $tid, $order->id . '-' . time(), $amount );
 
 			// Already canceled.
-			if ( isset( $response->mensagem ) && ! empty( $response->mensagem ) ) {
+			if ( ! empty( $response->mensagem ) ) {
 				$order->add_order_note( __( 'Cielo', 'cielo-woocommerce' ) . ': ' . sanitize_text_field( $response->mensagem ) );
 
 				return new WP_Error( 'cielo_refund_error', sanitize_text_field( $response->mensagem ) );
