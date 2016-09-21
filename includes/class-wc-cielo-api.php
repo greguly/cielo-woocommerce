@@ -225,13 +225,54 @@ class WC_Cielo_API {
 	}
 
 	/**
+	 * Safe load XML.
+	 *
+	 * @param  string $source  XML source.
+	 * @param  int    $options DOMDocument options.
+	 *
+	 * @return SimpleXMLElement|bool
+	 */
+	protected function safe_load_xml( $source, $options = 0 ) {
+		$old    = null;
+		$source = trim( $source );
+
+		if ( '<' !== substr( $source, 0, 1 ) ) {
+			return false;
+		}
+
+		if ( function_exists( 'libxml_disable_entity_loader' ) ) {
+			$old = libxml_disable_entity_loader( true );
+		}
+
+		$dom    = new DOMDocument();
+		$return = $dom->loadXML( $source, $options );
+
+		if ( ! is_null( $old ) ) {
+			libxml_disable_entity_loader( $old );
+		}
+
+		if ( ! $return ) {
+			return false;
+		}
+
+		if ( isset( $dom->doctype ) ) {
+			if ( 'yes' == $this->gateway->debug ) {
+				$this->gateway->log->add( $this->gateway->id, 'Unsafe DOCTYPE Detected while XML parsing' );
+			}
+
+			return false;
+		}
+
+		return simplexml_import_dom( $dom );
+	}
+
+	/**
 	 * Do remote requests.
 	 *
 	 * @param  string $data Post data.
 	 *
 	 * @return array        Remote response data.
 	 */
-
 	protected function do_request( $data ) {
 		$params = array(
 			'body'            => 'mensagem=' . $data,
@@ -312,14 +353,14 @@ class WC_Cielo_API {
 		$xml->add_token_generation( 'false' );
 
 		// Render the XML.
-		$data = $xml->render();
+		$xml_data = $xml->render();
 
 		if ( 'yes' == $this->gateway->debug ) {
 			$this->gateway->log->add( $this->gateway->id, 'Requesting a transaction for order ' . $order->get_order_number() . ' with the follow data: ' . print_r( $this->get_secure_xml_data( $xml ), true ) );
 		}
 
 		// Do the transaction request.
-		$response = $this->do_request( $data );
+		$response = $this->do_request( $xml_data );
 
 		// Request error.
 		if ( is_wp_error( $response ) || ( isset( $response['response'] ) && 200 != $response['response']['code'] ) ) {
@@ -331,18 +372,10 @@ class WC_Cielo_API {
 		}
 
 		// Get the transaction response data.
-		try {
-			$body = @new SimpleXmlElement( $response['body'], LIBXML_NOCDATA );
-		} catch ( Exception $e ) {
-			$body = '';
-
-			if ( 'yes' == $this->gateway->debug ) {
-				$this->gateway->log->add( $this->gateway->id, 'Error while parsing the Cielo response: ' . print_r( $e->getMessage(), true ) );
-			}
-		}
+		$response_data = $this->safe_load_xml( $response['body'] );
 
 		// Error when getting the transaction response data.
-		if ( empty( $body ) ) {
+		if ( empty( $response_data ) ) {
 			return $this->get_default_error_message();
 		}
 
@@ -350,7 +383,7 @@ class WC_Cielo_API {
 			$this->gateway->log->add( $this->gateway->id, 'Transaction successfully created for the order ' . $order->get_order_number() );
 		}
 
-		return $body;
+		return $response_data;
 	}
 
 	/**
@@ -386,18 +419,10 @@ class WC_Cielo_API {
 		}
 
 		// Get the transaction response data.
-		try {
-			$body = @new SimpleXmlElement( $response['body'], LIBXML_NOCDATA );
-		} catch ( Exception $e ) {
-			$body = '';
-
-			if ( 'yes' == $this->gateway->debug ) {
-				$this->gateway->log->add( $this->gateway->id, 'Error while parsing the Cielo response: ' . print_r( $e->getMessage(), true ) );
-			}
-		}
+		$response_data = $this->safe_load_xml( $response['body'] );
 
 		// Error when getting the transaction response data.
-		if ( empty( $body ) ) {
+		if ( empty( $response_data ) ) {
 			return $this->get_default_error_message();
 		}
 
@@ -405,7 +430,7 @@ class WC_Cielo_API {
 			$this->gateway->log->add( $this->gateway->id, 'Recovered the order ' . $order->get_order_number() . ' data successfully' );
 		}
 
-		return $body;
+		return $response_data;
 	}
 
 	/**
@@ -451,18 +476,10 @@ class WC_Cielo_API {
 		}
 
 		// Get the transaction response data.
-		try {
-			$body = @new SimpleXmlElement( $response['body'], LIBXML_NOCDATA );
-		} catch ( Exception $e ) {
-			$body = '';
-
-			if ( 'yes' == $this->gateway->debug ) {
-				$this->gateway->log->add( $this->gateway->id, 'Error while parsing the Cielo response: ' . print_r( $e->getMessage(), true ) );
-			}
-		}
+		$response_data = $this->safe_load_xml( $response['body'] );
 
 		// Error when getting the transaction response data.
-		if ( empty( $body ) ) {
+		if ( empty( $response_data ) ) {
 			return $error;
 		}
 
@@ -470,6 +487,6 @@ class WC_Cielo_API {
 			$this->gateway->log->add( $this->gateway->id, 'Refunded ' . $amount . ' from order ' . $order->get_order_number() . ' successfully!' );
 		}
 
-		return $body;
+		return $response_data;
 	}
 }
