@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Cielo WooCommerce - Solução Webservice 4.0.11\n"
+"Project-Id-Version: Cielo WooCommerce - Solução Webservice 4.0.12\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/plugins/woocommerce-domination/\n"
-"POT-Creation-Date: 2016-06-30 07:04:14+00:00\n"
+"POT-Creation-Date: 2016-11-08 00:23:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -37,7 +37,7 @@ msgid ""
 "contact us for assistance."
 msgstr ""
 
-#: includes/class-wc-cielo-api.php:443
+#: includes/class-wc-cielo-api.php:468
 msgid ""
 "An error occurred while trying to cancel the payment, turn on the Cielo log "
 "option and try again."
@@ -354,102 +354,102 @@ msgstr ""
 msgid "System Status &gt; Logs"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:344
-#: includes/class-wc-cielo-helper.php:388
+#: includes/class-wc-cielo-helper.php:346
+#: includes/class-wc-cielo-helper.php:389
 msgid "no interest. Total: %s"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:354
-#: includes/class-wc-cielo-helper.php:397
+#: includes/class-wc-cielo-helper.php:355
+#: includes/class-wc-cielo-helper.php:398
 msgid "with interest of %s%% a.m. Total: %s"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:365
-#: includes/class-wc-cielo-helper.php:367
-#: includes/class-wc-cielo-helper.php:401
+#: includes/class-wc-cielo-helper.php:366
+#: includes/class-wc-cielo-helper.php:368
+#: includes/class-wc-cielo-helper.php:402
 msgid "%sx of %s %s"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:454
+#: includes/class-wc-cielo-helper.php:455
 msgid "Please enter with a valid card brand. The following cards are accepted: %s."
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:476
+#: includes/class-wc-cielo-helper.php:477
 msgid "Please type the name of the card holder."
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:481
+#: includes/class-wc-cielo-helper.php:482
 msgid "Please type the card expiry date."
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:486
+#: includes/class-wc-cielo-helper.php:487
 msgid "Please type the cvv code for the card"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:515
+#: includes/class-wc-cielo-helper.php:516
 msgid "Please select a number of installments."
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:530
+#: includes/class-wc-cielo-helper.php:531
 msgid "Invalid number of installments!"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:588
-#: includes/class-wc-cielo-helper.php:746
+#: includes/class-wc-cielo-helper.php:589
+#: includes/class-wc-cielo-helper.php:747
 msgid "Cielo"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:624
+#: includes/class-wc-cielo-helper.php:625
 msgid "Invalid request"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:666
+#: includes/class-wc-cielo-helper.php:667
 msgid "Paid with"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:672
+#: includes/class-wc-cielo-helper.php:673
 msgid "debit"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:674
+#: includes/class-wc-cielo-helper.php:675
 msgid "credit at sight"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:676
+#: includes/class-wc-cielo-helper.php:677
 msgid "credit %dx"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:691
+#: includes/class-wc-cielo-helper.php:692
 msgid "Order canceled successfully."
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:751
+#: includes/class-wc-cielo-helper.php:752
 msgid "Cielo: %s - Refunded amount: %s."
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:757
+#: includes/class-wc-cielo-helper.php:758
 msgid ""
 "This transaction has been made ​​more than %s days and therefore it can not "
 "be canceled"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:779
+#: includes/class-wc-cielo-helper.php:780
 msgid "View order details"
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:779
+#: includes/class-wc-cielo-helper.php:780
 msgid "Your payment has been received successfully."
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:779
+#: includes/class-wc-cielo-helper.php:780
 msgid "The authorization code was generated."
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:781
+#: includes/class-wc-cielo-helper.php:782
 msgid "For more information or questions regarding your order, go to the %s."
 msgstr ""
 
-#: includes/class-wc-cielo-helper.php:781
+#: includes/class-wc-cielo-helper.php:782
 msgid "order details page"
 msgstr ""
 

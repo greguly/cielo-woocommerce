@@ -3,8 +3,8 @@
 **Donate link:** https://claudiosmweb.com/doacoes/  
 **Tags:** woocommerce, cielo, payment gateway  
 **Requires at least:** 3.9  
-**Tested up to:** 4.5  
-**Stable tag:** 4.0.11  
+**Tested up to:** 4.7  
+**Stable tag:** 4.0.12  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -192,6 +192,10 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 ## Changelog ##
 
+### 4.0.12 - 2016/11/07 ###
+
+* Corridigo erro quando taxa de juros é igual ou menor do que zero.
+
 ### 4.0.11 - 2016/06/30 ###
 
 * Suporte para WooCommerce 2.6.
@@ -256,9 +260,6 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 ## Upgrade Notice ##
 
-### 4.0.11 ###
+### 4.0.12 ###
 
-* Suporte para WooCommerce 2.6.
-* Melhorada a URL de retorno que em alguns servidores não funcionava.
-* Corrigido método de débito sendo recusado mesmo quando o pagamento esta em andamento.
-
+* Corridigo erro quando taxa de juros é igual ou menor do que zero.
