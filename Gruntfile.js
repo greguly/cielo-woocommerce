@@ -30,7 +30,7 @@ module.exports = function( grunt ) {
 		// Minify .js files
 		uglify: {
 			options: {
-				preserveComments: 'some'
+				preserveComments: /^!/
 			},
 			admin: {
 				files: [{

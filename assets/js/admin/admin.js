@@ -34,6 +34,22 @@
 				key.show();
 			}
 		}).change();
+
+		/**
+		 * Switch the options based on installment type.
+		 */
+		$( '#woocommerce_cielo_credit_installment_type' ).on( 'change', function() {
+			var interest_rate = $( '#woocommerce_cielo_credit_interest_rate' ).closest( 'tr' ),
+				interest      = $( '#woocommerce_cielo_credit_interest' ).closest( 'tr' );
+
+			if ( 'store' === $( this ).val() ) {
+				interest_rate.hide();
+				interest.hide();
+			} else {
+				interest_rate.show();
+				interest.show();
+			}
+		}).change();
 	});
 
 }( jQuery ) );
