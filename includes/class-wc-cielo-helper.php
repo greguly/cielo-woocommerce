@@ -339,13 +339,14 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$html .= '<select id="cielo-installments" name="cielo_credit_installments" style="font-size: 1.5em; padding: 4px; width: 100%;">';
 		}
 
+		$interest_rate = $this->get_valid_value( $this->interest_rate ) / 100;
+
 		for ( $i = 1; $i <= $installments; $i++ ) {
 			$credit_total    = $order_total / $i;
 			$credit_interest = sprintf( __( 'no interest. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $order_total ) ) );
 			$smallest_value  = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 
-			if ( 'client' == $this->installment_type && $i >= $this->interest ) {
-				$interest_rate   = $this->get_valid_value( $this->interest_rate ) / 100;
+			if ( 'client' == $this->installment_type && $i >= $this->interest && 0 < $interest_rate ) {
 				$interest_total = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $i ) ) ) );
 				$interest_order_total = $interest_total * $i;
 
@@ -386,9 +387,9 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	public function get_installment_text( $quantity, $order_total ) {
 		$credit_total    = $order_total / $quantity;
 		$credit_interest = sprintf( __( 'no interest. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $order_total ) ) );
+		$interest_rate   = $this->get_valid_value( $this->interest_rate ) / 100;
 
-		if ( 'client' == $this->installment_type && $quantity >= $this->interest ) {
-			$interest_rate        = $this->get_valid_value( $this->interest_rate ) / 100;
+		if ( 'client' == $this->installment_type && $quantity >= $this->interest && 0 < $interest_rate ) {
 			$interest_total       = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $quantity ) ) ) );
 			$interest_order_total = $interest_total * $quantity;
 
@@ -518,9 +519,9 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$installments      = absint( $posted['cielo_credit_installments'] );
 			$installment_total = $order_total / $installments;
 			$_installments     = apply_filters( 'wc_cielo_max_installments', $this->installments, $order_total );
+			$interest_rate     = $this->get_valid_value( $this->interest_rate ) / 100;
 
-			if ( 'client' == $this->installment_type && $installments >= $this->interest ) {
-				$interest_rate     = $this->get_valid_value( $this->interest_rate ) / 100;
+			if ( 'client' == $this->installment_type && $installments >= $this->interest && 0 < $interest_rate ) {
 				$interest_total    = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) ) );
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
 			}
