@@ -1,17 +1,30 @@
 <?php
 /**
  * Plugin Name: Cielo WooCommerce - Solução Webservice
- * Plugin URI: http://omniwp.com.br/plugins/
+ * Plugin URI:  http://omniwp.com.br/plugins/
  * Description: Works using the Cielo Webservice Solution to receive payments on WooCommerce.
- * Author: Gabriel Reguly, Claudio Sanches, Paulo Vieira
- * Author URI: http://omniwp.com.br
- * Version: 4.0.12
- * License: GPLv2 or later
+ * Author:      Gabriel Reguly, Claudio Sanches, Paulo Vieira
+ * Author URI:  http://omniwp.com.br
+ * Version:     4.0.13
+ * License:     GPLv2 or later
  * Text Domain: cielo-woocommerce
- * Domain Path: /languages/
- * Copyright: © 2015 omniWP
- * License: GNU General Public License v2.0
- * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Domain Path: /languages
+ *
+ * Cielo WooCommerce - Solução Webservice is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * Cielo WooCommerce - Solução Webservice is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Cielo WooCommerce - Solução Webservice. If not, see
+ * <https://www.gnu.org/licenses/gpl-2.0.txt>.
+ *
+ * @package WC_Cielo
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,7 +42,7 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 		 *
 		 * @var string
 		 */
-		const VERSION = '4.0.12';
+		const VERSION = '4.0.13';
 
 		/**
 		 * Instance of this class.

@@ -4,7 +4,7 @@ Donate link: https://claudiosmweb.com/doacoes/
 Tags: woocommerce, cielo, payment gateway
 Requires at least: 3.9
 Tested up to: 4.7
-Stable tag: 4.0.12
+Stable tag: 4.0.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -186,6 +186,10 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Changelog ==
 
+= 4.0.13 - 2016/12/24 =
+
+* Melhorada a exibição das opções de juros para cartão de crédito.
+
 = 4.0.12 - 2016/11/07 =
 
 * Corridigo erro quando taxa de juros é igual ou menor do que zero.
@@ -254,6 +258,6 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 == Upgrade Notice ==
 
-= 4.0.12 =
+= 4.0.13 =
 
-* Corridigo erro quando taxa de juros é igual ou menor do que zero.
+* Melhorada a exibição das opções de juros para cartão de crédito.
