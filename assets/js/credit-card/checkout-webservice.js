@@ -52,7 +52,7 @@
 		/**
 		 * Set the installment fields.
 		 *
-		 * @param {string} card
+		 * @param {String} card
 		 */
 		function setInstallmentsFields( card ) {
 			var installments = $( '#cielo-credit-payment-form #cielo-installments' );
@@ -66,14 +66,19 @@
 		}
 
 		// Set on update the checkout fields.
-		$( 'body' ).on( 'ajaxComplete', function() {
+		$( document.body ).on( 'ajaxComplete', function() {
 			$.data( document.body, 'cielo_credit_installments', $( '#cielo-credit-payment-form #cielo-installments' ).html() );
 			setInstallmentsFields( $( 'body #cielo-credit-payment-form #cielo-card-brand option' ).first().val() );
 		});
 
 		// Set on change the card brand.
-		$( 'body' ).on( 'change', '#cielo-credit-payment-form #cielo-card-number', function() {
+		$( document.body ).on( 'change', '#cielo-credit-payment-form #cielo-card-number', function() {
 			setInstallmentsFields( $.payment.cardType( $( this ).val() ) );
+		});
+
+		// Empty all card fields.
+		$( document.body ).on( 'checkout_error', function() {
+			$( 'body .cielo-payment-form input' ).val( '' );
 		});
 	});
 
