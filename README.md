@@ -4,7 +4,7 @@
 **Tags:** woocommerce, cielo, payment gateway  
 **Requires at least:** 3.9  
 **Tested up to:** 4.7  
-**Stable tag:** 4.0.13  
+**Stable tag:** 4.0.14  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -192,6 +192,10 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 ## Changelog ##
 
+### 4.0.14 - 2017/01/05 ###
+
+* Força sempre limpar os dados do cartão quando algo acontece qualquer erro na finalização do pedido.
+
 ### 4.0.13 - 2016/12/24 ###
 
 * Melhorada a exibição das opções de juros para cartão de crédito.
@@ -264,6 +268,6 @@ Esta mensagem geralmente irá aparecer quando o seu servidor tiver problemas par
 
 ## Upgrade Notice ##
 
-### 4.0.13 ###
+### 4.0.14 ###
 
-* Melhorada a exibição das opções de juros para cartão de crédito.
+* Força sempre limpar os dados do cartão quando algo acontece qualquer erro na finalização do pedido.

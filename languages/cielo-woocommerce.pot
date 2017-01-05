@@ -1,33 +1,33 @@
-# Copyright (C) 2016 Gabriel Reguly, Claudio Sanches, Paulo Vieira
+# Copyright (C) 2017 Gabriel Reguly, Claudio Sanches, Paulo Vieira
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Cielo WooCommerce - Solução Webservice 4.0.13\n"
+"Project-Id-Version: Cielo WooCommerce - Solução Webservice 4.0.14\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/plugins/woocommerce-domination/\n"
-"POT-Creation-Date: 2016-12-24 17:41:10+00:00\n"
+"POT-Creation-Date: 2017-01-05 03:48:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
 
-#: cielo-woocommerce.php:134 includes/class-wc-cielo-credit-gateway.php:84
+#: cielo-woocommerce.php:147 includes/class-wc-cielo-credit-gateway.php:84
 #: templates/credit-card/default-payment-form.php:16
 msgid "Credit Card"
 msgstr ""
 
-#: cielo-woocommerce.php:164 includes/class-wc-cielo-debit-gateway.php:80
+#: cielo-woocommerce.php:177 includes/class-wc-cielo-debit-gateway.php:80
 #: templates/debit-card/default-payment-form.php:17
 msgid "Debit Card"
 msgstr ""
 
-#: cielo-woocommerce.php:222 cielo-woocommerce.php:225
+#: cielo-woocommerce.php:235 cielo-woocommerce.php:238
 msgid "Credit Card Settings"
 msgstr ""
 
-#: cielo-woocommerce.php:223 cielo-woocommerce.php:226
+#: cielo-woocommerce.php:236 cielo-woocommerce.php:239
 msgid "Debit Card Settings"
 msgstr ""
 
