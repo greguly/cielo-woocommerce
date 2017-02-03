@@ -1,0 +1,15 @@
+{
+	"autoload" : {
+		"psr-0" : {
+			"Cielo" : "src"
+		}
+	},
+	"name" : "developercielo/api-3.0-php",
+	"description" : "Integração com a API 3.0 da Cielo",
+	"license" : "MIT",
+	"type" : "library",
+	"require" : {
+		"php" : ">=5.6"
+	},
+	"homepage" : "https://github.com/DeveloperCielo/API-3.0-PHP"
+}
