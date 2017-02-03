@@ -315,12 +315,14 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_webservice_payment( $order ) {
+		
 		$payment_url = '';
 		$card_number = isset( $_POST['cielo_credit_number'] ) ? sanitize_text_field( $_POST['cielo_credit_number'] ) : '';
 		$card_brand  = $this->api->get_card_brand( $card_number );
 
 		// Validate credit card brand.
-		$valid = $this->validate_credit_brand( $card_brand );
+		//$valid = $this->validate_credit_brand( $card_brand );
+		$valid = true;
 
 		// Test the card fields.
 		if ( $valid ) {
@@ -343,22 +345,53 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 
 			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments, $card_data );
 
-			// Set the error alert.
-			if ( ! empty( $response->mensagem ) ) {
-				$this->add_error( (string) $response->mensagem );
-				$valid = false;
-			}
+			if (!($this->api_version = 'version_3_0')) {
+				// Set the error alert.
+				if ( ! empty( $response->mensagem ) ) {
+					$this->add_error( (string) $response->mensagem );
+					$valid = false;
+				}
 
-			// Save the tid.
-			if ( ! empty( $response->tid ) ) {
-				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
-			}
+				// Save the tid.
+				if ( ! empty( $response->tid ) ) {
+					update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
+				}
 
-			// Set the transaction URL.
-			if ( ! empty( $response->{'url-autenticacao'} ) ) {
-				$payment_url = (string) $response->{'url-autenticacao'};
+				// Set the transaction URL.
+				if ( ! empty( $response->{'url-autenticacao'} ) ) {
+					$payment_url = (string) $response->{'url-autenticacao'};
+				} else {
+					$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
+				}
 			} else {
-				$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
+
+				//$tid = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['tid'] ) ;
+				$paymentId = json_encode( $response->getPayment()->getPaymentId() ) ;
+
+				$returnCode = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['returnCode'] ) ;
+				$returnMessage = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['returnMessage'] ) ;
+				$links = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['links'] ) ;
+
+				// Set the error alert.
+				if ( !( str_replace('"', '', $returnCode) == "4" ) ) {
+
+						$this->add_error((string)$returnMessage);
+						$valid = false;
+
+				}
+
+				// Save the tid.
+				if (!empty($paymentId)) {
+						update_post_meta($order->id, '_transaction_id', $paymentId);
+				}
+
+				// Set the transaction URL.
+				if (!empty($response->{'links'})) {
+						$payment_url = (string)$response->{'links'};
+				} else {
+						$payment_url = str_replace('&amp;', '&', urldecode($this->get_api_return_url($order)));
+				}
+
 			}
 
 			// Save payment data.
@@ -367,6 +400,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		}
 
 		if ( $valid && $payment_url ) {
+			$this->log->add( $this->id, 'Linha: ' . __LINE__ . ' process_webservice_payment');
 			return array(
 				'result'   => 'success',
 				'redirect' => $payment_url,
@@ -387,6 +421,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_buypage_cielo_payment( $order ) {
+		
 		$payment_url = '';
 		$card_brand  = isset( $_POST['cielo_credit_card'] ) ? sanitize_text_field( $_POST['cielo_credit_card'] ) : '';
 
@@ -444,6 +479,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	public function order_items_payment_details( $items, $order ) {
+		
 		if ( $this->id === $order->payment_method ) {
 			$card_brand   = get_post_meta( $order->id, '_wc_cielo_card_brand', true );
 			$card_brand   = $this->get_payment_method_name( $card_brand );
