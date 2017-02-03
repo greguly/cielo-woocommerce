@@ -22,18 +22,18 @@
 		/**
 		 * Switch the options based on environment.
 		 */
-		$( '[id^=woocommerce_cielo][id$=environment]' ).on( 'change', function() {
-			var number = $( '[id^=woocommerce_cielo][id$=number]' ).closest( 'tr' ),
-				key    = $( '[id^=woocommerce_cielo][id$=key]' ).closest( 'tr' );
-
-			if ( 'test' === $( this ).val() ) {
-				number.hide();
-				key.hide();
-			} else {
-				number.show();
-				key.show();
-			}
-		}).change();
+		// $( '[id^=woocommerce_cielo][id$=environment]' ).on( 'change', function() {
+		// 	var number = $( '[id^=woocommerce_cielo][id$=number]' ).closest( 'tr' ),
+		// 		key    = $( '[id^=woocommerce_cielo][id$=key]' ).closest( 'tr' );
+		// 
+		// 	if ( 'test' === $( this ).val() ) {
+		// 		number.hide();
+		// 		key.hide();
+		// 	} else {
+		// 		number.show();
+		// 		key.show();
+		// 	}
+		// }).change();
 
 		/**
 		 * Switch the options based on installment type.
