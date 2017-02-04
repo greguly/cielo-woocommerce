@@ -1,0 +1,13 @@
+{
+  "default": "version_1_5",
+  "versions" : {
+    "version_1_5": {
+      "class": "WC_Cielo_API_1_5",
+      "description": "Version 1.5"
+    },
+    "version_3_0": {
+      "class": "WC_Cielo_API_3_0",
+      "description": "Version 3.0"
+    }
+  }
+}
