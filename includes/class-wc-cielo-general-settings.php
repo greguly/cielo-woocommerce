@@ -23,7 +23,7 @@ class WC_Cielo_General_Settings_Gateway extends WC_Payment_Gateway {
 		$this->method_title = __( 'Cielo - General Settings', 'cielo-woocommerce' );
         $this->supports     = array( 'products', 'refunds' );
 
-		// Load the form fields.
+        // Load the form fields.
 		$this->init_form_fields();
 
 		// Define user set variables.
@@ -38,21 +38,22 @@ class WC_Cielo_General_Settings_Gateway extends WC_Payment_Gateway {
 	 * Initialise Gateway Settings Form Fields
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
+        // Get version list from json file
+        include_once dirname( __FILE__ ) . '/api/class-wc-cielo-version.php';
+
+        $this->form_fields = array(
 			'api_version' => array(
 				'title'       => __( 'API Version', 'cielo-woocommerce' ),
 				'type'        => 'select',
 				'class'       => 'wc-enhanced-select',
 				'description' => __( 'Select the API Version', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
-				'default'     => 'version_1_5',
-				'options'     => array(
-					'version_1_5' => __( 'Version 1.5', 'cielo-woocommerce' ),
-					'version_3_0' => __( 'Version 3.0', 'cielo-woocommerce' ),
-				),
-			),
-		);
-	}
+				'default'     => WC_Cielo_Version::getDefaultVersion(),
+				'options'     => WC_Cielo_Version::getVersion('description'),
+            ),
+        );
+        
+    }
 
 
 }
