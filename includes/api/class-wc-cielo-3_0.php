@@ -11,7 +11,7 @@ use Cielo\API30\Ecommerce\Request\CieloRequestException;
 /**
  * WC Cielo API Class.
  */
-class WC_Cielo_API_3_0 extends WC_Settings_API {
+class WC_Cielo_API_3_0 {
 
 	/**
 	 * API version.
@@ -37,7 +37,7 @@ class WC_Cielo_API_3_0 extends WC_Settings_API {
 	 *
 	 * @var string
 	 */
-	protected $merchant;
+	public $merchant;
 
 	/**
 	 * Charset.
@@ -54,21 +54,6 @@ class WC_Cielo_API_3_0 extends WC_Settings_API {
 	public function __construct( $gateway = null ) {
 		$this->gateway = $gateway;
 		$this->charset = get_bloginfo( 'charset' );
-		$this->api_version = $this->get_option( 'api_version' );
-	}
-
-	/**
-	 * Get the account data.
-	 *
-	 * @return array
-	 */
-	private function get_account_data() {
-
-		return array(
-			'number' => $this->gateway->number,
-			'key'    => $this->gateway->key,
-		);
-		
 	}
 
 	/**
@@ -84,207 +69,74 @@ class WC_Cielo_API_3_0 extends WC_Settings_API {
 		}
 	}
 
-	/**
-	 * Get certificate.
-	 *
-	 * @return string
-	 */
-	protected function get_certificate() {
-		return plugin_dir_path( __FILE__ ) . 'certificates/VeriSignClass3PublicPrimaryCertificationAuthority-G5.crt';
-	}
+    /**
+     * Process webservice payment.
+     *
+     * @param  WC_Order $order
+     *
+     * @return array
+     */
+    public function process_webservice_payment( $valid, $order, $response ) {
 
-	/**
-	 * Get credit card brand.
-	 *
-	 * @param  string $number
-	 *
-	 * @return string
-	 */
-	public function get_card_brand( $number ) {
-		$number = preg_replace( '([^0-9])', '', $number );
-		$brand  = '';
+        //$tid = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['tid'] ) ;
+        $paymentId = json_encode( $response->getPayment()->getPaymentId() ) ;
 
-		// https://gist.github.com/arlm/ceb14a05efd076b4fae5
-		$supported_brands = array(
-			'visa'       => '/^4\d{12}(\d{3})?$/',
-			'mastercard' => '/^(5[1-5]\d{4}|677189)\d{10}$/',
-			'diners'     => '/^3(0[0-5]|[68]\d)\d{11}$/',
-			'discover'   => '/^6(?:011|5[0-9]{2})[0-9]{12}$/',
-			'elo'        => '/^((((636368)|(438935)|(504175)|(451416)|(636297))\d{0,10})|((5067)|(4576)|(4011))\d{0,12})$/',
-			'amex'       => '/^3[47]\d{13}$/',
-			'jcb'        => '/^(?:2131|1800|35\d{3})\d{11}$/',
-			'aura'       => '/^(5078\d{2})(\d{2})(\d{11})$/',
-			'hipercard'  => '/^(606282\d{10}(\d{3})?)|(3841\d{15})$/',
-			'maestro'    => '/^(?:5[0678]\d\d|6304|6390|67\d\d)\d{8,15}$/',
-		);
+        $returnCode = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['returnCode'] ) ;
+        $returnMessage = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['returnMessage'] ) ;
+        $links = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['links'] ) ;
 
-		foreach ( $supported_brands as $key => $value ) {
-			if ( preg_match( $value, $number ) ) {
-				$brand = $key;
-				break;
-			}
-		}
+        // Set the error alert.
+        if ( !( str_replace('"', '', $returnCode) == "4" ) ) {
 
-		return $brand;
-	}
+            $this->add_error((string)$returnMessage);
+            $valid = false;
 
-	/**
-	 * Get language.
-	 *
-	 * @return string
-	 */
-	protected function get_language() {
-		$language = strtoupper( substr( get_locale(), 0, 2 ) );
+        }
 
-		if ( ! in_array( $language, array( 'PT', 'EN', 'ES' ) ) ) {
-			$language = 'EN';
-		}
+        // Save the tid.
+        if (!empty($paymentId)) {
+            update_post_meta($order->id, '_transaction_id', $paymentId);
+        }
 
-		return $language;
-	}
+        // Set the transaction URL.
+        if (!empty($response->{'links'})) {
+            $payment_url = (string)$response->{'links'};
+        } else {
+            $payment_url = str_replace('&amp;', '&', urldecode($this->gateway->get_api_return_url($order)));
+        }
+        $this->gateway->log->add( $this->gateway->id, 'Linha: ' . __LINE__. ' $payment_url: ' . $payment_url );
 
-	/**
-	 * Get the secure XML data for debug.
-	 *
-	 * @param  WC_Cielo_XML $xml
-	 *
-	 * @return WC_Cielo_XML
-	 */
-	protected function get_secure_xml_data( $xml ) {
-		// Remove API data.
-		if ( isset( $xml->{'dados-ec'} ) ) {
-			unset( $xml->{'dados-ec'} );
-		}
+        return Array(
+            'valid' => $valid,
+            'payment_url' => $payment_url,
+        );
+        
+    }
 
-		// Remove card data.
-		if ( isset( $xml->{'dados-portador'} ) ) {
-			unset( $xml->{'dados-portador'} );
-		}
-
-		return $xml;
-	}
-
-	/**
-	 * Get default error message.
-	 *
-	 * @return StdClass
-	 */
-	protected function get_default_error_message() {
-		$error = new StdClass;
-		$error->mensagem = __( 'An error has occurred while processing your payment, please try again or contact us for assistance.', 'cielo-woocommerce' );
-
-		return $error;
-	}
-
-	/**
-	 * Safe load XML.
-	 *
-	 * @param  string $source  XML source.
-	 * @param  int    $options DOMDocument options.
-	 *
-	 * @return SimpleXMLElement|bool
-	 */
-	protected function safe_load_xml( $source, $options = 0 ) {
-		$old    = null;
-		$source = trim( $source );
-
-		if ( '<' !== substr( $source, 0, 1 ) ) {
-			return false;
-		}
-
-		if ( function_exists( 'libxml_disable_entity_loader' ) ) {
-			$old = libxml_disable_entity_loader( true );
-		}
-
-		$dom    = new DOMDocument();
-		$return = $dom->loadXML( $source, $options );
-
-		if ( ! is_null( $old ) ) {
-			libxml_disable_entity_loader( $old );
-		}
-
-		if ( ! $return ) {
-			return false;
-		}
-
-		if ( isset( $dom->doctype ) ) {
-			if ( 'yes' == $this->gateway->debug ) {
-				$this->gateway->log->add( $this->gateway->id, 'Unsafe DOCTYPE Detected while XML parsing' );
-			}
-
-			return false;
-		}
-
-		return simplexml_import_dom( $dom );
-	}
-	
-	/**
-	 * Do remote requests to API 1.5.
-	 *
-	 * @param  string $data Post data.
-	 *
-	 * @return array        Remote response data.
-	 */	
-	protected function do_request_version_1_5( $data ) {
-
-		$params = array(
-			'body'            => 'mensagem=' . $data,
-			'sslverify'       => true,
-			'timeout'         => 40,
-			'sslcertificates' => $this->get_certificate(),
-			'headers'         => array(
-				'Content-Type' => 'application/x-www-form-urlencoded',
-			),
-		);
-
-		add_action( 'http_api_curl', array( $this, 'curl_settings' ), 10, 3 );
-		$response = wp_remote_post( $this->get_api_url(), $params );
-		remove_action( 'http_api_curl', array( $this, 'curl_settings' ), 10 );
-
-		return $response;
-
-	}
-	
-	/**
-	 * Do remote requests to API 3.0.
-	 *
-	 * @param  string $data Post data.
-	 *
-	 * @return array        Remote response data.
-	 */
-	protected function do_request_version_3_0() {
-
-		$account_data = $this->get_account_data();
-
-		// Configure o ambiente
-		if ( 'production' == $this->gateway->environment ) {
-			$this->environment = $environment = Environment::production();
-		} else {
-			$this->gateway->log->add( $this->gateway->id, 'Linha: ' . __LINE__. ' do_request_version_3_0 sandbox ' );
-
-			$this->environment = $environment = Environment::sandbox();
-		}
-
-		// Configure seu merchant
-		$this->merchant = new Merchant( $account_data['number'], $account_data['key'] );
-
-		$this->gateway->log->add( $this->gateway->id, 'Linha: ' . __LINE__. ' do_request_version_3_0 MerchantID: '. (string)$this->merchant->getId() );
-
-	}	
-
-	/**
+    /**
 	 * Do remote requests.
 	 *
 	 * @param  string $data Post data.
 	 *
 	 * @return array        Remote response data.
 	 */
-	protected function do_request( $data = null ) {
-		
-		$response = !($this->api_version = 'version_3_0') ? $this->do_request_version_1_5( $data ) : $this->do_request_version_3_0();
-		return $response;
-		
-	}
+	public function do_request( $account_data ) {
+
+		//$account_data = $this->get_account_data();
+
+		// Configure o ambiente
+		if ( 'production' == $this->gateway->environment ) {
+			$this->environment = $environment = Environment::production();
+		} else {
+
+            $this->environment = $environment = Environment::sandbox();
+        }
+
+        // Configure seu merchant
+        $this->merchant = new Merchant( $account_data['number'], $account_data['key'] );
+        $this->gateway->log->add( $this->gateway->id, 'Linha: ' . __LINE__. ' do_request_version_3_0 sandbox ' . $account_data['number'] );
+
+    }
 
 	/**
 	 * Do transaction.
@@ -298,152 +150,42 @@ class WC_Cielo_API_3_0 extends WC_Settings_API {
 	 *
 	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
-	public function do_transaction( $order, $id, $card_brand, $installments = 0, $credit_card_data = array(), $is_debit = false ) {
-		
-		$account_data    = $this->get_account_data();
-		$payment_product = '1';
-		$order_total     = (float) $order->get_total();
-		$authorization   = $this->gateway->authorization;
+	public function do_transaction(  $account_data, $payment_product, $order_total, $authorization, $order, $id, $card_brand, $installments = 0, $credit_card_data = array(), $is_debit = false ) {
 
-		$response_data = null;
+        $this->do_request($account_data);
 
-		$this->gateway->log->add( $this->gateway->id, 'Bandeira: '.$card_brand );
+        $sale = new Sale($id);
 
-		// Set the authorization.
-		if ( in_array( $card_brand, $this->gateway->get_accept_authorization() ) && 3 != $authorization && ! $is_debit ) {
-			$authorization = 3;
-		}
+        $customer = $sale->customer( trim($order->billing_first_name) . ' ' . trim($order->billing_last_name) );
 
-		// Set the order total with interest.
-		if ( isset( $this->gateway->installment_type ) && 'client' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
-			$interest_rate        = $this->gateway->get_valid_value( $this->gateway->interest_rate ) / 100;
-			$interest_total       = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) ) );
-			$interest_order_total = $interest_total * $installments;
+        //$order->setBirthDate();
+        //$customer->setBirthDate();
 
-			if ( $order_total < $interest_order_total ) {
-				$order_total = round( $interest_order_total, 2 );
-			}
-		}
+        $payment = $sale->payment($order_total, $installments);
 
-		// Set the debit values.
-		if ( $is_debit ) {
-			$order_total     = $order_total * ( ( 100 - $this->gateway->get_valid_value( $this->gateway->debit_discount ) ) / 100 );
-			$payment_product = 'A';
-			$installments    = '1';
-		}
+        $payment->setType( (!$is_debit) ? Payment::PAYMENTTYPE_CREDITCARD : Payment::PAYMENTTYPE_DEBITCARD )
+            ->creditCard( $credit_card_data['card_cvv'], "Visa" )
+            ->setExpirationDate( $credit_card_data['card_expiration'] )
+            ->setCardNumber( $credit_card_data['card_number'] )
+            ->setHolder( $credit_card_data['name_on_card'] );
 
-		// Set the product when has installments.
-		if ( 1 < $installments ) {
-			$payment_product = '2';
-		}
+        try {
+            $sale = (new CieloEcommerce($this->merchant, $this->environment))->createSale($sale);
 
-		if (!($this->api_version = 'version_3_0')) {
+            if (!$this->gateway->api->admin_sale_capture ()) {
+                $sale = $this->do_sale_capture_internal($order, '', $id, $order_total, $account_data);
+            }
 
-			$xml = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-transacao id="' . $id . '" versao="' . self::VERSION . '"></requisicao-transacao>' );
-			$xml->add_account_data( $account_data['number'], $account_data['key'] );
+            $response_data = $sale;
 
-			if ( $credit_card_data ) {
-				$xml->add_card_data( $credit_card_data['card_number'], $credit_card_data['card_expiration'], $credit_card_data['card_cvv'], $credit_card_data['name_on_card'] );
-			}
+        } catch (CieloRequestException $e) {
+            // Em caso de erros de integração, podemos tratar o erro aqui.
+            // os códigos de erro estão todos disponíveis no manual de integração.
+            $error = $e->getCieloError();
 
-			$xml->add_order_data( $order, $order_total, self::CURRENCY, $this->get_language() );
-			$xml->add_payment_data( $card_brand, $payment_product, $installments );
+            $this->gateway->log->add( $this->gateway->id, 'Erro: ' . $error->getMessage() );
 
-			$xml->add_return_url( $this->gateway->get_api_return_url( $order ) );
-			$xml->add_authorize( $authorization );
-			$xml->add_capture( 'true' );
-			$xml->add_token_generation( 'false' );
-
-			// Render the XML.
-			$xml_data = $xml->render();
-
-			if ( 'yes' == $this->gateway->debug ) {
-				$this->gateway->log->add( $this->gateway->id, 'Requesting a transaction for order ' . $order->get_order_number() . ' with the follow data: ' . print_r( $this->get_secure_xml_data( $xml ), true ) );
-			}
-
-			// Do the transaction request.
-			$response = $this->do_request( $xml_data );
-
-			// Request error.
-			if ( is_wp_error( $response ) || ( isset( $response['response'] ) && 200 != $response['response']['code'] ) ) {
-				if ( 'yes' == $this->gateway->debug ) {
-					$this->gateway->log->add( $this->gateway->id, 'An error occurred while requesting the transaction: ' . print_r( $response, true ) );
-				}
-
-				return $this->get_default_error_message();
-			}
-
-			// Get the transaction response data.
-			$response_data = $this->safe_load_xml( $response['body'] );
-
-			// Error when getting the transaction response data.
-			if ( empty( $response_data ) ) {
-				return $this->get_default_error_message();
-			}
-
-			if ( 'yes' == $this->gateway->debug ) {
-				$this->gateway->log->add( $this->gateway->id, 'Transaction successfully created for the order ' . $order->get_order_number() );
-			}
-			
-		} elseif ($this->api_version = 'version_3_0') {
-
-			$this->do_request();
-
-
-			$sale = new Sale($id);
-
-			$customer = $sale->customer( trim($order->billing_first_name) . ' ' . trim($order->billing_last_name) );
-
-			$payment = $sale->payment($order_total, $installments);
-
-			$payment->setType( Payment::PAYMENTTYPE_CREDITCARD )
-				->creditCard( $credit_card_data['card_cvv'], "Visa" )
-				->setExpirationDate( $credit_card_data['card_expiration'] )
-				->setCardNumber( $credit_card_data['card_number'] )
-				->setHolder( $credit_card_data['name_on_card'] );
-
-			try {
-				$sale = (new CieloEcommerce($this->merchant, $this->environment))->createSale($sale);
-
-				// Com a venda criada na Cielo, já temos o ID do pagamento, TID e demais
-				// dados retornados pela Cielo
-//				$paymentId = $sale->getPayment()->getPaymentId();
-
-//				$header_size = curl_getinfo($sale->jsonSerialize(), CURLINFO_HEADER_SIZE);
-//				$header = substr($sale, 0, $header_size);
-//				$body = substr($sale, $header_size);
-//				$this->gateway->log->add( $this->gateway->id, 'URL Corpo: '. $sale->{'href'} );
-
-//				$tid = json_encode( $sale->jsonSerialize()['payment']->jsonSerialize()['tid'] ) ;
-//				$returnCode = json_encode( $sale->jsonSerialize()['payment']->jsonSerialize()['returnCode'] ) ;
-//				$returnMessage = json_encode( $sale->jsonSerialize()['payment']->jsonSerialize()['returnMessage'] ) ;
-//				$url = $sale->jsonSerialize()['payment']->jsonSerialize()['links'][0] ;
-
-
-				$response_data = $sale;
-//				$response_data = array(
-//
-//					'tid' => $tid,
-//					'mensagem' => ( $returnCode != '4' ) ? $returnMessage : '',
-//					'url-autenticacao' => 'https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/'.$paymentId,
-//
-//				);
-
-				// Com o ID do pagamento, podemos fazer sua captura, se ela não tiver sido capturada ainda
-				//$sale = (new CieloEcommerce($this->merchant, $this->environment))->captureSale($paymentId, 15700, 0);
-
-				// E também podemos fazer seu cancelamento, se for o caso
-				//$sale = (new CieloEcommerce($this->merchant, $this->environment))->cancelSale($paymentId, 15700);
-			} catch (CieloRequestException $e) {
-				// Em caso de erros de integração, podemos tratar o erro aqui.
-				// os códigos de erro estão todos disponíveis no manual de integração.
-				$error = $e->getCieloError();
-
-				$this->gateway->log->add( $this->gateway->id, 'Erro: ' . $error->getMessage() );
-
-			}
-
-		}
+        }
 
 		return $response_data;
 	}
@@ -457,74 +199,173 @@ class WC_Cielo_API_3_0 extends WC_Settings_API {
 	 *
 	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
-	public function get_transaction_data( $order, $tid, $id ) {
-		$account_data = $this->get_account_data();
-
-		$this->gateway->log->add( $this->gateway->id, 'Linha: ' . __LINE__. ' TID: ' . $tid . ' ID: ' . $id );
-
+	public function get_transaction_data( $order, $tid, $id, $account_data ) {
 		$sale = null;
 		$response_data = null;
 
-		if (!($this->api_version = 'version_3_0')) {
-			
-			$xml          = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-consulta id="' . $id . '" versao="' . self::VERSION . '"></requisicao-consulta>' );
-			$xml->add_tid( $tid );
-			$xml->add_account_data( $account_data['number'], $account_data['key'] );
+		$this->do_request($account_data);
 
-			// Render the XML.
-			$data = $xml->render();
+		try {
 
-			if ( 'yes' == $this->gateway->debug ) {
-				$this->gateway->log->add( $this->gateway->id, 'Checking the transaction status for order ' . $order->get_order_number() . '...' );
-			}
-
-			// Do the transaction request.
-			$response = $this->do_request( $data );
-			if ( is_wp_error( $response ) || ( isset( $response['response'] ) && 200 != $response['response']['code'] ) ) {
-				if ( 'yes' == $this->gateway->debug ) {
-					$this->gateway->log->add( $this->gateway->id, 'An error occurred while checking the transaction status: ' . print_r( $response, true ) );
-				}
-
-				return $this->get_default_error_message();
-			}
-
-			// Get the transaction response data.
-			$response_data = $this->safe_load_xml( $response['body'] );
-
-			// Error when getting the transaction response data.
-			if ( empty( $response_data ) ) {
-				return $this->get_default_error_message();
-			}
-
-			if ( 'yes' == $this->gateway->debug ) {
-				$this->gateway->log->add( $this->gateway->id, 'Recovered the order ' . $order->get_order_number() . ' data successfully' );
-			}
-		} else {
-
-			$this->do_request();
-			$this->gateway->log->add( $this->gateway->id, 'Linha: ' . __LINE__. ' MerchantID: '. (string)$this->merchant->getId() );
-
-			try {
-
-				$sale = (new CieloEcommerce($this->merchant, $this->environment))->getSale( str_replace('"', '', $tid) );
-
-				$this->gateway->log->add( $this->gateway->id, 'Linha: ' . __LINE__. ' get_transaction_data' );
-
-			} catch (CieloRequestException $e) {
-
-				$error = $e->getCieloError();
-
-				$this->gateway->log->add( $this->gateway->id,  'Linha: ' . __LINE__. ' Erro: ' . $error );
-
-			}
-
-
+			$sale = (new CieloEcommerce($this->merchant, $this->environment))->getSale( str_replace('"', '', $tid) );
 			$response_data = $sale;
 
-		}		
+		} catch (CieloRequestException $e) {
+
+			$error = $e->getCieloError();
+			$this->gateway->log->add( $this->gateway->id,  'Linha: ' . __LINE__. ' Erro: ' . $error );
+
+		}
 
 		return $response_data;
+
+        
 	}
+
+    /**
+     * Return handler.
+     *
+     * @param WC_Order $order Order data.
+     */
+    public function return_handler( $response, $tid ) {
+
+        $this->gateway->log->add($this->gateway->id, 'return_handler' );
+
+        $paymentId = json_encode( $response->getPayment()->getPaymentId() ) ;
+
+        $returnCode    = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['returnCode'] ) ;
+        $status        = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['status'] ) ;
+        $returnMessage = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['returnMessage'] ) ;
+        $links         = json_encode( $response->jsonSerialize()['payment']->jsonSerialize()['links'] ) ;
+
+        $this->gateway->log->add($this->gateway->id, 'Return Code: ' . json_encode($response));
+        $this->gateway->log->add($this->gateway->id, 'Return Code: ' . json_encode($response->jsonSerialize()['payment']));
+//                $this->log->add($this->id, 'Status payment: ' . $status);
+//                $this->log->add($this->id, 'Return: ' . __LINE__ . ' - ' . str_replace('"', '', $returnCode));
+
+        // Set the error alert.
+        if ( trim(str_replace('"', '', $returnCode)) != '4' ) {
+            if ('yes' == $this->gateway->debug) {
+                $this->gateway->log->add($this->gateway->id, 'Cielo payment error: ' . print_r($returnMessage, true));
+            }
+
+            $this->gateway->add_error((string)$returnMessage);
+        }
+
+        // Update the order status.
+        $status = !empty($status) ? intval($status) : -1;
+        $order_note = "\n";
+
+        if ('yes' == $this->debug) {
+            $this->gateway->log->add($this->gateway->id, 'Cielo payment status: ' . $status);
+        }
+
+        // For backward compatibility!
+        if (defined('WC_VERSION') && version_compare(WC_VERSION, '2.1.12', '<=')) {
+            $order_note = "\n" . 'TID: ' . $tid . '.';
+        }
+
+        if (!empty($response->{'forma-pagamento'})) {
+            $payment_method = $response->{'forma-pagamento'};
+
+            $order_note .= "\n";
+            $order_note .= __('Paid with', 'cielo-woocommerce');
+            $order_note .= ' ';
+            $order_note .= $this->gateway->get_payment_method_name((string)$payment_method->bandeira);
+            $order_note .= ' ';
+
+            if ('A' == $payment_method->produto) {
+                $order_note .= __('debit', 'cielo-woocommerce');
+            } elseif ('1' == $payment_method->produto) {
+                $order_note .= __('credit at sight', 'cielo-woocommerce');
+            } else {
+                $order_note .= sprintf(__('credit %dx', 'cielo-woocommerce'), $payment_method->parcelas);
+            }
+
+            $order_note .= '.';
+        }
+
+        return Array(
+            'status'     => $status,
+            'order_note' => $order_note,
+        );
+
+    }
+
+    /**
+     * Do sale capture internal.
+     *
+     * @param  WC_Order $order Order data.
+     * @param  string   $tid     Transaction ID.
+     * @param  string   $id      Request ID.
+     * @param  float    $amount  Amount for refund.
+     *
+     * @return array
+     */
+    public function do_sale_capture_internal( $order, $tid, $id, $amount = 0, $account_data ) {
+
+        return (new CieloEcommerce($this->merchant, $this->environment))->captureSale(str_replace('"', '', $id), number_format( $amount, 2, '', '' ), 0, true);
+
+    }
+
+
+    /**
+     * Do sale capture.
+     *
+     * @param  WC_Order $order Order data.
+     * @param  string   $tid     Transaction ID.
+     * @param  string   $id      Request ID.
+     * @param  float    $amount  Amount for refund.
+     *
+     * @return array
+     */
+    public function do_sale_capture( $order, $tid, $id, $amount = 0, $account_data ) {
+        $sale = null;
+
+        $this->do_request($account_data);
+
+        try {
+
+            $sale = $this->do_sale_capture_internal( $order, $tid, $id, $amount, $account_data );
+
+        //} catch (CieloRequestException $e) {
+        } catch (CieloRequestException $e) {
+
+            $cieloerror = $e->getCieloError();
+
+        }
+
+        if ( 'yes' == $this->gateway->debug ) {
+            $this->gateway->log->add( $this->gateway->id, 'Capturing ' . $amount . ' from order ' . $order->get_order_number() . '...' );
+        }
+
+        // Set error message.
+        $error = new StdClass;
+        $error->mensagem = __( 'An error occurred while trying to capturing the sale, turn on the Cielo log option and try again.', 'cielo-woocommerce' );
+        if (isset($cieloerror)) {
+            $error->cielocode = $cieloerror->getCode();
+        }
+
+//        if ( is_wp_error( $sale ) || ( isset( $sale['response'] ) && 200 != $sale['response']['code'] ) ) {
+//        }
+        if ( !isset( $sale ) ) {
+            if ( 'yes' == $this->gateway->debug ) {
+                $this->gateway->log->add( $this->gateway->id, 'An error occurred while capturing the transaction: Code: ' . $cieloerror->getCode() . ' - Message: ' . $cieloerror->getMessage() );
+            }
+            return $error;
+        }
+
+        // Error when getting the transaction response data.
+        if ( !isset( $sale ) && !isset( $cieloerror ) ) {
+            return $error;
+        }
+
+        if ( 'yes' == $this->gateway->debug ) {
+            $this->gateway->log->add( $this->gateway->id, 'Captured ' . $amount . ' from order ' . $order->get_order_number() . ' successfully!' );
+        }
+
+        return $sale->jsonSerialize();
+    }
 
 	/**
 	 * Do transaction cancellation.
@@ -536,50 +377,56 @@ class WC_Cielo_API_3_0 extends WC_Settings_API {
 	 *
 	 * @return array
 	 */
-	public function do_transaction_cancellation( $order, $tid, $id, $amount = 0 ) {
-		$this->gateway->log->add( $this->gateway->id, 'do_transaction_cancellation');
+	public function do_transaction_cancellation( $order, $tid, $id, $amount = 0, $account_data ) {
+        $this->do_request($account_data);
 
-		$account_data = $this->get_account_data();
-		$xml          = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-cancelamento id="' . $id . '" versao="' . self::VERSION . '"></requisicao-cancelamento>' );
-		$xml->add_tid( $tid );
-		$xml->add_account_data( $account_data['number'], $account_data['key'] );
+        $this->gateway->log->add( $this->gateway->id, 'Cancelation: ' );
 
-		if ( $amount ) {
-			$xml->add_value( $amount );
-		}
+        try {
 
-		// Render the XML.
-		$data = $xml->render();
+            $sale = (new CieloEcommerce($this->merchant, $this->environment))->cancelSale($tid, $amount);
 
-		if ( 'yes' == $this->gateway->debug ) {
-			$this->gateway->log->add( $this->gateway->id, 'Refunding ' . $amount . ' from order ' . $order->get_order_number() . '...' );
-		}
+        } catch (CieloRequestException $e) {
 
-		// Do the request.
-		$response = $this->do_request( $data );
+            $error = $e->getCieloError();
+            $this->gateway->log->add( $this->gateway->id,  'Linha: ' . __LINE__. ' Erro: ' . $error );
 
-		// Set error message.
+        }
+
+        $this->gateway->log->add( $this->gateway->id, 'Sale Cancelation: ' . $sale->jsonSerialize());
+
+        if ( 'yes' == $this->gateway->debug ) {
+            $this->gateway->log->add( $this->gateway->id, 'Refunding ' . $amount . ' from order ' . $order->get_order_number() . '...' );
+        }
+
+        // Set error message.
 		$error = new StdClass;
 		$error->mensagem = __( 'An error occurred while trying to cancel the payment, turn on the Cielo log option and try again.', 'cielo-woocommerce' );
 
-		if ( is_wp_error( $response ) || ( isset( $response['response'] ) && 200 != $response['response']['code'] ) ) {
+		if ( is_wp_error( $sale ) || ( isset( $sale['response'] ) && 200 != $sale['response']['code'] ) ) {
+            
 			if ( 'yes' == $this->gateway->debug ) {
-				$this->gateway->log->add( $this->gateway->id, 'An error occurred while canceling the transaction: ' . print_r( $response, true ) );
+				$this->gateway->log->add( $this->gateway->id, 'An error occurred while canceling the transaction: ' . print_r( $sale, true ) );
 			}
 
 			return $error;
+            
 		}
 
 		// Get the transaction response data.
-		$response_data = $this->safe_load_xml( $response['body'] );
+		$response_data = $sale['body'] ;
 
 		// Error when getting the transaction response data.
 		if ( empty( $response_data ) ) {
+
 			return $error;
+
 		}
 
 		if ( 'yes' == $this->gateway->debug ) {
+
 			$this->gateway->log->add( $this->gateway->id, 'Refunded ' . $amount . ' from order ' . $order->get_order_number() . ' successfully!' );
+
 		}
 
 		return $response_data;
