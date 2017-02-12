@@ -3,11 +3,13 @@
   "versions" : {
     "version_1_5": {
       "class": "WC_Cielo_API_1_5",
-      "description": "Version 1.5"
+      "description": "Version 1.5",
+      "path": "/api/class-wc-cielo-1_5.php"
     },
     "version_3_0": {
       "class": "WC_Cielo_API_3_0",
-      "description": "Version 3.0"
+      "description": "Version 3.0",
+      "path": "/api/class-wc-cielo-3_0.php"
     }
   }
 }
