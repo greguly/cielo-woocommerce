@@ -63,18 +63,36 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 				$this->upgrade();
 				$this->includes();
 
-				// Add the gateway.
+                // Get from General Setting Enabled checkbox, value to show or hide MetaBox Cielo Capture
+                $general_settings = maybe_unserialize(get_option('woocommerce_cielo_general_settings_settings')) ;
+                // Function to show MetaBox Cielo Capture
+                $AdminOrderPage = function($this) {
+                    if (class_exists('WC_Integration')) {
+                        if (is_admin()) {
+                            $this->admin_sale_capture_includes();
+                        }
+                    }
+                };
+
+                // Check if enabled is using default value
+                if ( array_key_exists('admin_sale_capture', $general_settings) ) {
+                    if ($general_settings['admin_sale_capture'] == 'yes') {
+                        $AdminOrderPage($this);
+                    }
+                }
+//                else {
+//                    $AdminOrderPage($this);
+//                }
+
+                // Add the gateway.
 				add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateway' ) );
 				add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
 
-				// Admin actions.
-				if ( is_admin() ) {
-					add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
-				}
 			} else {
 				add_action( 'admin_notices', array( $this, 'woocommerce_missing_notice' ) );
 			}
-		}
+
+        }
 
 		/**
 		 * Return an instance of this class.
@@ -236,6 +254,9 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 						delete_option( 'woocommerce_cielo_settings' );
 					}
 
+                    global $wpdb;
+                    $wpdb->query( "UPDATE $wpdb->postmeta SET meta_key = '_cielo_sale_captured_status' WHERE meta_key = 'cielo_sale_captured';" );
+
 					update_option( 'wc_cielo_version', WC_Cielo::VERSION );
 				}
 			}
@@ -287,7 +308,15 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 
 			return array_merge( $plugin_links, $links );
 		}
-	}
+
+        /**
+         * Admin includes.
+         */
+        private function admin_sale_capture_includes() {
+            include_once dirname( __FILE__ ) . '/includes/views/admin/class-wc-cielo-admin-orders.php';
+        }
+
+    }
 
 	add_action( 'plugins_loaded', array( 'WC_Cielo', 'get_instance' ), 0 );
 
