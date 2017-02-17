@@ -132,41 +132,6 @@ class WC_Cielo_API_1_5 {
 	}
 
 	/**
-	 * Get credit card brand.
-	 *
-	 * @param  string $number
-	 *
-	 * @return string
-	 */
-//	public function get_card_brand( $number ) {
-//		$number = preg_replace( '([^0-9])', '', $number );
-//		$brand  = '';
-//
-//		// https://gist.github.com/arlm/ceb14a05efd076b4fae5
-//		$supported_brands = array(
-//			'visa'       => '/^4\d{12}(\d{3})?$/',
-//			'mastercard' => '/^(5[1-5]\d{4}|677189)\d{10}$/',
-//			'diners'     => '/^3(0[0-5]|[68]\d)\d{11}$/',
-//			'discover'   => '/^6(?:011|5[0-9]{2})[0-9]{12}$/',
-//			'elo'        => '/^((((636368)|(438935)|(504175)|(451416)|(636297))\d{0,10})|((5067)|(4576)|(4011))\d{0,12})$/',
-//			'amex'       => '/^3[47]\d{13}$/',
-//			'jcb'        => '/^(?:2131|1800|35\d{3})\d{11}$/',
-//			'aura'       => '/^(5078\d{2})(\d{2})(\d{11})$/',
-//			'hipercard'  => '/^(606282\d{10}(\d{3})?)|(3841\d{15})$/',
-//			'maestro'    => '/^(?:5[0678]\d\d|6304|6390|67\d\d)\d{8,15}$/',
-//		);
-//
-//		foreach ( $supported_brands as $key => $value ) {
-//			if ( preg_match( $value, $number ) ) {
-//				$brand = $key;
-//				break;
-//			}
-//		}
-//
-//		return $brand;
-//	}
-
-	/**
 	 * Get language.
 	 *
 	 * @return string
@@ -256,61 +221,6 @@ class WC_Cielo_API_1_5 {
 		return simplexml_import_dom( $dom );
 	}
 	
-	/**
-	 * Do remote requests to API 1.5.
-	 *
-	 * @param  string $data Post data.
-	 *
-	 * @return array        Remote response data.
-	 */	
-	protected function do_request_version_1_5( $data ) {
-
-//		$params = array(
-//			'body'            => 'mensagem=' . $data,
-//			'sslverify'       => true,
-//			'timeout'         => 40,
-//			'sslcertificates' => $this->get_certificate(),
-//			'headers'         => array(
-//				'Content-Type' => 'application/x-www-form-urlencoded',
-//			),
-//		);
-//
-//		add_action( 'http_api_curl', array( $this, 'curl_settings' ), 10, 3 );
-//		$response = wp_remote_post( $this->get_api_url(), $params );
-//		remove_action( 'http_api_curl', array( $this, 'curl_settings' ), 10 );
-//
-//		return $response;
-
-	}
-	
-	/**
-	 * Do remote requests to API 3.0.
-	 *
-	 * @param  string $data Post data.
-	 *
-	 * @return array        Remote response data.
-	 */
-//	protected function do_request_version_3_0() {
-//
-//		$account_data = $this->get_account_data();
-//
-//		// Configure o ambiente
-//		if ( 'production' == $this->gateway->environment ) {
-//			$this->environment = $environment = Environment::production();
-//		} else {
-//			$this->gateway->log->add( $this->gateway->id, 'Linha: ' . __LINE__. ' do_request_version_3_0 sandbox ' );
-//
-//			$this->environment = $environment = Environment::sandbox();
-//		}
-//
-//		// Configure seu merchant
-//		$this->merchant = new Merchant( $account_data['number'], $account_data['key'] );
-//
-//		$this->gateway->log->add( $this->gateway->id, 'Linha: ' . __LINE__. ' do_request_version_3_0 MerchantID: '. (string)$this->merchant->getId() );
-//
-//	}
-
-
 	/**
 	 * Process webservice payment.
 	 *
