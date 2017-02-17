@@ -33,7 +33,6 @@ class WC_Cielo_General_Settings_Gateway extends WC_Payment_Gateway {
 		$this->icon         = apply_filters( 'wc_cielo_general_settings_icon', '' );
 		$this->has_fields   = true;
 		$this->method_title = __( 'Cielo - General Settings', 'cielo-woocommerce' );
-        //$this->supports     = array( 'products', 'refunds' );
 
         // Load the form fields.
         $this->init_form_fields();
@@ -41,6 +40,7 @@ class WC_Cielo_General_Settings_Gateway extends WC_Payment_Gateway {
         // Define user set variables.
         $this->api_version        = $this->get_option( 'api_version' );
         $this->admin_sale_capture = $this->get_option( 'admin_sale_capture' );
+        $this->time_sale_capture = $this->get_option( 'time_sale_capture' );
 
         // Actions.
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -74,9 +74,16 @@ class WC_Cielo_General_Settings_Gateway extends WC_Payment_Gateway {
                 'desc_tip'    => true,
                 'default' => 'no',
             ),
+            'time_sale_capture' => array(
+                'title'   => __( 'Term to Capture', 'cielo-woocommerce' ),
+                'type'    => 'text',
+                'label'   => __( 'Term in days to Sale Capture in Admin Order Page', 'cielo-woocommerce' ),
+                'description' => __( 'Term in days before exceed Sale Capture time', 'cielo-woocommerce' ),
+                'desc_tip' => true,
+                'default' => 15,
+            ),
         );
 
     }
-
 
 }
