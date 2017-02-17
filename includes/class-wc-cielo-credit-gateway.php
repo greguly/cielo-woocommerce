@@ -319,6 +319,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		$payment_url = '';
 		$card_number = isset( $_POST['cielo_credit_number'] ) ? sanitize_text_field( $_POST['cielo_credit_number'] ) : '';
 		$card_brand  = $this->api->get_card_brand( $card_number );
+		$card_brand  = "visa";
 
 		// Validate credit card brand.
 		//$valid = $this->validate_credit_brand( $card_brand );
