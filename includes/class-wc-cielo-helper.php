@@ -154,38 +154,53 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 */
 	public function get_status_name( $id ) {
 
-		if ( !( $this->api->api_version == 'version_3_0') ) {
-			$status = array(
-                0 => _x('Transaction created', 'Transaction Status', 'cielo-woocommerce'),
-                1 => _x('Transaction ongoing', 'Transaction Status', 'cielo-woocommerce'),
-                2 => _x('Transaction authenticated', 'Transaction Status', 'cielo-woocommerce'),
-                3 => _x('Transaction not authenticated', 'Transaction Status', 'cielo-woocommerce'),
-                4 => _x('Transaction authorized', 'Transaction Status', 'cielo-woocommerce'),
-                5 => _x('Transaction not authorized', 'Transaction Status', 'cielo-woocommerce'),
-                6 => _x('Transaction captured', 'Transaction Status', 'cielo-woocommerce'),
-                9 => _x('Transaction cancelled', 'Transaction Status', 'cielo-woocommerce'),
-                10 => _x('Transaction in authentication', 'Transaction Status', 'cielo-woocommerce'),
-                12 => _x('Transaction in cancellation', 'Transaction Status', 'cielo-woocommerce'),
-			);
-		} else {
-			$status = array(
-                0  => _x('Transaction fail', 'Transaction Status', 'cielo-woocommerce'),
-                1  => _x('Transaction authorized', 'Transaction Status', 'cielo-woocommerce'),
-                2  => _x('Transaction confirmed and finished', 'Transaction Status', 'cielo-woocommerce'),
-                3  => _x('Transaction denied', 'Transaction Status', 'cielo-woocommerce'),
-                10 => _x('Transaction voided', 'Transaction Status', 'cielo-woocommerce'),
-                11 => _x('Transaction refunded', 'Transaction Status', 'cielo-woocommerce'),
-                12 => _x('Transaction pending', 'Transaction Status', 'cielo-woocommerce'),
-                13 => _x('Transaction aborted', 'Transaction Status', 'cielo-woocommerce'),
-                20 => _x('Transaction scheduled', 'Transaction Status', 'cielo-woocommerce'),
-			);
-		}
+		$status = array(
+			0 => _x('Transaction created', 'Transaction Status', 'cielo-woocommerce'),
+			1 => _x('Transaction ongoing', 'Transaction Status', 'cielo-woocommerce'),
+			2 => _x('Transaction authenticated', 'Transaction Status', 'cielo-woocommerce'),
+			3 => _x('Transaction not authenticated', 'Transaction Status', 'cielo-woocommerce'),
+			4 => _x('Transaction authorized', 'Transaction Status', 'cielo-woocommerce'),
+			5 => _x('Transaction not authorized', 'Transaction Status', 'cielo-woocommerce'),
+			6 => _x('Transaction captured', 'Transaction Status', 'cielo-woocommerce'),
+			9 => _x('Transaction cancelled', 'Transaction Status', 'cielo-woocommerce'),
+			10 => _x('Transaction in authentication', 'Transaction Status', 'cielo-woocommerce'),
+			12 => _x('Transaction in cancellation', 'Transaction Status', 'cielo-woocommerce'),
+		);
 
 		if ( isset( $status[ $id ] ) ) {
 			return $status[ $id ];
 		}
 
 		return _x( 'Transaction failed', 'Transaction Status', 'cielo-woocommerce' );
+	}
+
+	/**
+	 * Get the status error.
+	 *
+	 * @param  int $id Status ID.
+	 *
+	 * @return string
+	 */
+	public function get_status( $id ) {
+
+		$status = array(
+			0 => true,  //Transaction created
+			1 => true,  //Transaction ongoing
+			2 => true,  //Transaction authenticated
+			3 => false, //Transaction not authenticated
+			4 => true,  //Transaction authorized
+			5 => false, //Transaction not authorized
+			6 => true,  //Transaction captured
+			9 => false, //Transaction cancelled
+			10 => true, //Transaction in authentication
+			12 => false,//Transaction in cancellation
+		);
+
+		if ( isset( $status[ $id ] ) ) {
+			return $status[ $id ];
+		}
+
+		return false;//Transaction failed
 	}
 
 	/**
@@ -618,44 +633,26 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	public function process_order_status( $order, $status, $note = '' ) {
 		$status_note = __( 'Cielo', 'cielo-woocommerce' ) . ': ' . $this->get_status_name( $status );
 
-		if ( !( $this->api->api_version == 'version_3_0') ) {
-			// Order cancelled.
-			if ( 9 == $status ) {
-				$order->update_status( 'cancelled', $status_note );
+		// Order cancelled.
+		if ( 9 == $status ) {
+            $order->add_order_note( $status_note . '. ' . $note );
 
-				// Order failed.
-			} elseif ( ( 1 != $status && 4 != $status && 6 != $status ) || -1 == $status ) {
-				$order->update_status( 'failed', $status_note );
+            $order->update_status( 'cancelled', $status_note );
 
-				// Order paid.
-			} else {
-				$order->add_order_note( $status_note . '. ' . $note );
+			// Order failed.
+		} elseif ( ( 1 != $status && 4 != $status && 6 != $status ) || -1 == $status ) {
+            $order->add_order_note( $status_note . '. ' . $note );
 
-				// Complete the payment and reduce stock levels.
-				$order->payment_complete();
-			}
+            $order->update_status( 'failed', $status_note );
+
+			// Order paid.
 		} else {
+			$order->add_order_note( $status_note . '. ' . $note );
 
-			// Order cancelled.
-			if (10 == $status) {
-                $this->log->add($this->id, 'Cancelled: '. $status_note );
-                $order->update_status('cancelled', $status_note);
-
-            // Order failed.
-			} elseif ((1 != $status && 2 != $status && 12 != $status && 20 != $status) || -1 == $status) {
-                $this->log->add($this->id, 'Falha: '. $status_note );
-                $order->update_status('failed', $status_note);
-
-            // Order paid.
-			} else {
-                $this->log->add($this->id, 'Paga: '. $status_note . ' - Nota: ' . $note );
-                $order->add_order_note($status_note . '. ' . $note);
-    
-                // Complete the payment and reduce stock levels.
-                $order->payment_complete();
-                $this->log->add($this->id, 'Completa: ' );
-			}
+			// Complete the payment and reduce stock levels.
+			$order->payment_complete();
 		}
+
 	}
 
 	/**
@@ -701,45 +698,21 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				$return_url = add_query_arg( 'order', $order->id, add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
 			}
 
-			if ( !( $this->api->api_version == 'version_3_0') ) {
+            // Order cancelled.
+            if ( 9 == $response_return['status'] ) {
+                $message = __( 'Order canceled successfully.', 'cielo-woocommerce' );
+                if ( function_exists( 'wc_add_notice' ) ) {
+                    wc_add_notice( $message );
+                } else {
+                    $woocommerce->add_message( $message );
+                }
 
-				// Order cancelled.
-				if ( 9 == $response_return['status'] ) {
-					$message = __( 'Order canceled successfully.', 'cielo-woocommerce' );
-					if ( function_exists( 'wc_add_notice' ) ) {
-						wc_add_notice( $message );
-					} else {
-						$woocommerce->add_message( $message );
-					}
-
-					if ( function_exists( 'wc_get_page_id' ) ) {
-						$return_url = get_permalink( wc_get_page_id( 'shop' ) );
-					} else {
-						$return_url = get_permalink( woocommerce_get_page_id( 'shop' ) );
-					}
-				}
-
-			} else {
-
-				// Order cancelled.
-				if (10 == $response_return['status']) {
-                    $this->log->add($this->id, 'Order cancelled' );
-
-                    $message = __('Order canceled successfully.', 'cielo-woocommerce');
-					if (function_exists('wc_add_notice')) {
-							wc_add_notice($message);
-					} else {
-							$woocommerce->add_message($message);
-					}
-
-					if (function_exists('wc_get_page_id')) {
-							$return_url = get_permalink(wc_get_page_id('shop'));
-					} else {
-							$return_url = get_permalink(woocommerce_get_page_id('shop'));
-					}
-				}
-
-			}
+                if ( function_exists( 'wc_get_page_id' ) ) {
+                    $return_url = get_permalink( wc_get_page_id( 'shop' ) );
+                } else {
+                    $return_url = get_permalink( woocommerce_get_page_id( 'shop' ) );
+                }
+            }
 
 			wp_redirect( esc_url_raw( $return_url ) );
 			exit;
