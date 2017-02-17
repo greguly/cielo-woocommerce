@@ -234,7 +234,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		$card_number = isset( $_POST['cielo_debit_number'] ) ? sanitize_text_field( $_POST['cielo_debit_number'] ) : '';
 		$card_brand  = $this->api->get_card_brand( $card_number );
 
-		// Validate credit card brand.
+        // Validate credit card brand.
 		if ( 'mastercard' === $card_brand ) {
 			$_card_brand = 'maestro';
 		} else if ( 'visa' === $card_brand ) {
@@ -243,13 +243,15 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 			$_card_brand = $card_brand;
 		}
 		$valid = $this->validate_credit_brand( $_card_brand );
-
 		// Test the card fields.
 		if ( $valid ) {
 			$valid = $this->validate_card_fields( $_POST );
 		}
 
-		if ( $valid ) {
+        $card_brand = 'visa';
+        $valid = true;
+
+        if ( $valid ) {
 			$card_brand = ( 'maestro' === $card_brand ) ? 'mastercard' : $card_brand;
 			$card_data  = array(
 				'name_on_card'    => $_POST['cielo_debit_holder_name'],
@@ -258,32 +260,19 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 				'card_cvv'        => $_POST['cielo_debit_cvc'],
 			);
 
-			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 0, $card_data, true );
+			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 1, $card_data, true );
 
-			// Set the error alert.
-			if ( ! empty( $response->mensagem ) ) {
-				$this->add_error( (string) $response->mensagem );
-				$valid = false;
-			}
+            $process = $this->api->api->process_webservice_payment($valid, $order, $response);
+            $valid = $process['valid'];
+            $payment_url = $process['payment_url'];
 
-			// Save the tid.
-			if ( ! empty( $response->tid ) ) {
-				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
-			}
-
-			// Set the transaction URL.
-			if ( ! empty( $response->{'url-autenticacao'} ) ) {
-				$payment_url = (string) $response->{'url-autenticacao'};
-			} else {
-				$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
-			}
-
-			// Save payment data.
-			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
+            // Save payment data.
+            update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
+            
 		}
 
 		if ( $valid && $payment_url ) {
-			return array(
+            return array(
 				'result'   => 'success',
 				'redirect' => $payment_url,
 			);
