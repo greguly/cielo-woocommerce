@@ -77,6 +77,7 @@ class WC_Cielo_API extends WC_Settings_API {
 
 		// Get API Class name, selected in General Settings and class in Json file
 		$api_class = WC_Cielo_Version::getVersion('class', $this->api_version);
+        //$this->gateway->log->add( $this->gateway->id, 'Create API ' . $api_class );
 
 		// Instantiate API, according with version selected in General Settings
 		$this->api = new $api_class($this->gateway);
@@ -95,6 +96,7 @@ class WC_Cielo_API extends WC_Settings_API {
         // Check if enabled is using default value
         if ( array_key_exists('admin_sale_capture', $general_settings) ) {
             if ($general_settings['admin_sale_capture'] == 'yes') {
+                $this->gateway->log->add( $this->gateway->id, 'Gateway: ' . $this->gateway->id );
                 return true;
             }
         } else {
@@ -156,42 +158,6 @@ class WC_Cielo_API extends WC_Settings_API {
 	}
 
 	/**
-	 * Get language.
-	 *
-	 * @return string
-	 */
-	protected function get_language() {
-		$language = strtoupper( substr( get_locale(), 0, 2 ) );
-
-		if ( ! in_array( $language, array( 'PT', 'EN', 'ES' ) ) ) {
-			$language = 'EN';
-		}
-
-		return $language;
-	}
-
-	/**
-	 * Get the secure XML data for debug.
-	 *
-	 * @param  WC_Cielo_XML $xml
-	 *
-	 * @return WC_Cielo_XML
-	 */
-	protected function get_secure_xml_data( $xml ) {
-		// Remove API data.
-		if ( isset( $xml->{'dados-ec'} ) ) {
-			unset( $xml->{'dados-ec'} );
-		}
-
-		// Remove card data.
-		if ( isset( $xml->{'dados-portador'} ) ) {
-			unset( $xml->{'dados-portador'} );
-		}
-
-		return $xml;
-	}
-
-	/**
 	 * Get default error message.
 	 *
 	 * @return StdClass
@@ -201,61 +167,6 @@ class WC_Cielo_API extends WC_Settings_API {
 		$error->mensagem = __( 'An error has occurred while processing your payment, please try again or contact us for assistance.', 'cielo-woocommerce' );
 
 		return $error;
-	}
-
-	/**
-	 * Safe load XML.
-	 *
-	 * @param  string $source  XML source.
-	 * @param  int    $options DOMDocument options.
-	 *
-	 * @return SimpleXMLElement|bool
-	 */
-	protected function safe_load_xml( $source, $options = 0 ) {
-		$old    = null;
-		$source = trim( $source );
-
-		if ( '<' !== substr( $source, 0, 1 ) ) {
-			return false;
-		}
-
-		if ( function_exists( 'libxml_disable_entity_loader' ) ) {
-			$old = libxml_disable_entity_loader( true );
-		}
-
-		$dom    = new DOMDocument();
-		$return = $dom->loadXML( $source, $options );
-
-		if ( ! is_null( $old ) ) {
-			libxml_disable_entity_loader( $old );
-		}
-
-		if ( ! $return ) {
-			return false;
-		}
-
-		if ( isset( $dom->doctype ) ) {
-			if ( 'yes' == $this->gateway->debug ) {
-				$this->gateway->log->add( $this->gateway->id, 'Unsafe DOCTYPE Detected while XML parsing' );
-			}
-
-			return false;
-		}
-
-		return simplexml_import_dom( $dom );
-	}
-	
-	/**
-	 * Do remote requests.
-	 *
-	 * @param  string $data Post data.
-	 *
-	 * @return array        Remote response data.
-	 */
-	protected function do_request( $data = null ) {
-		
-		return $this->api->do_request( $data );
-		
 	}
 
 	/**
@@ -278,8 +189,6 @@ class WC_Cielo_API extends WC_Settings_API {
 		$authorization   = $this->gateway->authorization;
 
 		$response_data = null;
-
-		$this->gateway->log->add( $this->gateway->id, 'Bandeira: '.$card_brand );
 
 		// Set the authorization.
 		if ( in_array( $card_brand, $this->gateway->get_accept_authorization() ) && 3 != $authorization && ! $is_debit ) {
@@ -353,8 +262,6 @@ class WC_Cielo_API extends WC_Settings_API {
 			$account_data
 		);
 
-//        $this->gateway->log->add( $this->gateway->id, $response_data);
-
         if (isset($response_data->mensagem)) {
             return array(
                 'error'     => true,
@@ -414,8 +321,6 @@ class WC_Cielo_API extends WC_Settings_API {
 			$amount,
 			$account_data
 		);
-
-		$this->gateway->log->add( $this->gateway->id, $response_data);
 
 		return $response_data;
 
