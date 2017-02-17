@@ -3,36 +3,35 @@ msgstr ""
 "Project-Id-Version: Cielo WooCommerce - Solução Webservice v4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: Thu May 14 2015 01:17:08 GMT-0300 (BRT)\n"
+"PO-Revision-Date: 2017-02-13 15:45-0200\n"
 "Last-Translator: Claudio Sanches <contato@claudiosmweb.com>\n"
 "Language-Team: \n"
-"Language: Portuguese (Brazil)\n"
-"Plural-Forms: nplurals=2; plural=n != 1\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Loco - https://localise.biz/\n"
-"X-Poedit-Language: Portuguese\n"
-"X-Poedit-Country: BRAZIL\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
 "__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
 "_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
 "esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
 "esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
-"X-Poedit-Basepath: ../\n"
-"X-Poedit-Bookmarks: \n"
-"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
-"X-Loco-Target-Locale: pt_BR"
+"X-Loco-Target-Locale: pt_BR\n"
+"X-Poedit-SearchPath-0: .\n"
 
-#: ../cielo-woocommerce.php:137 ../templates/credit-card/default-payment-form.php:
-#: 16 ../includes/class-wc-cielo-credit-gateway.php:85
+#: ../cielo-woocommerce.php:137
+#: ../templates/credit-card/default-payment-form.php:16
+#: ../includes/class-wc-cielo-credit-gateway.php:85
 msgid "Credit Card"
 msgstr "Cartão de crédito"
 
-#: ../cielo-woocommerce.php:167 ../templates/debit-card/default-payment-form.php:
-#: 17 ../includes/class-wc-cielo-debit-gateway.php:81
+#: ../cielo-woocommerce.php:167
+#: ../templates/debit-card/default-payment-form.php:17
+#: ../includes/class-wc-cielo-debit-gateway.php:81
 msgid "Debit Card"
 msgstr "Cartão de débito"
 
@@ -127,7 +126,8 @@ msgstr "Descrição"
 #: ../includes/class-wc-cielo-debit-gateway.php:86 ../includes/class-wc-cielo-
 #: credit-gateway.php:90
 msgid "This controls the description which the user sees during checkout."
-msgstr "Isto controla a descrição que o usuário vê durante a finalização do pedido."
+msgstr ""
+"Isto controla a descrição que o usuário vê durante a finalização do pedido."
 
 #: ../includes/class-wc-cielo-debit-gateway.php:88 ../includes/class-wc-cielo-
 #: credit-gateway.php:92
@@ -202,8 +202,8 @@ msgstr "Bandeiras aceitas"
 #: ../includes/class-wc-cielo-debit-gateway.php:131 ../includes/class-wc-cielo-
 #: credit-gateway.php:135
 msgid ""
-"Select the card brands that will be accepted as payment. Press the Ctrl key "
-"to select more than one brand."
+"Select the card brands that will be accepted as payment. Press the Ctrl key to "
+"select more than one brand."
 msgstr ""
 "Selecione as bandeiras que serão aceitas para pagamento. Pressione o botão "
 "CTRL para selecionar mais de uma bandeira."
@@ -365,11 +365,11 @@ msgstr "Taxa de juros (%)"
 
 #: ../includes/class-wc-cielo-credit-gateway.php:174
 msgid ""
-"Percentage of interest that will be charged to the customer in the "
-"installment where there is interest rate to be charged."
+"Percentage of interest that will be charged to the customer in the installment "
+"where there is interest rate to be charged."
 msgstr ""
-"Porcentagem de juros que será cobrado do cliente por parcela quando há taxa "
-"de juros a ser cobrada."
+"Porcentagem de juros que será cobrado do cliente por parcela quando há taxa de "
+"juros a ser cobrada."
 
 #: ../includes/class-wc-cielo-credit-gateway.php:179
 msgid "Installment Within"
@@ -415,8 +415,8 @@ msgid ""
 "An error has occurred while processing your payment, please try again or "
 "contact us for assistance."
 msgstr ""
-"Um erro aconteceu ao processar o seu pagamento, por favor, tente novamente "
-"ou entre em contato para conseguir assistência."
+"Um erro aconteceu ao processar o seu pagamento, por favor, tente novamente ou "
+"entre em contato para conseguir assistência."
 
 #: ../includes/class-wc-cielo-api.php:443
 msgid ""
@@ -510,7 +510,8 @@ msgstr "%sx de %s %s"
 
 #: ../includes/class-wc-cielo-helper.php:463
 #, php-format
-msgid "Please enter with a valid card brand. The following cards are accepted: %s."
+msgid ""
+"Please enter with a valid card brand. The following cards are accepted: %s."
 msgstr ""
 "Por favor, digite um cartão com bandeira válida. As seguintes bandeiras de "
 "cartão são aceitas: %s"
@@ -573,8 +574,8 @@ msgstr "Cielo: %s - Total reembolsado: %s."
 #: ../includes/class-wc-cielo-helper.php:769
 #, php-format
 msgid ""
-"This transaction has been made ​​more than %s days and therefore it can not "
-"be canceled"
+"This transaction has been made ​​more than %s days and therefore it can not be "
+"canceled"
 msgstr ""
 "Esta transação foi feita a mais do que %s dias e por isso não pode mais ser "
 "cancelada."
@@ -622,22 +623,24 @@ msgid "WordPress.org"
 msgstr "WordPress.org"
 
 #: ../includes/views/notices/html-notice-need-update-woocommerce.php:13 ..
-#: /includes/views/notices/html-notice-currency-not-supported.php:13 ..
-#: /includes/views/notices/html-notice-ssl-required.php:13 ..
-#: /includes/views/notices/html-notice-woocommerce-missing.php:20 ..
+#: /includes/views/notices/html-notice-currency-not-supported.php:13
+#: /includes/views/notices/html-notice-ssl-required.php:13
+#: /includes/views/notices/html-notice-woocommerce-missing.php:20
 #: /includes/views/notices/html-notice-not-configured.php:17
 msgid "Cielo WooCommerce Disabled"
 msgstr "Cielo WooCommerce desabilitado"
 
 #: ../includes/views/notices/html-notice-need-update-woocommerce.php:13
-msgid "Webservice Cielo Store Solution will only work for Woocommerce 2.3.x and up."
+msgid ""
+"Webservice Cielo Store Solution will only work for Woocommerce 2.3.x and up."
 msgstr ""
-"A Solução Webservice Cielo apenas funcionará para as versões 2.3.x ou "
-"superior do Woocommerce."
+"A Solução Webservice Cielo apenas funcionará para as versões 2.3.x ou superior "
+"do Woocommerce."
 
 #: ../includes/views/notices/html-notice-currency-not-supported.php:13
 #, php-format
-msgid "Currency <code>%s</code> is not supported. Works only with Brazilian Real."
+msgid ""
+"Currency <code>%s</code> is not supported. Works only with Brazilian Real."
 msgstr "A moeda <code>%s</code> não é aceita. Funciona apenas com reais."
 
 #: ../includes/views/notices/html-notice-ssl-required.php:13
@@ -646,9 +649,9 @@ msgid ""
 "A SSL Certificate is required for Webservice Solution. Please verify if a "
 "certificate is installed on your server and enable the %s option."
 msgstr ""
-"Um certificado SSL é necessário para utilizar a Solução Webservice. Por "
-"favor, verifique se um certificado esta instalado no seu servidor e que a "
-"opção %s esta ativada."
+"Um certificado SSL é necessário para utilizar a Solução Webservice. Por favor, "
+"verifique se um certificado esta instalado no seu servidor e que a opção %s "
+"esta ativada."
 
 #: ../includes/views/notices/html-notice-ssl-required.php:13
 msgid "Force secure checkout"
@@ -666,3 +669,60 @@ msgstr "WooCommerce"
 #: ../includes/views/notices/html-notice-not-configured.php:17
 msgid "You should inform your Affiliation Number and Key."
 msgstr "Você deve informar o seu número de número e chave de afiliação."
+
+msgid "Cielo - General Settings"
+msgstr "Cielo - Configurações Gerais"
+
+msgid "API Version"
+msgstr "Versão da API"
+
+msgid "Select the API Version"
+msgstr "Selecione a versão da API"
+
+msgid "Version 1.5"
+msgstr "Versão 1.5"
+
+msgid "Version 3.0"
+msgstr "Versão 3.0"
+
+msgid "Enable Sale Capture in Admin Order Page"
+msgstr "Habilita a Captura da Venda na página de Administração do Pedido"
+
+msgid "Enable manual capture in Admin Order Page"
+msgstr "Habilita a Captura manual na página de Administração do Pedido"
+
+msgid "Term to Capture"
+msgstr "Tempo para Captura"
+
+msgid "Term in days to Sale Capture in Admin Order Page"
+msgstr "Tempo em dias para Captura da Venda na página de Administração do Pedido"
+
+msgid "Term in days before exceed Sale Capture time"
+msgstr "Tempo em dias antes de exceder tempo de Captura da Venda"
+
+msgid "Cielo - Capture Sale"
+msgstr "Cielo - Capturar Venda"
+
+msgid "%s day(s) left"
+msgstr "%s dia(s) restante(s)"
+
+msgid "Captured"
+msgstr "Capturada"
+
+msgid ""
+"Do you right about proceed with that capture? This operation cannot be undone."
+msgstr ""
+"Você esta certo que deseja proceder com esta captura? Esta operação não pode "
+"ser desfeita."
+
+msgid "Capture"
+msgstr "Capturar"
+
+msgid "Capture sale to finalize and charge transaction"
+msgstr "Capturar venda para finalizar e lançar a fatura"
+
+msgid "Term to capture sale exceeded"
+msgstr "Tempo para capturar venda excedido"
+
+msgid "Cielo: %s - Captured amount: %s."
+msgstr "Cielo: %s - Capturado o valor de : %s."
