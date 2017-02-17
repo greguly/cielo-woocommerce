@@ -36,6 +36,22 @@
 		// }).change();
 
 		/**
+		 * Switch the options based on Enable Sale Capture.
+		 */
+		// $( '#woocommerce_cielo_general_settings_admin_sale_capture' ).on( 'change', function() {
+         //    console.log( 'Teste' );
+         //    //console.log( $( this ).val() );
+        //
+         //    var time_sale_capture = $( '#woocommerce_cielo_general_settings_time_sale_capture' ).closest( 'tr' );
+        //
+		// 	if ( '0' === $( this ).val() ) {
+		// 		time_sale_capture.hide();
+		// 	} else {
+		// 		time_sale_capture.show();
+		// 	}
+		// }).change();
+
+		/**
 		 * Switch the options based on installment type.
 		 */
 		$( '#woocommerce_cielo_credit_installment_type' ).on( 'change', function() {
