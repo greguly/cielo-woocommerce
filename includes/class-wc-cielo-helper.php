@@ -640,7 +640,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
             $order->update_status( 'cancelled', $status_note );
 
 			// Order failed.
-		} elseif ( ( 1 != $status && 4 != $status && 6 != $status ) || -1 == $status ) {
+		} elseif ( ( 0 != $status && 1 != $status && 2 != $status && 4 != $status && 6 != $status && 10 != $status ) || -1 == $status ) {
             $order->add_order_note( $status_note . '. ' . $note );
 
             $order->update_status( 'failed', $status_note );
@@ -681,6 +681,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @param WC_Order $order Order data.
 	 */
 	public function return_handler( $order ) {
+
 		global $woocommerce;
 
 		$tid = get_post_meta( $order->id, '_transaction_id', true );
@@ -689,6 +690,9 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$response = $this->api->get_transaction_data( $order, $tid, $order->id . '-' . time() );
 
             $response_return = $this->api->api->return_handler($response, $tid);
+
+            $this->log->add( $this->id, __LINE__. ' - $response ' . json_encode($response) );
+            $this->log->add( $this->id, __LINE__. ' - $response_return ' . json_encode($response_return) );
 
 			$this->process_order_status( $order, $response_return['status'], $response_return['$order_note'] );
 
