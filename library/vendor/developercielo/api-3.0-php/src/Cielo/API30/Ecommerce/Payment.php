@@ -129,11 +129,14 @@ class Payment implements \JsonSerializable
         $this->proofOfSale = isset($data->ProofOfSale)? $data->ProofOfSale: null;
         $this->authorizationCode = isset($data->AuthorizationCode)? $data->AuthorizationCode: null;
         $this->softDescriptor = isset($data->SoftDescriptor)? $data->SoftDescriptor: null;
+        $this->returnUrl = isset($data->ReturnUrl)? $data->ReturnUrl: null;
         $this->provider = isset($data->Provider)? $data->Provider: null;
         $this->paymentId = isset($data->PaymentId)? $data->PaymentId: null;
         $this->type = isset($data->Type)? $data->Type: null;
         $this->amount = isset($data->Amount)? $data->Amount: null;
         $this->receivedDate = isset($data->ReceivedDate)? $data->ReceivedDate: null;
+        $this->capturedAmount = isset($data->CapturedAmount)? $data->CapturedAmount: null;
+        $this->capturedDate = isset($data->CapturedDate)? $data->CapturedDate: null;
         $this->currency = isset($data->Currency)? $data->Currency: null;
         $this->country = isset($data->Country)? $data->Country: null;
         $this->returnCode = isset($data->ReturnCode)? $data->ReturnCode: null;
@@ -141,6 +144,14 @@ class Payment implements \JsonSerializable
         $this->status = isset($data->Status)? $data->Status: null;
 
         $this->links = isset($data->Links)? $data->Links: [];
+
+        $this->extraDataCollection = isset($data->ExtraDataCollection)? $data->ExtraDataCollection: null;
+        $this->expirationDate = isset($data->ExpirationDate)? $data->ExpirationDate: null;
+        $this->url = isset($data->Url)? $data->Url: null;
+        $this->number = isset($data->Number)? $data->Number: null;
+        $this->barCodeNumber = isset($data->BarCodeNumber)? $data->BarCodeNumber: null;
+        $this->digitableLine = isset($data->DigitableLine)? $data->DigitableLine: null;
+        $this->address = isset($data->Address)? $data->Address: null;
     }
 
     public static function fromJson($json)
