@@ -294,7 +294,11 @@ class WC_Cielo_API_1_5 {
 	 *
 	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
-	public function do_transaction( $account_data, $payment_product, $order_total, $authorization, $order, $id, $card_brand, $installments = 0, $credit_card_data = array(), $is_debit = false ) {
+	public function do_transaction( $account_data, $payment_product, $order_total, $authorization, $order, $id, $card_brand, $installments = 0, $credit_card_data = array(), $gateway = '' ) {
+
+		if ( in_array( $card_brand, $this->gateway->get_accept_authorization() ) && 3 != $this->gateway->authorization && ! ($gateway == 'cielo_debit') ) {
+			$authorization = 3;
+		}
 
         $xml = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-transacao id="' . $id . '" versao="' . self::VERSION . '"></requisicao-transacao>' );
         $xml->add_account_data( $account_data['number'], $account_data['key'] );
