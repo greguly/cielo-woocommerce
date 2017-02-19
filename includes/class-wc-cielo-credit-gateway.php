@@ -337,14 +337,14 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 
 		if ( $valid ) {
 			$installments = isset( $_POST['cielo_credit_installments'] ) ? absint( $_POST['cielo_credit_installments'] ) : 1;
-			$card_data    = array(
+			$gateway_data    = array(
 				'name_on_card'    => $_POST['cielo_credit_holder_name'],
 				'card_number'     => $_POST['cielo_credit_number'],
 				'card_expiration' => $_POST['cielo_credit_expiry'],
 				'card_cvv'        => $_POST['cielo_credit_cvc'],
 			);
 
-			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments, $card_data );
+			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments, $gateway_data, $this->id );
 
             $process = $this->api->api->process_webservice_payment($valid, $order, $response);
             $valid = $process['valid'];
@@ -439,6 +439,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			$card_brand   = get_post_meta( $order->id, '_wc_cielo_card_brand', true );
 			$card_brand   = $this->get_payment_method_name( $card_brand );
 			$installments = get_post_meta( $order->id, '_wc_cielo_installments', true );
+			$installments = ($installments <= 0) ? 1 : $installments;
 
 			$items['payment_method']['value'] .= '<br />';
 			$items['payment_method']['value'] .= '<small>';
