@@ -49,8 +49,8 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 		$this->api = new WC_Cielo_API( $this );
 
 		// Actions.
+		add_action( 'woocommerce_api_wc_cielo_direct_debit_gateway', array( $this, 'check_return' ) );
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-		add_action( 'woocommerce_api_wc_cielo_directdebit_gateway', array( $this, 'check_return' ) );
 		add_action( 'woocommerce_' . $this->id . '_return', array( $this, 'return_handler' ) );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ), 999 );
@@ -122,21 +122,23 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 				'desc_tip'    => true,
 				'default'     => '',
 			),
-			'design_options' => array(
-				'title'       => __( 'Design', 'cielo-woocommerce' ),
-				'type'        => 'title',
-				'description' => '',
-			),
-			'design' => array(
-				'title'   => __( 'Payment Form Design', 'cielo-woocommerce' ),
-				'type'    => 'select',
+			'methods' => array(
+				'title'   => __( 'Direct Debit Methods', 'cielo-woocommerce' ),
+				'type'    => 'multiselect',
+                'description' => __( 'Select the method\'s that will be accepted as payment. Press the Ctrl key to select more than one method.', 'cielo-woocommerce' ),
+                'desc_tip'    => true,
 				'class'       => 'wc-enhanced-select',
-				'default' => 'default',
+				'default' => array( 'bancodobrasil', 'bradesco' ),
 				'options' => array(
-					'default' => __( 'Default', 'cielo-woocommerce' ),
-					'icons'   => __( 'With card icons', 'cielo-woocommerce' ),
+					'bancodobrasil' => __( 'Banco do Brasil', 'cielo-woocommerce' ),
+					'bradesco'      => __( 'Bradesco', 'cielo-woocommerce' ),
 				),
 			),
+            'integration' => array(
+                'title'       => __( 'Integration Settings', 'cielo-woocommerce' ),
+                'type'        => 'title',
+                'description' => sprintf( __( 'For the integration work you need to set the following urls in the %s:', 'cielo-woocommerce' ), '<br /><br /><strong>' . __( 'Notification URL:', 'cielo-woocommerce' ) . '</strong> <code>' . esc_url( WC()->api_request_url( 'WC_Checkout_Cielo_Gateway' ) ) . '</code><br /><strong>' . __( 'Status Change URL:', 'cielo-woocommerce' ) . '</strong> <code>' . esc_url( WC()->api_request_url( 'WC_Checkout_Cielo_Gateway' ) ) . '</code>'),
+            ),
 			'testing' => array(
 				'title'       => __( 'Gateway Testing', 'cielo-woocommerce' ),
 				'type'        => 'title',
@@ -197,69 +199,30 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_webservice_payment( $order ) {
-//		$payment_url = '';
-//		$card_number = isset( $_POST['cielo_debit_number'] ) ? sanitize_text_field( $_POST['cielo_debit_number'] ) : '';
-//		$card_brand  = $this->api->get_card_brand( $card_number );
-//
-//		// Validate credit card brand.
-//		if ( 'mastercard' === $card_brand ) {
-//			$_card_brand = 'maestro';
-//		} else if ( 'visa' === $card_brand ) {
-//			$_card_brand = 'visaelectron';
-//		} else {
-//			$_card_brand = $card_brand;
-//		}
-//		$valid = $this->validate_credit_brand( $_card_brand );
-//
-//		// Test the card fields.
-//		if ( $valid ) {
-//			$valid = $this->validate_card_fields( $_POST );
-//		}
-//
-//		if ( $valid ) {
-//			$card_brand = ( 'maestro' === $card_brand ) ? 'mastercard' : $card_brand;
-//			$card_data  = array(
-//				'name_on_card'    => $_POST['cielo_debit_holder_name'],
-//				'card_number'     => $_POST['cielo_debit_number'],
-//				'card_expiration' => $_POST['cielo_debit_expiry'],
-//				'card_cvv'        => $_POST['cielo_debit_cvc'],
-//			);
-//
-//			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 0, $card_data, true );
-//
-//			// Set the error alert.
-//			if ( ! empty( $response->mensagem ) ) {
-//				$this->add_error( (string) $response->mensagem );
-//				$valid = false;
-//			}
-//
-//			// Save the tid.
-//			if ( ! empty( $response->tid ) ) {
-//				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
-//			}
-//
-//			// Set the transaction URL.
-//			if ( ! empty( $response->{'url-autenticacao'} ) ) {
-//				$payment_url = (string) $response->{'url-autenticacao'};
-//			} else {
-//				$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
-//			}
-//
-//			// Save payment data.
-//			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
-//		}
-//
-//		if ( $valid && $payment_url ) {
-//			return array(
-//				'result'   => 'success',
-//				'redirect' => $payment_url,
-//			);
-//		} else {
-//			return array(
-//				'result'   => 'fail',
-//				'redirect' => '',
-//			);
-//		}
+        $gateway_data  = array(
+            'name_of_bank' => $_POST['cielo_direct_debit'],
+        );
+
+        $response = $this->api->do_transaction( $order, $order->id . '-' . time(), '', 1, $gateway_data, $this->id );
+
+        $process = $this->api->api->process_webservice_payment(true, $order, $response);
+        $valid = $process['valid'];
+        $payment_url = $process['payment_url'];
+
+        // Save payment data.
+        update_post_meta( $order->id, '_wc_cielo_card_brand', $gateway_data['name_of_bank'] );
+
+		if ( $valid && $payment_url ) {
+			return array(
+				'result'   => 'success',
+				'redirect' => $payment_url,
+			);
+		} else {
+			return array(
+				'result'   => 'fail',
+				'redirect' => '',
+			);
+		}
 	}
 
 	/**
@@ -270,46 +233,46 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_buypage_cielo_payment( $order ) {
-//		$payment_url = '';
-//		$card_brand  = isset( $_POST['cielo_debit_card'] ) ? sanitize_text_field( $_POST['cielo_debit_card'] ) : '';
-//
-//		// Validate credit card brand.
-//		$valid = $this->validate_credit_brand( $card_brand );
-//
-//		if ( $valid ) {
-//			$card_brand = ( 'visaelectron' === $card_brand ) ? 'visa' : 'mastercard';
-//			$response   = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 0, array(), true );
-//
-//			// Set the error alert.
-//			if ( ! empty( $response->mensagem ) ) {
-//				$this->add_error( (string) $response->mensagem );
-//				$valid = false;
-//			}
-//
-//			// Save the tid.
-//			if ( ! empty( $response->tid ) ) {
-//				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
-//			}
-//
-//			// Set the transaction URL.
-//			if ( ! empty( $response->{'url-autenticacao'} ) ) {
-//				$payment_url = (string) $response->{'url-autenticacao'};
-//			}
-//
-//			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
-//		}
-//
-//		if ( $valid && $payment_url ) {
-//			return array(
-//				'result'   => 'success',
-//				'redirect' => $payment_url,
-//			);
-//		} else {
-//			return array(
-//				'result'   => 'fail',
-//				'redirect' => '',
-//			);
-//		}
+		$payment_url = '';
+		$card_brand  = isset( $_POST['cielo_debit_card'] ) ? sanitize_text_field( $_POST['cielo_debit_card'] ) : '';
+
+		// Validate credit card brand.
+		$valid = $this->validate_credit_brand( $card_brand );
+
+		if ( $valid ) {
+			$card_brand = ( 'visaelectron' === $card_brand ) ? 'visa' : 'mastercard';
+			$response   = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 0, array(), true );
+
+			// Set the error alert.
+			if ( ! empty( $response->mensagem ) ) {
+				$this->add_error( (string) $response->mensagem );
+				$valid = false;
+			}
+
+			// Save the tid.
+			if ( ! empty( $response->tid ) ) {
+				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
+			}
+
+			// Set the transaction URL.
+			if ( ! empty( $response->{'url-autenticacao'} ) ) {
+				$payment_url = (string) $response->{'url-autenticacao'};
+			}
+
+			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
+		}
+
+		if ( $valid && $payment_url ) {
+			return array(
+				'result'   => 'success',
+				'redirect' => $payment_url,
+			);
+		} else {
+			return array(
+				'result'   => 'fail',
+				'redirect' => '',
+			);
+		}
 	}
 
 	/**
@@ -322,21 +285,21 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function order_items_payment_details( $items, $order ) {
 		if ( $this->id === $order->payment_method ) {
-//			$card_brand   = get_post_meta( $order->id, '_wc_cielo_card_brand', true );
-//			$card_brand   = $this->get_payment_method_name( $card_brand );
-//
-//			$items['payment_method']['value'] .= '<br />';
-//			$items['payment_method']['value'] .= '<small>';
-//			$items['payment_method']['value'] .= esc_attr( $card_brand );
-//
+			$card_brand   = get_post_meta( $order->id, '_wc_cielo_card_brand', true );
+			$card_brand   = $this->get_payment_method_name( $card_brand );
+
+			$items['payment_method']['value'] .= '<br />';
+			$items['payment_method']['value'] .= '<small>';
+			$items['payment_method']['value'] .= esc_attr( $card_brand );
+
 //			if ( 0 < $this->debit_discount ) {
 //				$discount_total = $this->get_debit_discount( (float) $order->get_total() );
 //
 //				$items['payment_method']['value'] .= ' ';
 //				$items['payment_method']['value'] .= sprintf( __( 'with discount of %s. Order Total: %s.', 'cielo-woocommerce' ), $this->debit_discount . '%', sanitize_text_field( woocommerce_price( $discount_total ) ) );
 //			}
-//
-//			$items['payment_method']['value'] .= '</small>';
+
+			$items['payment_method']['value'] .= '</small>';
 		}
 
 		return $items;
