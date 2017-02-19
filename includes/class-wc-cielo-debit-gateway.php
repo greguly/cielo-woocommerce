@@ -253,14 +253,14 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 
         if ( $valid ) {
 			$card_brand = ( 'maestro' === $card_brand ) ? 'mastercard' : $card_brand;
-			$card_data  = array(
+			$gateway_data  = array(
 				'name_on_card'    => $_POST['cielo_debit_holder_name'],
 				'card_number'     => $_POST['cielo_debit_number'],
 				'card_expiration' => $_POST['cielo_debit_expiry'],
 				'card_cvv'        => $_POST['cielo_debit_cvc'],
 			);
 
-			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 1, $card_data, true );
+			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 1, $gateway_data, $this->id );
 
             $process = $this->api->api->process_webservice_payment($valid, $order, $response);
             $valid = $process['valid'];
