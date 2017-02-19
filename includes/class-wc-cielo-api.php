@@ -176,24 +176,29 @@ class WC_Cielo_API extends WC_Settings_API {
 	 * @param  string   $id               Request ID.
 	 * @param  string   $card_brand       Card brand slug.
 	 * @param  int      $installments     Number of installments (use 0 for debit).
-	 * @param  array    $credit_card_data Credit card data for the webservice.
+	 * @param  array    $gateway_data     Gateway data for the webservice.
 	 * @param  bool     $is_debit         Check if is debit or credit.
 	 *
 	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
-	public function do_transaction( $order, $id, $card_brand, $installments = 0, $credit_card_data = array(), $is_debit = false ) {
-		
+	public function do_transaction( $order, $id, $card_brand, $installments = 0, $gateway_data = array(), $gateway = '' ) {
+
+        $this->gateway->log->add( $this->gateway->id, 'Gateway ' . $gateway );
+
 		$account_data    = $this->get_account_data();
 		$payment_product = '1';
 		$order_total     = (float) $order->get_total();
-		$authorization   = $this->gateway->authorization;
+        $authorization = false;
+//		if ($gateway != 'cielo_direct_debit') {
+//            $authorization = $this->gateway->authorization;
+//        }
 
 		$response_data = null;
 
 		// Set the authorization.
-		if ( in_array( $card_brand, $this->gateway->get_accept_authorization() ) && 3 != $authorization && ! $is_debit ) {
-			$authorization = 3;
-		}
+//		if ( in_array( $card_brand, $this->gateway->get_accept_authorization() ) && 3 != $authorization && ! ($gateway == 'cielo_debit') ) {
+//			$authorization = 3;
+//		}
 
 		// Set the order total with interest.
 		if ( isset( $this->gateway->installment_type ) && 'client' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
@@ -207,7 +212,7 @@ class WC_Cielo_API extends WC_Settings_API {
 		}
 
 		// Set the debit values.
-		if ( $is_debit ) {
+		if ( $gateway == 'cielo_debit' ) {
 			$order_total     = $order_total * ( ( 100 - $this->gateway->get_valid_value( $this->gateway->debit_discount ) ) / 100 );
 			$payment_product = 'A';
 			$installments    = '1';
@@ -223,13 +228,13 @@ class WC_Cielo_API extends WC_Settings_API {
 			$account_data,
 			$payment_product,
 			$order_total,
-			$authorization,
+            ($gateway != 'cielo_direct_debit') ? $authorization : false,
 			$order,
 			$id,
 			$card_brand,
 			$installments,
-			$credit_card_data,
-			$is_debit
+			$gateway_data,
+			$gateway
 		);
 
 		return $response_data;
