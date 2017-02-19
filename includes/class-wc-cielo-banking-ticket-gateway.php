@@ -251,7 +251,7 @@ class WC_Cielo_Banking_Ticket_Gateway extends WC_Cielo_Helper {
 //				'card_cvv'        => $_POST['cielo_debit_cvc'],
 //			);
 //
-//			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 0, $card_data, true );
+//			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 0, $card_data, $this->id );
 //
 //			// Set the error alert.
 //			if ( ! empty( $response->mensagem ) ) {
