@@ -34,15 +34,19 @@ class WC_Cielo_Admin_Orders {
         global $post;
         $order = wc_get_order( $post->ID );
 
-        if ( $order->payment_method == 'cielo_credit' ) {
-            add_meta_box(
-                'wc_cielo',
-                __( 'Cielo - Capture Sale', 'cielo-woocommerce' ),
-                array($this, 'metabox_content'),
-                'shop_order',
-                'side',
-                'default'
-            );
+        if (isset($order)) {
+            if (is_array($order)) {
+                if ($order->payment_method == 'cielo_credit') {
+                    add_meta_box(
+                        'wc_cielo',
+                        __('Cielo - Capture Sale', 'cielo-woocommerce'),
+                        array($this, 'metabox_content'),
+                        'shop_order',
+                        'side',
+                        'default'
+                    );
+                }
+            }
         }
 
     }
