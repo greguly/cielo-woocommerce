@@ -18,7 +18,7 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function __construct() {
 		$this->id           = 'cielo_direct_debit';
-		$this->icon         = apply_filters( 'wc_cielo_direct_debit_icon', '' );
+		$this->icon         = apply_filters( 'wc_cielo_direct_debit_icon', plugins_url( 'assets/images/directdebit.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields   = true;
 		$this->method_title = __( 'Cielo - Direct Debit', 'cielo-woocommerce' );
 		$this->supports     = array( 'products', 'refunds' );
@@ -50,6 +50,7 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 
 		// Actions.
 		add_action( 'woocommerce_api_wc_cielo_direct_debit_gateway', array( $this, 'check_return' ) );
+		add_action( 'valid_cielo_ipn_request', array( $this, 'update_order_status' ) );
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'woocommerce_' . $this->id . '_return', array( $this, 'return_handler' ) );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
@@ -199,18 +200,20 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_webservice_payment( $order ) {
-        $gateway_data  = array(
-            'name_of_bank' => $_POST['cielo_direct_debit'],
-        );
+			$gateway_data  = array(
+				'name_of_bank' => $_POST['cielo_direct_debit'],
+			);
 
-        $response = $this->api->do_transaction( $order, $order->id . '-' . time(), '', 1, $gateway_data, $this->id );
+			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), '', 1, $gateway_data, $this->id );
 
-        $process = $this->api->api->process_webservice_payment(true, $order, $response);
-        $valid = $process['valid'];
-        $payment_url = $process['payment_url'];
+			$process = $this->api->api->process_webservice_payment(true, $order, $response);
+			$valid = $process['valid'];
+			$payment_url = $process['payment_url'];
 
-        // Save payment data.
-        update_post_meta( $order->id, '_wc_cielo_card_brand', $gateway_data['name_of_bank'] );
+			// Save payment data.
+			update_post_meta( $order->id, '_wc_cielo_card_brand', $gateway_data['name_of_bank'] );
+
+//		}
 
 		if ( $valid && $payment_url ) {
 			return array(
