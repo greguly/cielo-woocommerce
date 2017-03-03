@@ -18,7 +18,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function __construct() {
 		$this->id           = 'cielo_debit';
-		$this->icon         = apply_filters( 'wc_cielo_debit_icon', '' );
+		$this->icon         = apply_filters( 'wc_cielo_debit_icon', plugins_url( 'assets/images/debitcards.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields   = true;
 		$this->method_title = __( 'Cielo - Debit Card', 'cielo-woocommerce' );
 		$this->supports     = array( 'products', 'refunds' );
@@ -248,9 +248,8 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 			$valid = $this->validate_card_fields( $_POST );
 		}
 
-        $card_brand = 'visa';
-        $valid = true;
-
+//        $card_brand = 'visa';
+//        $valid = true;
         if ( $valid ) {
 			$card_brand = ( 'maestro' === $card_brand ) ? 'mastercard' : $card_brand;
 			$gateway_data  = array(
