@@ -16,8 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<p><?php _e( 'Select your bank:', 'cielo-woocommerce' ); ?></p>
 	<ul style="list-style: none; margin: 0 0 10px; padding: 0;">
         <style type="text/css">
-            input[name="cielo_direct_debit"]:checked {
-                outline: 1px solid red
+            li:focus {
+                outline:solid 1px black;
             }
         </style>
 		<li style="border: none; display: block; float: left; list-style: none; margin: 0; padding: 0; width: 130px;">
