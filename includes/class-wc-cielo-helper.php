@@ -14,6 +14,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			// Credit.
 			'visa'         => __( 'Visa', 'cielo-woocommerce' ),
 			'mastercard'   => __( 'MasterCard', 'cielo-woocommerce' ),
+            // API 3.0
+			'master'       => __( 'MasterCard', 'cielo-woocommerce' ),
 			'diners'       => __( 'Diners', 'cielo-woocommerce' ),
 			'discover'     => __( 'Discover', 'cielo-woocommerce' ),
 			'elo'          => __( 'Elo', 'cielo-woocommerce' ),
@@ -172,6 +174,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		}
 
 		return _x( 'Transaction failed', 'Transaction Status', 'cielo-woocommerce' );
+
 	}
 
 	/**
