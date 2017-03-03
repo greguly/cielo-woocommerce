@@ -18,7 +18,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function __construct() {
 		$this->id           = 'cielo_credit';
-		$this->icon         = apply_filters( 'wc_cielo_credit_icon', '' );
+		$this->icon         = apply_filters( 'wc_cielo_credit_icon', plugins_url( 'assets/images/creditcards.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields   = true;
 		$this->method_title = __( 'Cielo - Credit Card', 'cielo-woocommerce' );
 		$this->supports     = array( 'products', 'refunds' );
@@ -315,17 +315,15 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_webservice_payment( $order ) {
-		
+
 		$payment_url = '';
 		$card_number = isset( $_POST['cielo_credit_number'] ) ? sanitize_text_field( $_POST['cielo_credit_number'] ) : '';
-		$card_brand  = $this->api->get_card_brand( $card_number );
-		$card_brand  = "visa";
+		$card_brand  = $this->api->api->get_card_brand( $card_number );
 
-		// Validate credit card brand.
-		//$valid = $this->validate_credit_brand( $card_brand );
-		$valid = true;
+        // Validate credit card brand.
+        $valid = $this->validate_credit_brand( $card_brand );
 
-		// Test the card fields.
+        // Test the card fields.
 		if ( $valid ) {
 			$valid = $this->validate_card_fields( $_POST );
 		}
@@ -335,6 +333,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			$valid = $this->validate_installments( $_POST, $order->order_total );
 		}
 
+        //$card_brand  = "visa";
+        //$valid = true;
 		if ( $valid ) {
 			$installments = isset( $_POST['cielo_credit_installments'] ) ? absint( $_POST['cielo_credit_installments'] ) : 1;
 			$gateway_data    = array(
@@ -347,6 +347,9 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments, $gateway_data, $this->id );
 
             $process = $this->api->api->process_webservice_payment($valid, $order, $response);
+
+            $this->log->add($this->id, 'Cielo payment error: ' . json_encode($process) );
+
             $valid = $process['valid'];
             $payment_url = $process['payment_url'];
 
