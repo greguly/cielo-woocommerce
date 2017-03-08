@@ -232,7 +232,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 	protected function process_webservice_payment( $order ) {
 		$payment_url = '';
 		$card_number = isset( $_POST['cielo_debit_number'] ) ? sanitize_text_field( $_POST['cielo_debit_number'] ) : '';
-		$card_brand  = $this->api->get_card_brand( $card_number );
+		$card_brand  = $this->api->api->get_card_brand( $card_number );
 
         // Validate credit card brand.
 		if ( 'mastercard' === $card_brand ) {
