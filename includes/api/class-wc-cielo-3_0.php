@@ -346,7 +346,7 @@ class WC_Cielo_API_3_0 {
             123 => 'Numero de parcelas deve ser superior a 1',
             124 => 'Campo enviado está vazio ou invalido',
             125 => 'Campo enviado está vazio ou invalido',
-            126 => 'Campo enviado está vazio ou invalido',
+            126 => 'Prazo de validade do cartão expirou',//'Credit Card Expiration Date is invalid',
             127 => 'Numero do cartão de crédito é obrigatório',
             128 => 'Numero do cartão superiro a 16 digitos',
             129 => 'Meio de pagamento não vinculado a loja ou Provider invalido',
@@ -516,38 +516,44 @@ class WC_Cielo_API_3_0 {
 
         $status = $response->getPayment()->getStatus();
         $returnCode = $response->getPayment()->getReturnCode();
+        $returnMessage = $response->getPayment()->getReturnMessage();
         $links = ($response->getPayment()->getAuthenticationUrl() != null) ? $response->getPayment()->getAuthenticationUrl() : $response->getPayment()->getUrl();
 
         // Set the error alert.
-        if (isset($status)) {
-            if (!$this->gateway->get_status(trim($status, '"'))) {
-                $this->gateway->add_error( (string) 'Status - Code: ' . $status. ' Message: ' . $this->gateway->get_status_name( $status ) );
+//        if ($status == '0' && $this->gateway->id != 'cielo_debit') {
+            if (isset($returnMessage)) {
+                if (!$this->gateway->get_status(trim($status, '"'))) {
+                    $this->gateway->add_error((string)$this->get_api_error( $status ));
+                    //$this->gateway->add_error((string)'Status - Code: ' . $status . ' Message: ' . $this->gateway->get_status_name( $status ));
 //                $this->gateway->add_error( (string) $this->gateway->get_status_name( $status ) );
 //                $valid = false;
-                return Array(
-                    'valid' => false,
-                    'payment_url' => '',
-                );
-            }
-            if ($this->get_api_error( $status ) != null) {
-                $this->gateway->add_error(  (string) 'API - Code: ' . $status. ' Message: ' . $this->get_api_error( $status ) );
+                    return Array(
+                        'valid' => false,
+                        'payment_url' => '',
+                    );
+                }
+                if ($this->get_api_error($status) != null) {
+                    $this->gateway->add_error((string)$this->get_sale_return_message( $returnCode ));
+                    $this->gateway->add_error((string)'API - Code: ' . $status . ' Message: ' . $this->get_api_error($status));
 //                $this->gateway->add_error(  (string) $this->get_api_error( $status ) );
 //                $valid = false;
-                return Array(
-                    'valid' => false,
-                    'payment_url' => '',
-                );
-            }
-            if ( !$this->get_sale_return_status( $returnCode ) ) {
-                $this->gateway->add_error(  (string) 'Sale - Code: ' . $status. ' Message: ' . $this->get_api_error( $status ) );
+                    return Array(
+                        'valid' => false,
+                        'payment_url' => '',
+                    );
+                }
+                if (!$this->get_sale_return_status($returnCode)) {
+                    $this->gateway->add_error((string)$this->get_sale_return_message( $returnCode ));
+                    $this->gateway->add_error((string)'Sale - Code: ' . $status . ' Message: ' . $this->get_api_error($status));
 //                $this->gateway->add_error(  (string) $this->get_sale_return_message( $status ) );
 //                $valid = false;
-                return Array(
-                    'valid' => false,
-                    'payment_url' => '',
-                );
+                    return Array(
+                        'valid' => false,
+                        'payment_url' => '',
+                    );
+                }
             }
-        }
+//        }
 
         // Save the tid.
         if (!empty($paymentId)) {
@@ -565,6 +571,19 @@ class WC_Cielo_API_3_0 {
             'valid' => $valid,
             'payment_url' => $payment_url,
         );
+        
+    }
+
+    /**
+     * Process webservice payment with card brand.
+     *
+     * @param  Card_Brand String
+     *
+     * @return null
+     */
+    public function process_webservice_payment_card_brand( $card_brand ) {
+        
+        return $card_brand;
         
     }
 
@@ -651,7 +670,6 @@ class WC_Cielo_API_3_0 {
 
                 $payment ->setType( Payment::PAYMENTTYPE_ELECTRONIC_TRANSFER )
                          ->setProvider(str_replace(' ', '', $gateway_data['name_of_bank']));
-                         //->setProvider('Bradesco');
 
                 $payment->setReturnUrl( str_replace( '&amp;', '&', urldecode( $this->gateway->get_api_return_url( $order ) ) ) );
 
@@ -668,28 +686,18 @@ class WC_Cielo_API_3_0 {
             }
         }
 
+        // Verify is Credit Gateway only
+        if ($this->gateway->id == 'cielo_debit') {
+            // Automatic Capture Sale
+            $payment->setAuthenticate( true );
+        }
+
         try {
-            $this->gateway->log->add( $this->gateway->id, 'Erro - Gateway: ' . $gateway );
+//            $this->gateway->log->add( $this->gateway->id, 'Erro - Gateway: ' . $gateway );
 
             $sale   = (new CieloEcommerce($this->merchant, $this->environment))->createSale($sale);
 //            $status = $sale->getPayment()->getStatus() ;
-            $this->gateway->log->add($this->gateway->id, json_encode($sale->jsonSerialize()) );
-
-//            // Get status message
-//            if (isset($status)) {
-//                // Check if a message is a error
-//                if ($this->gateway->get_status(trim($status, '"'))) {
-//                    // Verify is Credit Gateway only
-//                    if ($this->gateway->id == 'cielo_credit') {
-//                        // Check if capture sale is made by Admin Order Page
-//                        if (!$this->gateway->api->admin_sale_capture()) {
-//                            $this->gateway->log->add($this->gateway->id, 'Automatic sale capture');
-//                            // Automatic Capture Sale
-//                            $sale = $this->do_sale_capture_internal($order, '', $id, $order_total, $account_data);
-//                        }
-//                    }
-//                }
-//            }
+//            $this->gateway->log->add($this->gateway->id, json_encode($sale->jsonSerialize()) );
 
         } catch (CieloRequestException $e) {
             // Em caso de erros de integração, podemos tratar o erro aqui.
@@ -751,15 +759,21 @@ class WC_Cielo_API_3_0 {
         $this->gateway->log->add($this->gateway->id, 'Cielo payment error: ' . json_encode($response->jsonSerialize()) );
 
         $status = $response->getPayment()->getStatus() ;
+        $returnCode = $response->getPayment()->getReturnCode();
+        //$returnMessage = $response->getPayment()->getReturnMessage();
 
         if (isset($status)) {
+
             // Set the error alert.
             if (!$this->gateway->get_status(trim($status, '"'))) {
                 if ('yes' == $this->gateway->debug) {
                     $this->gateway->log->add($this->gateway->id, 'Cielo payment error: ' . $this->gateway->get_status_name( $status ) );
                 }
-                $this->gateway->add_error( (string)$this->gateway->get_status_name( $status ) );
+
+                $this->gateway->add_error((string)$this->get_sale_return_message( $returnCode ));
+
             }
+
         }
 
         // Update the order status.
@@ -775,7 +789,7 @@ class WC_Cielo_API_3_0 {
             $order_note = "\n" . 'TID: ' . $tid . '.';
         }
 
-        if (!empty($response->getPayment())) {
+        if (!empty($response->getPayment()->getProofOfSale())) {
             $payment_type = $response->getPayment()->getType();
 
             if (method_exists($response->getPayment(), "get" . $payment_type)) {
