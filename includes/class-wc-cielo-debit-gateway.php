@@ -36,7 +36,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		$this->environment      = $this->get_option( 'environment' );
 		$this->number           = $this->get_option( 'number' );
 		$this->key              = $this->get_option( 'key' );
-		$this->methods          = $this->get_option( 'methods', 'visa' );
+		$this->methods          = $this->get_option( 'methods', 'visaelectron' );
 		$this->authorization    = $this->get_option( 'authorization' );
 		$this->debit_discount   = $this->get_option( 'debit_discount' );
 		$this->design           = $this->get_option( 'design' );
@@ -229,20 +229,20 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 	 *
 	 * @return array
 	 */
-	protected function process_webservice_payment( $order ) {
+	protected function process_webservice_payment( $order )
+	{
+		$valid = false;
 		$payment_url = '';
-		$card_number = isset( $_POST['cielo_debit_number'] ) ? sanitize_text_field( $_POST['cielo_debit_number'] ) : '';
-		$card_brand  = $this->api->api->get_card_brand( $card_number );
+		$card_number = isset($_POST['cielo_debit_number']) ? sanitize_text_field($_POST['cielo_debit_number']) : '';
+		$card_brand = $this->api->api->get_card_brand($card_number);
 
         // Validate credit card brand.
-		if ( 'mastercard' === $card_brand ) {
-			$_card_brand = 'maestro';
-		} else if ( 'visa' === $card_brand ) {
-			$_card_brand = 'visaelectron';
-		} else {
-			$_card_brand = $card_brand;
+		$_card_brand = $this->api->api->process_webservice_payment_card_brand($card_brand);
+        
+		if (isset( $_card_brand )) {
+			$valid = $this->validate_credit_brand($_card_brand);
 		}
-		$valid = $this->validate_credit_brand( $_card_brand );
+		
 		// Test the card fields.
 		if ( $valid ) {
 			$valid = $this->validate_card_fields( $_POST );
