@@ -50,7 +50,6 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 
 		// Actions.
 		add_action( 'woocommerce_api_wc_cielo_direct_debit_gateway', array( $this, 'check_return' ) );
-		add_action( 'valid_cielo_ipn_request', array( $this, 'update_order_status' ) );
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'woocommerce_' . $this->id . '_return', array( $this, 'return_handler' ) );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
@@ -211,7 +210,7 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 			$payment_url = $process['payment_url'];
 
 			// Save payment data.
-			update_post_meta( $order->id, '_wc_cielo_card_brand', $gateway_data['name_of_bank'] );
+			update_post_meta( $order->id, '_wc_cielo_direct_debit_brand', $gateway_data['name_of_bank'] );
 
 //		}
 
@@ -262,7 +261,7 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 				$payment_url = (string) $response->{'url-autenticacao'};
 			}
 
-			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
+			update_post_meta( $order->id, '_wc_cielo_direct_debit_brand', $card_brand );
 		}
 
 		if ( $valid && $payment_url ) {
@@ -288,12 +287,12 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function order_items_payment_details( $items, $order ) {
 		if ( $this->id === $order->payment_method ) {
-			$card_brand   = get_post_meta( $order->id, '_wc_cielo_card_brand', true );
-			$card_brand   = $this->get_payment_method_name( $card_brand );
+			$direct_debit_brand   = get_post_meta( $order->id, '_wc_cielo_direct_debit_brand', true );
+			//$direct_debit_brand = $this->get_payment_method_name( $direct_debit_brand );
 
 			$items['payment_method']['value'] .= '<br />';
 			$items['payment_method']['value'] .= '<small>';
-			$items['payment_method']['value'] .= esc_attr( $card_brand );
+			$items['payment_method']['value'] .= esc_attr( $direct_debit_brand );
 
 //			if ( 0 < $this->debit_discount ) {
 //				$discount_total = $this->get_debit_discount( (float) $order->get_total() );
