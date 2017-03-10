@@ -291,6 +291,26 @@ class WC_Cielo_API_1_5 {
 	}
 
 	/**
+	 * Process webservice payment with card brand.
+	 *
+	 * @param  Card_Brand String
+	 *
+	 * @return array
+	 */
+	public function process_webservice_payment_card_brand( $card_brand ) {
+
+		// Validate credit card brand.
+		if ( 'mastercard' === $card_brand ) {
+			return 'maestro';
+		} else if ( 'visa' === $card_brand ) {
+			return 'visaelectron';
+		} else {
+			return $card_brand;
+		}
+
+	}
+
+	/**
 	 * Do remote requests.
 	 *
 	 * @param  string $data Post data.
