@@ -534,7 +534,7 @@ class WC_Cielo_API_3_0 {
                 }
                 if ($this->get_api_error($status) != null) {
                     $this->gateway->add_error((string)$this->get_sale_return_message( $returnCode ));
-                    $this->gateway->add_error((string)'API - Code: ' . $status . ' Message: ' . $this->get_api_error($status));
+//                    $this->gateway->add_error((string)'API - Code: ' . $status . ' Message: ' . $this->get_api_error($status));
 //                $this->gateway->add_error(  (string) $this->get_api_error( $status ) );
 //                $valid = false;
                     return Array(
