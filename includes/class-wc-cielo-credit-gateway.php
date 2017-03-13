@@ -333,8 +333,6 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			$valid = $this->validate_installments( $_POST, $order->order_total );
 		}
 
-        //$card_brand  = "visa";
-        //$valid = true;
 		if ( $valid ) {
 			$installments = isset( $_POST['cielo_credit_installments'] ) ? absint( $_POST['cielo_credit_installments'] ) : 1;
 			$gateway_data    = array(
