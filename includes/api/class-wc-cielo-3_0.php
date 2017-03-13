@@ -57,6 +57,63 @@ class WC_Cielo_API_3_0 {
 	}
 
     /**
+     * Get the status error.
+     *
+     * @param  int $id Status ID.
+     *
+     * @return string
+     */
+    public function get_status( $id ) {
+
+        $status = array(
+            0 => false, //Falha ao processar o pagamento
+            1 => true, //Meio de pagamento apto a ser capturado ou pago(Boleto
+            2 => true, //Pagamento confirmado e finalizado
+            3 => false, //Negado
+            10 => false, //Pagamento cancelado
+            11 => false, //Pagamento Cancelado/Estornado
+            12 => true, //Esperando retorno da instituição financeira
+            13 => false, //Pagamento cancelado por falha no processamento
+            20 => true, //Recorrência agendada
+        );
+
+        if ( isset( $status[ $id ] ) ) {
+            return $status[ $id ];
+        }
+
+        return false;//Transaction failed
+    }
+
+    /**
+     * Get the status name.
+     *
+     * @param  int $id Status ID.
+     *
+     * @return string
+     */
+    public function get_status_name( $id ) {
+
+        $status = array(
+            0 => _x('Transaction fail on processing payment', 'Transaction Status', 'cielo-woocommerce'), //Falha ao processar o pagamento
+            1 => _x('Transaction authorized', 'Transaction Status', 'cielo-woocommerce'), //Meio de pagamento apto a ser capturado ou pago(Boleto
+            2 => _x('Transaction confirmed and finalized', 'Transaction Status', 'cielo-woocommerce'), //Pagamento confirmado e finalizado
+            3 => _x('Transaction denied', 'Transaction Status', 'cielo-woocommerce'), //Cartão de Crédito e Débito / Transferência eletrônica
+            10 => _x('Transaction voided', 'Transaction Status', 'cielo-woocommerce'), //Pagamento cancelado
+            11 => _x('Transaction refunded', 'Transaction Status', 'cielo-woocommerce'), //Pagamento Cancelado/Estornado
+            12 => _x('Transaction pending', 'Transaction Status', 'cielo-woocommerce'), //Esperando retorno da instituição financeira
+            13 => _x('Transaction aborted', 'Transaction Status', 'cielo-woocommerce'), //Pagamento cancelado por falha no processamento
+            20 => _x('Transaction scheduled', 'Transaction Status', 'cielo-woocommerce'), //Recorrência agendada
+        );
+
+        if ( isset( $status[ $id ] ) ) {
+            return $status[ $id ];
+        }
+
+        return _x( 'Transaction failed', 'Transaction Status', 'cielo-woocommerce' );
+
+    }
+
+    /**
      * Get the status name.
      *
      * @param  int $id Status ID.
@@ -178,7 +235,7 @@ class WC_Cielo_API_3_0 {
             return $status[ $sale_code ];
         }
 
-        return null;
+        return false;
 
     }
 
@@ -198,9 +255,9 @@ class WC_Cielo_API_3_0 {
             '02' => 'Transação não autorizada. Transação referida.',
             '03' => 'Transação não permitida. Erro no cadastramento do código do estabelecimento no arquivo de configuração do TEF',
             '04' => 'Transação não autorizada. Cartão bloqueado pelo banco emissor.',
-            '05' => 'Transação não autorizada. Cartão inadimplente (Do not honor).',
+            '05' => 'Transação não autorizada.', // 'Cartão inadimplente (Do not honor).'
             '06' => 'Transação não autorizada. Cartão cancelado.',
-            '07' => 'Transação negada. Reter cartão condição especial',
+            '07' => 'Transação negada.', //Reter cartão condição especial',
             '08' => 'Transação não autorizada. Código de segurança inválido.',
             '11' => 'Transação autorizada com sucesso para cartão emitido no exterior',
             '12' => 'Transação inválida, erro no cartão.',
@@ -282,7 +339,7 @@ class WC_Cielo_API_3_0 {
             'EK' => 'Transação não permitida para o cartão',
             'FA' => 'Transação não autorizada.',
             'FC' => 'Transação não autorizada. Ligue Emissor',
-            'FD' => 'Transação negada. Reter cartão condição especial',
+            'FD' => 'Transação negada.', // 'Reter cartão condição especial'
             'FE' => 'Transação não autorizada. Divergencia na data de transação/pagamento.',
             'FF' => 'Cancelamento OK',
             'FG' => 'Transação não autorizada. Ligue AmEx.',
@@ -295,7 +352,7 @@ class WC_Cielo_API_3_0 {
             'KB' => 'Transação não permitida. Selecionado a opção incorrente.',
             'KE' => 'Transação não autorizada. Falha na validação dos dados.',
             'N7' => 'Transação não autorizada. Código de segurança inválido.',
-            'R1' => 'Transação não autorizada. Cartão inadimplente (Do not honor).',
+            'R1' => 'Transação não autorizada.', // 'Cartão inadimplente (Do not honor).',
             'U3' => 'Transação não permitida. Falha na validação dos dados.',
 
         );
@@ -317,147 +374,148 @@ class WC_Cielo_API_3_0 {
      */
     public function get_api_error( $error_code ) {
 
-
         $status = array(
-            0   => 'Dado enviado excede o tamanho do campo',
-            100 => 'Campo enviado está vazio ou invalido',
-            101 => 'Campo enviado está vazio ou invalido',
-            102 => 'Campo enviado está vazio ou invalido',
-            103 => 'Caracteres especiais não permitidos',
-            104 => 'Campo enviado está vazio ou invalido',
-            105 => 'Campo enviado está vazio ou invalido',
-            106 => 'Campo enviado está vazio ou invalido',
-            107 => 'Campo enviado excede o tamanho ou contem caracteres especiais',
-            108 => 'Valor da transação deve ser maior que \'0\'',
-            109 => 'Campo enviado está vazio ou invalido',
-            110 => 'Campo enviado está vazio ou invalido',
-            111 => 'Campo enviado está vazio ou invalido',
-            112 => 'Campo enviado está vazio ou invalido',
-            113 => 'Campo enviado está vazio ou invalido',
-            114 => 'O MerchantId enviado não é um GUID',
-            115 => 'O MerchantID não existe ou pertence a outro ambiente (EX: Sandbox)',
-            116 => 'Loja bloqueada, entre em contato com o suporte Cielo',
-            117 => 'Campo enviado está vazio ou invalido',
-            118 => 'Campo enviado está vazio ou invalido',
-            119 => 'Nó \'Payment\' não enviado',
-            120 => 'IP bloqueado por questões de segurança',
-            121 => 'Nó \'Customer\' não enviado',
-            122 => 'Campo enviado está vazio ou invalido',
-            123 => 'Numero de parcelas deve ser superior a 1',
-            124 => 'Campo enviado está vazio ou invalido',
-            125 => 'Campo enviado está vazio ou invalido',
-            126 => 'Prazo de validade do cartão expirou',//'Credit Card Expiration Date is invalid',
-            127 => 'Numero do cartão de crédito é obrigatório',
-            128 => 'Numero do cartão superiro a 16 digitos',
-            129 => 'Meio de pagamento não vinculado a loja ou Provider invalido',
-            130 => 'Não foi possível obter o Cartão de Crédito',
-            131 => 'Campo enviado está vazio ou invalido',
-            132 => 'O Merchantkey enviado não é um válido',
-            133 => 'Provider enviado não existe',
-            134 => 'Dado enviado excede o tamanho do campo',
-            135 => 'Dado enviado excede o tamanho do campo',
-            136 => 'Dado enviado excede o tamanho do campo',
-            137 => 'Dado enviado excede o tamanho do campo',
-            138 => 'Dado enviado excede o tamanho do campo',
-            139 => 'Dado enviado excede o tamanho do campo',
-            140 => 'Dado enviado excede o tamanho do campo',
-            141 => 'Dado enviado excede o tamanho do campo',
-            142 => 'Dado enviado excede o tamanho do campo',
-            143 => 'Dado enviado excede o tamanho do campo',
-            144 => 'Dado enviado excede o tamanho do campo',
-            145 => 'Dado enviado excede o tamanho do campo',
-            146 => 'Dado enviado excede o tamanho do campo',
-            147 => 'Dado enviado excede o tamanho do campo',
-            148 => 'Dado enviado excede o tamanho do campo',
-            149 => 'Dado enviado excede o tamanho do campo',
-            150 => 'Dado enviado excede o tamanho do campo',
-            151 => 'Dado enviado excede o tamanho do campo',
-            152 => 'Dado enviado excede o tamanho do campo',
-            153 => 'Dado enviado excede o tamanho do campo',
-            154 => 'Dado enviado excede o tamanho do campo',
-            155 => 'Dado enviado excede o tamanho do campo',
-            156 => 'Dado enviado excede o tamanho do campo',
-            157 => 'Dado enviado excede o tamanho do campo',
-            158 => 'Dado enviado excede o tamanho do campo',
-            159 => 'Dado enviado excede o tamanho do campo',
-            160 => 'Dado enviado excede o tamanho do campo',
-            161 => 'Dado enviado excede o tamanho do campo',
-            162 => 'Dado enviado excede o tamanho do campo',
-            163 => 'URL de retorno não é valida - Não é aceito paginação ou extenções (EX .PHP) na URL de retorno',
-            166 => 'Parâmetro AuthorizeNow é de preenchimento obrigatório',
-            167 => 'Antifraude não vinculado ao cadastro do lojista',
-            168 => 'Recorrencia não encontrada',
-            169 => 'Recorrencia não está ativa. Execução paralizada',
-            170 => 'Cartão protegido não vinculado ao cadastro do lojista',
-            171 => 'Falha no processamento do pedido - Entre em contato com o suporte Cielo',
-            172 => 'Falha na validação das credenciadas enviadas',
-            173 => 'Meio de pagamento não vinculado ao cadastro do lojista',
-            174 => 'Campo enviado está vazio ou invalido',
-            175 => 'Campo enviado está vazio ou invalido',
-            176 => 'Campo enviado está vazio ou invalido',
-            177 => 'Campo enviado está vazio ou invalido',
-            178 => 'Campo enviado está vazio ou invalido',
-            179 => 'Campo enviado está vazio ou invalido',
-            180 => 'Token do Cartão protegido não encontrado',
-            181 => 'Token do Cartão protegido bloqueado',
-            182 => 'Bandeira do cartão não enviado',
-            183 => 'Data de nascimento invalida ou futura',
-            184 => 'Falha no formado ta requisição. Verifique o código enviado',
-            185 => 'Bandeira não suportada pela API Cielo',
-            186 => 'Meio de pagamento não suporta o comando enviado',
-            187 => 'ExtraData possui um ou mais nomes duplicados',
-            188 => 'Avs com o CPF é invalido',
-            189 => 'Dado enviado excede o tamanho do campo',
-            190 => 'Dado enviado excede o tamanho do campo',
-            191 => 'Dado enviado excede o tamanho do campo',
-            192 => 'CEP enviado é invalido',
-            193 => 'Valor para realização do SPLIT deve ser superior a 0',
-            194 => 'SPLIT não habilitado para o cadastro da loja',
-            195 => 'Validados de plataformas não enviado',
-            196 => 'Campo obrigatório não enviado',
-            197 => 'Campo obrigatório não enviado',
-            198 => 'Campo obrigatório não enviado',
-            199 => 'Campo obrigatório não enviado',
-            200 => 'Campo obrigatório não enviado',
-            201 => 'Campo obrigatório não enviado',
-            202 => 'Campo obrigatório não enviado',
-            203 => 'Campo obrigatório não enviado',
-            204 => 'Campo obrigatório não enviado',
-            205 => 'Campo obrigatório não enviado',
-            206 => 'Dado enviado excede o tamanho do campo',
-            207 => 'Dado enviado excede o tamanho do campo',
-            208 => 'Dado enviado excede o tamanho do campo',
-            209 => 'Dado enviado excede o tamanho do campo',
-            210 => 'Campo obrigatório não enviado',
-            211 => 'Dados da Visa Checkout invalidos',
-            212 => 'Dado de Wallet enviado não é valido',
-            213 => 'Cartão de crédito enviado é invalido',
-            214 => 'Portador do cartão não deve conter caracteres especiais',
-            215 => 'Campo obrigatório não enviado',
-            216 => 'IP bloqueado por questões de segurança',
-            300 => 'MerchantId was not found',
-            301 => 'Request IP is not allowed',
-            302 => 'Sent MerchantOrderId is duplicated',
-            303 => 'Sent OrderId does not exist',
-            304 => 'Customer Identity is required',
-            306 => 'Merchant is blocked',
-            307 => 'Transação não encontrada ou não existente no ambiente',
-            308 => 'Transação não pode ser capturada - Entre em contato com o suporte Cielo',
-            309 => 'Transação não pode ser Cancelada - Entre em contato com o suporte Cielo',
-            310 => 'Comando enviado não suportado pelo meio de pagamento',
-            311 => 'Cancelamento após 24 horas não liberado para o lojista',
-            312 => 'Transação não permite cancelamento após 24 horas',
-            313 => 'Transação recorrente não encontrada ou não disponivel no ambiente',
-            314 => 'Invalid Integration',
-            315 => 'Cannot change NextRecurrency with pending payment',
-            316 => 'Não é permitido alterada dada da recorrencia para uma data passada',
-            317 => 'Invalid Recurrency Day',
-            318 => 'No transaction found',
-            319 => 'Recorrencia não vinculada ao cadastro do lojista',
-            320 => 'Can not Update Affiliation Because this Recurrency not Affiliation saved',
-            321 => 'Can not set EndDate to before next recurrency',
-            322 => 'Zero Dollar não vinculado ao cadastro do lojista',
-            323 => 'Consulta de Bins não vinculada ao cadastro do lojista',
+
+            //API Error
+            '0'   => 'Dado enviado excede o tamanho do campo',
+            '100' => 'Campo enviado está vazio ou invalido',
+            '101' => 'Campo enviado está vazio ou invalido',
+            '102' => 'Campo enviado está vazio ou invalido',
+            '103' => 'Caracteres especiais não permitidos',
+            '104' => 'Campo enviado está vazio ou invalido',
+            '105' => 'Campo enviado está vazio ou invalido',
+            '106' => 'Campo enviado está vazio ou invalido',
+            '107' => 'Campo enviado excede o tamanho ou contem caracteres especiais',
+            '108' => 'Valor da transação deve ser maior que \'0\'',
+            '109' => 'Campo enviado está vazio ou invalido',
+            '110' => 'Campo enviado está vazio ou invalido',
+            '111' => 'Campo enviado está vazio ou invalido',
+            '112' => 'Campo enviado está vazio ou invalido',
+            '113' => 'Campo enviado está vazio ou invalido',
+            '114' => 'O MerchantId enviado não é um GUID',
+            '115' => 'O MerchantID não existe ou pertence a outro ambiente (EX: Sandbox)',
+            '116' => 'Loja bloqueada, entre em contato com o suporte Cielo',
+            '117' => 'Campo enviado está vazio ou invalido',
+            '118' => 'Campo enviado está vazio ou invalido',
+            '119' => 'Nó \'Payment\' não enviado',
+            '120' => 'IP bloqueado por questões de segurança',
+            '121' => 'Nó \'Customer\' não enviado',
+            '122' => 'Campo enviado está vazio ou invalido',
+            '123' => 'Numero de parcelas deve ser superior a 1',
+            '124' => 'Campo enviado está vazio ou invalido',
+            '125' => 'Campo enviado está vazio ou invalido',
+            '126' => 'Prazo de validade do cartão expirou',//'Credit Card Expiration Date is invalid',
+            '127' => 'Numero do cartão de crédito é obrigatório',
+            '128' => 'Numero do cartão superior a 16 digitos',
+            '129' => 'Meio de pagamento não vinculado a loja ou Provider invalido',
+            '130' => 'Não foi possível obter o Cartão de Crédito',
+            '131' => 'Campo enviado está vazio ou invalido',
+            '132' => 'O Merchantkey enviado não é um válido',
+            '133' => 'Provider enviado não existe',
+            '134' => 'Dado enviado excede o tamanho do campo',
+            '135' => 'Dado enviado excede o tamanho do campo',
+            '136' => 'Dado enviado excede o tamanho do campo',
+            '137' => 'Dado enviado excede o tamanho do campo',
+            '138' => 'Dado enviado excede o tamanho do campo',
+            '139' => 'Dado enviado excede o tamanho do campo',
+            '140' => 'Dado enviado excede o tamanho do campo',
+            '141' => 'Dado enviado excede o tamanho do campo',
+            '142' => 'Dado enviado excede o tamanho do campo',
+            '143' => 'Dado enviado excede o tamanho do campo',
+            '144' => 'Dado enviado excede o tamanho do campo',
+            '145' => 'Dado enviado excede o tamanho do campo',
+            '146' => 'Dado enviado excede o tamanho do campo',
+            '147' => 'Dado enviado excede o tamanho do campo',
+            '148' => 'Dado enviado excede o tamanho do campo',
+            '149' => 'Dado enviado excede o tamanho do campo',
+            '150' => 'Dado enviado excede o tamanho do campo',
+            '151' => 'Dado enviado excede o tamanho do campo',
+            '152' => 'Dado enviado excede o tamanho do campo',
+            '153' => 'Dado enviado excede o tamanho do campo',
+            '154' => 'Dado enviado excede o tamanho do campo',
+            '155' => 'Dado enviado excede o tamanho do campo',
+            '156' => 'Dado enviado excede o tamanho do campo',
+            '157' => 'Dado enviado excede o tamanho do campo',
+            '158' => 'Dado enviado excede o tamanho do campo',
+            '159' => 'Dado enviado excede o tamanho do campo',
+            '160' => 'Dado enviado excede o tamanho do campo',
+            '161' => 'Dado enviado excede o tamanho do campo',
+            '162' => 'Dado enviado excede o tamanho do campo',
+            '163' => 'URL de retorno não é valida - Não é aceito paginação ou extenções (EX .PHP) na URL de retorno',
+            '166' => 'Parâmetro AuthorizeNow é de preenchimento obrigatório',
+            '167' => 'Antifraude não vinculado ao cadastro do lojista',
+            '168' => 'Recorrencia não encontrada',
+            '169' => 'Recorrencia não está ativa. Execução paralizada',
+            '170' => 'Cartão protegido não vinculado ao cadastro do lojista',
+            '171' => 'Falha no processamento do pedido - Entre em contato com o suporte Cielo',
+            '172' => 'Falha na validação das credenciadas enviadas',
+            '173' => 'Meio de pagamento não vinculado ao cadastro do lojista',
+            '174' => 'Campo enviado está vazio ou invalido',
+            '175' => 'Campo enviado está vazio ou invalido',
+            '176' => 'Campo enviado está vazio ou invalido',
+            '177' => 'Campo enviado está vazio ou invalido',
+            '178' => 'Campo enviado está vazio ou invalido',
+            '179' => 'Campo enviado está vazio ou invalido',
+            '180' => 'Token do Cartão protegido não encontrado',
+            '181' => 'Token do Cartão protegido bloqueado',
+            '182' => 'Bandeira do cartão não enviado',
+            '183' => 'Data de nascimento invalida ou futura',
+            '184' => 'Falha no formado ta requisição. Verifique o código enviado',
+            '185' => 'Bandeira não suportada pela API Cielo',
+            '186' => 'Meio de pagamento não suporta o comando enviado',
+            '187' => 'ExtraData possui um ou mais nomes duplicados',
+            '188' => 'Avs com o CPF é invalido',
+            '189' => 'Dado enviado excede o tamanho do campo',
+            '190' => 'Dado enviado excede o tamanho do campo',
+            '191' => 'Dado enviado excede o tamanho do campo',
+            '192' => 'CEP enviado é invalido',
+            '193' => 'Valor para realização do SPLIT deve ser superior a 0',
+            '194' => 'SPLIT não habilitado para o cadastro da loja',
+            '195' => 'Validados de plataformas não enviado',
+            '196' => 'Campo obrigatório não enviado',
+            '197' => 'Campo obrigatório não enviado',
+            '198' => 'Campo obrigatório não enviado',
+            '199' => 'Campo obrigatório não enviado',
+            '200' => 'Campo obrigatório não enviado',
+            '201' => 'Campo obrigatório não enviado',
+            '202' => 'Campo obrigatório não enviado',
+            '203' => 'Campo obrigatório não enviado',
+            '204' => 'Campo obrigatório não enviado',
+            '205' => 'Campo obrigatório não enviado',
+            '206' => 'Dado enviado excede o tamanho do campo',
+            '207' => 'Dado enviado excede o tamanho do campo',
+            '208' => 'Dado enviado excede o tamanho do campo',
+            '209' => 'Dado enviado excede o tamanho do campo',
+            '210' => 'Campo obrigatório não enviado',
+            '211' => 'Dados da Visa Checkout invalidos',
+            '212' => 'Dado de Wallet enviado não é valido',
+            '213' => 'Cartão de crédito enviado é invalido',
+            '214' => 'Portador do cartão não deve conter caracteres especiais',
+            '215' => 'Campo obrigatório não enviado',
+            '216' => 'IP bloqueado por questões de segurança',
+            '300' => 'MerchantId was not found',
+            '301' => 'Request IP is not allowed',
+            '302' => 'Sent MerchantOrderId is duplicated',
+            '303' => 'Sent OrderId does not exist',
+            '304' => 'Customer Identity is required',
+            '306' => 'Merchant is blocked',
+            '307' => 'Transação não encontrada ou não existente no ambiente',
+            '308' => 'Transação não pode ser capturada - Entre em contato com o suporte Cielo',
+            '309' => 'Transação não pode ser Cancelada - Entre em contato com o suporte Cielo',
+            '310' => 'Comando enviado não suportado pelo meio de pagamento',
+            '311' => 'Cancelamento após 24 horas não liberado para o lojista',
+            '312' => 'Transação não permite cancelamento após 24 horas',
+            '313' => 'Transação recorrente não encontrada ou não disponivel no ambiente',
+            '314' => 'Invalid Integration',
+            '315' => 'Cannot change NextRecurrency with pending payment',
+            '316' => 'Não é permitido alterada dada da recorrencia para uma data passada',
+            '317' => 'Invalid Recurrency Day',
+            '318' => 'No transaction found',
+            '319' => 'Recorrencia não vinculada ao cadastro do lojista',
+            '320' => 'Can not Update Affiliation Because this Recurrency not Affiliation saved',
+            '321' => 'Can not set EndDate to before next recurrency',
+            '322' => 'Zero Dollar não vinculado ao cadastro do lojista',
+            '323' => 'Consulta de Bins não vinculada ao cadastro do lojista',
         );
 
         if ( isset( $status[ $error_code ] ) ) {
@@ -521,38 +579,35 @@ class WC_Cielo_API_3_0 {
 
         // Set the error alert.
 //        if ($status == '0' && $this->gateway->id != 'cielo_debit') {
-            if (isset($returnMessage)) {
-                if (!$this->gateway->get_status(trim($status, '"'))) {
-                    $this->gateway->add_error((string)$this->get_api_error( $status ));
-                    //$this->gateway->add_error((string)'Status - Code: ' . $status . ' Message: ' . $this->gateway->get_status_name( $status ));
-//                $this->gateway->add_error( (string) $this->gateway->get_status_name( $status ) );
-//                $valid = false;
+//            if (isset($status)) {
+                if (!$this->get_status(trim($status, '"'))) {
+                    $this->gateway->add_error((string)$this->get_status_name( $status ));
+
+                    if ( $this->get_sale_return_message( $returnCode ) != null ) {
+                        $this->gateway->add_error( (string)$this->get_sale_return_message( $returnCode ) );
+                    }
+
+//                    $this->gateway->add_error((string)'Status - Code: ' . $status . ' Message: ' . $this->get_api_error( $status ));
                     return Array(
                         'valid' => false,
                         'payment_url' => '',
                     );
-                }
-                if ($this->get_api_error($status) != null) {
+                } elseif ($this->get_api_error( $returnCode ) != null) {
+                    $this->gateway->add_error((string)$this->get_api_error( $returnCode ));
+//                    $this->gateway->add_error((string)'API - Code: ' . $status . ' Message: ' . $this->get_api_error( $returnCode ));
+                    return Array(
+                        'valid' => false,
+                        'payment_url' => '',
+                    );
+                } elseif (!$this->get_sale_return_status( $returnCode )) {
                     $this->gateway->add_error((string)$this->get_sale_return_message( $returnCode ));
-//                    $this->gateway->add_error((string)'API - Code: ' . $status . ' Message: ' . $this->get_api_error($status));
-//                $this->gateway->add_error(  (string) $this->get_api_error( $status ) );
-//                $valid = false;
+//                    $this->gateway->add_error((string)'Sale - Code: ' . $status . ' Message: ' . $this->get_sale_return_message( $returnCode ));
                     return Array(
                         'valid' => false,
                         'payment_url' => '',
                     );
                 }
-                if (!$this->get_sale_return_status($returnCode)) {
-                    $this->gateway->add_error((string)$this->get_sale_return_message( $returnCode ));
-                    $this->gateway->add_error((string)'Sale - Code: ' . $status . ' Message: ' . $this->get_api_error($status));
-//                $this->gateway->add_error(  (string) $this->get_sale_return_message( $status ) );
-//                $valid = false;
-                    return Array(
-                        'valid' => false,
-                        'payment_url' => '',
-                    );
-                }
-            }
+//            }
 //        }
 
         // Save the tid.
@@ -622,8 +677,6 @@ class WC_Cielo_API_3_0 {
 	 */
 	public function do_transaction(  $account_data, $payment_product, $order_total, $authorization, $order, $id, $card_brand, $installments = 0, $gateway_data = array(), $gateway = '' ) {
 
-        $this->gateway->log->add( $this->gateway->id, 'Bandeira: '.$card_brand );
-
         $response_data = null;
 
         // Create the environment
@@ -641,19 +694,12 @@ class WC_Cielo_API_3_0 {
 
         $payment->setAuthenticate($authorization);
 
-//        $card_info = function ( $_card, $card_expiration, $card_number, $name_on_card ) {
-//            $_card->setExpirationDate( $card_expiration );
-//            $_card->setCardNumber( $card_number );
-//            $_card->setHolder( $name_on_card );
-//        };
-
         switch ($gateway) {
             case 'cielo_credit':
                 $payment->creditCard($gateway_data['card_cvv'], $card_brand)
                         ->setExpirationDate( str_replace( ' ', '', $gateway_data['card_expiration'] ) )
                         ->setCardNumber( str_replace( ' ', '', $gateway_data['card_number'] ) )
                         ->setHolder( $gateway_data['name_on_card'] );
-//                $card_info($card, $gateway_data['card_expiration'], $gateway_data['card_number'], $gateway_data['name_on_card']);
 
                 break;
             case 'cielo_debit':
@@ -664,7 +710,7 @@ class WC_Cielo_API_3_0 {
                         ->setExpirationDate( str_replace( ' ', '', $gateway_data['card_expiration'] ) )
                         ->setCardNumber( str_replace( ' ', '', $gateway_data['card_number'] ) )
                         ->setHolder( $gateway_data['name_on_card'] );
-//                $card_info($card, $gateway_data['card_expiration'], $gateway_data['card_number'], $gateway_data['name_on_card']);
+
                 break;
             case 'cielo_direct_debit':
 
@@ -693,11 +739,9 @@ class WC_Cielo_API_3_0 {
         }
 
         try {
-//            $this->gateway->log->add( $this->gateway->id, 'Erro - Gateway: ' . $gateway );
 
             $sale   = (new CieloEcommerce($this->merchant, $this->environment))->createSale($sale);
 //            $status = $sale->getPayment()->getStatus() ;
-//            $this->gateway->log->add($this->gateway->id, json_encode($sale->jsonSerialize()) );
 
         } catch (CieloRequestException $e) {
             // Em caso de erros de integração, podemos tratar o erro aqui.
@@ -707,9 +751,7 @@ class WC_Cielo_API_3_0 {
             $sale->getPayment()->setStatus( $error->getCode() );
             $sale->getPayment()->setReturnMessage( $error->getMessage() );
 
-            $this->gateway->log->add( $this->gateway->id, 'Erro - Code: ' . $error->getCode() );
-            $this->gateway->log->add( $this->gateway->id, 'Error - Message: ' . $error->getMessage() );
-            $this->gateway->log->add( $this->gateway->id, 'Error - Sale: ' . json_encode($sale->jsonSerialize()) );
+            $this->gateway->log->add( $this->gateway->id, 'Erro - Code: ' . $error->getCode() .  ' - Message: ' . $error->getMessage()  );
 
         }
 
@@ -756,22 +798,18 @@ class WC_Cielo_API_3_0 {
      */
     public function return_handler(Sale $response, $tid ) {
 
-        $this->gateway->log->add($this->gateway->id, 'Cielo payment error: ' . json_encode($response->jsonSerialize()) );
-
         $status = $response->getPayment()->getStatus() ;
         $returnCode = $response->getPayment()->getReturnCode();
-        //$returnMessage = $response->getPayment()->getReturnMessage();
 
         if (isset($status)) {
 
             // Set the error alert.
-            if (!$this->gateway->get_status(trim($status, '"'))) {
+            if (!$this->get_status(trim($status, '"'))) {
                 if ('yes' == $this->gateway->debug) {
-                    $this->gateway->log->add($this->gateway->id, 'Cielo payment error: ' . $this->gateway->get_status_name( $status ) );
+                    $this->gateway->log->add($this->gateway->id, 'Cielo payment error: ' . $this->get_status_name( $status ) );
                 }
 
                 $this->gateway->add_error((string)$this->get_sale_return_message( $returnCode ));
-
             }
 
         }
@@ -818,14 +856,6 @@ class WC_Cielo_API_3_0 {
                 $order_note .= __('Direct Debit', 'cielo-woocommerce');
                 $order_note .= ' ';
                 $order_note .= $response->getPayment()->getProvider();
-
-//                if ('DebitCard' == $payment_type) {
-//                    $order_note .= __('debit', 'cielo-woocommerce');
-//                } elseif (('CreditCard' == $payment_type) && ((int)$response->getPayment()->getInstallments() == 1)) {
-//                    $order_note .= __('credit at sight', 'cielo-woocommerce');
-//                } else {
-//                    $order_note .= sprintf(__('credit %dx', 'cielo-woocommerce'), $payment_method->parcelas);
-//                }
 
             }
 
