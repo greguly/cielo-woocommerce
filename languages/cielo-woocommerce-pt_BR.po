@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Cielo WooCommerce - Solução Webservice v4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-02-13 15:45-0200\n"
+"PO-Revision-Date: 2017-03-13 13:21-0300\n"
 "Last-Translator: Claudio Sanches <contato@claudiosmweb.com>\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -12,12 +12,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.8.11\n"
-"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
-"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
-"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
-"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
-"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Generator: Poedit 1.8.12\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
 "X-Loco-Target-Locale: pt_BR\n"
@@ -126,8 +122,7 @@ msgstr "Descrição"
 #: ../includes/class-wc-cielo-debit-gateway.php:86 ../includes/class-wc-cielo-
 #: credit-gateway.php:90
 msgid "This controls the description which the user sees during checkout."
-msgstr ""
-"Isto controla a descrição que o usuário vê durante a finalização do pedido."
+msgstr "Isto controla a descrição que o usuário vê durante a finalização do pedido."
 
 #: ../includes/class-wc-cielo-debit-gateway.php:88 ../includes/class-wc-cielo-
 #: credit-gateway.php:92
@@ -201,12 +196,8 @@ msgstr "Bandeiras aceitas"
 
 #: ../includes/class-wc-cielo-debit-gateway.php:131 ../includes/class-wc-cielo-
 #: credit-gateway.php:135
-msgid ""
-"Select the card brands that will be accepted as payment. Press the Ctrl key to "
-"select more than one brand."
-msgstr ""
-"Selecione as bandeiras que serão aceitas para pagamento. Pressione o botão "
-"CTRL para selecionar mais de uma bandeira."
+msgid "Select the card brands that will be accepted as payment. Press the Ctrl key to select more than one brand."
+msgstr "Selecione as bandeiras que serão aceitas para pagamento. Pressione o botão CTRL para selecionar mais de uma bandeira."
 
 #: ../includes/class-wc-cielo-debit-gateway.php:136 ../includes/class-wc-cielo-
 #: helper.php:25
@@ -290,9 +281,7 @@ msgstr "Ativar logs"
 #: credit-gateway.php:259
 #, php-format
 msgid "Log Cielo events, such as API requests, inside %s"
-msgstr ""
-"Grava eventos da Cielo, como por exemplo solicitações a API, você pode "
-"encontrar o log em %s"
+msgstr "Grava eventos da Cielo, como por exemplo solicitações a API, você pode encontrar o log em %s"
 
 #: ../includes/class-wc-cielo-debit-gateway.php:370
 #, php-format
@@ -307,43 +296,43 @@ msgstr "Cielo - Cartão de crédito"
 msgid "Enable Cielo Credit Card"
 msgstr "Ativar cartão de crédito da Cielo"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:140 ../includes/class-wc-cielo-
-#: helper.php:15
+#: ../includes/class-wc-cielo-credit-gateway.php:140
+#: ../includes/class-wc-cielo- helper.php:15
 msgid "Visa"
 msgstr "Visa"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:141 ../includes/class-wc-cielo-
-#: helper.php:16
+#: ../includes/class-wc-cielo-credit-gateway.php:141
+#: ../includes/class-wc-cielo- helper.php:16
 msgid "MasterCard"
 msgstr "MasterCard"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:142 ../includes/class-wc-cielo-
-#: helper.php:17
+#: ../includes/class-wc-cielo-credit-gateway.php:142
+#: ../includes/class-wc-cielo- helper.php:17
 msgid "Diners"
 msgstr "Diners"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:143 ../includes/class-wc-cielo-
-#: helper.php:18
+#: ../includes/class-wc-cielo-credit-gateway.php:143
+#: ../includes/class-wc-cielo- helper.php:18
 msgid "Discover"
 msgstr "Discover"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:144 ../includes/class-wc-cielo-
-#: helper.php:19
+#: ../includes/class-wc-cielo-credit-gateway.php:144
+#: ../includes/class-wc-cielo- helper.php:19
 msgid "Elo"
 msgstr "Elo"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:145 ../includes/class-wc-cielo-
-#: helper.php:20
+#: ../includes/class-wc-cielo-credit-gateway.php:145
+#: ../includes/class-wc-cielo- helper.php:20
 msgid "American Express"
 msgstr "American Express"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:146 ../includes/class-wc-cielo-
-#: helper.php:21
+#: ../includes/class-wc-cielo-credit-gateway.php:146
+#: ../includes/class-wc-cielo- helper.php:21
 msgid "JCB"
 msgstr "JCB"
 
-#: ../includes/class-wc-cielo-credit-gateway.php:147 ../includes/class-wc-cielo-
-#: helper.php:22
+#: ../includes/class-wc-cielo-credit-gateway.php:147
+#: ../includes/class-wc-cielo- helper.php:22
 msgid "Aura"
 msgstr "Aura"
 
@@ -364,12 +353,8 @@ msgid "Interest Rate (%)"
 msgstr "Taxa de juros (%)"
 
 #: ../includes/class-wc-cielo-credit-gateway.php:174
-msgid ""
-"Percentage of interest that will be charged to the customer in the installment "
-"where there is interest rate to be charged."
-msgstr ""
-"Porcentagem de juros que será cobrado do cliente por parcela quando há taxa de "
-"juros a ser cobrada."
+msgid "Percentage of interest that will be charged to the customer in the installment where there is interest rate to be charged."
+msgstr "Porcentagem de juros que será cobrado do cliente por parcela quando há taxa de juros a ser cobrada."
 
 #: ../includes/class-wc-cielo-credit-gateway.php:179
 msgid "Installment Within"
@@ -393,9 +378,7 @@ msgstr "Tipo de parcelamento"
 
 #: ../includes/class-wc-cielo-credit-gateway.php:225
 msgid "Client adds interest installments on the order total."
-msgstr ""
-"Quando selecionado \"Cliente\" é adicionado valor do juros no valor total do "
-"pedido."
+msgstr "Quando selecionado \"Cliente\" é adicionado valor do juros no valor total do pedido."
 
 #: ../includes/class-wc-cielo-credit-gateway.php:230
 msgid "Client"
@@ -411,20 +394,12 @@ msgid "%s in %s."
 msgstr "%s em %s."
 
 #: ../includes/class-wc-cielo-api.php:222
-msgid ""
-"An error has occurred while processing your payment, please try again or "
-"contact us for assistance."
-msgstr ""
-"Um erro aconteceu ao processar o seu pagamento, por favor, tente novamente ou "
-"entre em contato para conseguir assistência."
+msgid "An error has occurred while processing your payment, please try again or contact us for assistance."
+msgstr "Um erro aconteceu ao processar o seu pagamento, por favor, tente novamente ou entre em contato para conseguir assistência."
 
 #: ../includes/class-wc-cielo-api.php:443
-msgid ""
-"An error occurred while trying to cancel the payment, turn on the Cielo log "
-"option and try again."
-msgstr ""
-"Um erro aconteceu ao tentar cancelar o pagamento, ative a opção de log do "
-"plugin da Cielo e tente novamente."
+msgid "An error occurred while trying to cancel the payment, turn on the Cielo log option and try again."
+msgstr "Um erro aconteceu ao tentar cancelar o pagamento, ative a opção de log do plugin da Cielo e tente novamente."
 
 #: ../includes/class-wc-cielo-helper.php:82
 #, php-format
@@ -510,11 +485,8 @@ msgstr "%sx de %s %s"
 
 #: ../includes/class-wc-cielo-helper.php:463
 #, php-format
-msgid ""
-"Please enter with a valid card brand. The following cards are accepted: %s."
-msgstr ""
-"Por favor, digite um cartão com bandeira válida. As seguintes bandeiras de "
-"cartão são aceitas: %s"
+msgid "Please enter with a valid card brand. The following cards are accepted: %s."
+msgstr "Por favor, digite um cartão com bandeira válida. As seguintes bandeiras de cartão são aceitas: %s"
 
 #: ../includes/class-wc-cielo-helper.php:486
 msgid "Please type the name of the card holder."
@@ -573,12 +545,8 @@ msgstr "Cielo: %s - Total reembolsado: %s."
 
 #: ../includes/class-wc-cielo-helper.php:769
 #, php-format
-msgid ""
-"This transaction has been made ​​more than %s days and therefore it can not be "
-"canceled"
-msgstr ""
-"Esta transação foi feita a mais do que %s dias e por isso não pode mais ser "
-"cancelada."
+msgid "This transaction has been made ​​more than %s days and therefore it can not be canceled"
+msgstr "Esta transação foi feita a mais do que %s dias e por isso não pode mais ser cancelada."
 
 #: ../includes/class-wc-cielo-helper.php:791
 msgid "View order details"
@@ -603,12 +571,8 @@ msgstr "página de detalhes do pedido"
 
 #: ../includes/views/html-admin-page.php:39
 #, php-format
-msgid ""
-"Help us keep the %s plugin free making a %s or rate %s on %s. Thank you in "
-"advance!"
-msgstr ""
-"Ajude-nos a manter o %s gratuito, para isso faça uma %s ou vote %s no %s. "
-"Muito obrigado!"
+msgid "Help us keep the %s plugin free making a %s or rate %s on %s. Thank you in advance!"
+msgstr "Ajude-nos a manter o %s gratuito, para isso faça uma %s ou vote %s no %s. Muito obrigado!"
 
 #: ../includes/views/html-admin-page.php:39
 msgid "Cielo WooCommerce"
@@ -631,27 +595,18 @@ msgid "Cielo WooCommerce Disabled"
 msgstr "Cielo WooCommerce desabilitado"
 
 #: ../includes/views/notices/html-notice-need-update-woocommerce.php:13
-msgid ""
-"Webservice Cielo Store Solution will only work for Woocommerce 2.3.x and up."
-msgstr ""
-"A Solução Webservice Cielo apenas funcionará para as versões 2.3.x ou superior "
-"do Woocommerce."
+msgid "Webservice Cielo Store Solution will only work for Woocommerce 2.3.x and up."
+msgstr "A Solução Webservice Cielo apenas funcionará para as versões 2.3.x ou superior do Woocommerce."
 
 #: ../includes/views/notices/html-notice-currency-not-supported.php:13
 #, php-format
-msgid ""
-"Currency <code>%s</code> is not supported. Works only with Brazilian Real."
+msgid "Currency <code>%s</code> is not supported. Works only with Brazilian Real."
 msgstr "A moeda <code>%s</code> não é aceita. Funciona apenas com reais."
 
 #: ../includes/views/notices/html-notice-ssl-required.php:13
 #, php-format
-msgid ""
-"A SSL Certificate is required for Webservice Solution. Please verify if a "
-"certificate is installed on your server and enable the %s option."
-msgstr ""
-"Um certificado SSL é necessário para utilizar a Solução Webservice. Por favor, "
-"verifique se um certificado esta instalado no seu servidor e que a opção %s "
-"esta ativada."
+msgid "A SSL Certificate is required for Webservice Solution. Please verify if a certificate is installed on your server and enable the %s option."
+msgstr "Um certificado SSL é necessário para utilizar a Solução Webservice. Por favor, verifique se um certificado esta instalado no seu servidor e que a opção %s esta ativada."
 
 #: ../includes/views/notices/html-notice-ssl-required.php:13
 msgid "Force secure checkout"
@@ -709,11 +664,8 @@ msgstr "%s dia(s) restante(s)"
 msgid "Captured"
 msgstr "Capturada"
 
-msgid ""
-"Do you right about proceed with that capture? This operation cannot be undone."
-msgstr ""
-"Você esta certo que deseja proceder com esta captura? Esta operação não pode "
-"ser desfeita."
+msgid "Do you right about proceed with that capture? This operation cannot be undone."
+msgstr "Você esta certo que deseja proceder com esta captura? Esta operação não pode ser desfeita."
 
 msgid "Capture"
 msgstr "Capturar"
@@ -726,3 +678,35 @@ msgstr "Tempo para capturar venda excedido"
 
 msgid "Cielo: %s - Captured amount: %s."
 msgstr "Cielo: %s - Capturado o valor de : %s."
+
+msgctxt "Transaction Status"
+msgid "Transaction fail on processing payment"
+msgstr "Transação falhou ao processar o pagamento."
+
+msgctxt "Transaction Status"
+msgid "Transaction confirmed and finalized"
+msgstr "Transação confirmada e finalizada."
+
+msgctxt "Transaction Status"
+msgid "Transaction denied"
+msgstr "Transação negada."
+
+msgctxt "Transaction Status"
+msgid "Transaction voided"
+msgstr "Transação cancelada."
+
+msgctxt "Transaction Status"
+msgid "Transaction refunded"
+msgstr "Transação reembolsada."
+
+msgctxt "Transaction Status"
+msgid "Transaction pending"
+msgstr "Transação aguardando."
+
+msgctxt "Transaction Status"
+msgid "Transaction aborted"
+msgstr "Transação cancelada por falha no processamento."
+
+msgctxt "Transaction Status"
+msgid "Transaction scheduled"
+msgstr "Transação recorrente agendada."
