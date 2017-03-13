@@ -248,8 +248,6 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 			$valid = $this->validate_card_fields( $_POST );
 		}
 
-//        $card_brand = 'visa';
-//        $valid = true;
         if ( $valid ) {
 			$card_brand = ( 'maestro' === $card_brand ) ? 'mastercard' : $card_brand;
 			$gateway_data  = array(
