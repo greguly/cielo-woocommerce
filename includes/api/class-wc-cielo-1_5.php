@@ -82,6 +82,65 @@ class WC_Cielo_API_1_5 {
 	}
 
 	/**
+	 * Get the status error.
+	 *
+	 * @param  int $id Status ID.
+	 *
+	 * @return string
+	 */
+	public function get_status( $id ) {
+
+		$status = array(
+			0 => true,  //Transaction created
+			1 => true,  //Transaction ongoing
+			2 => true,  //Transaction authenticated
+			3 => false, //Transaction not authenticated
+			4 => true,  //Transaction authorized
+			5 => false, //Transaction not authorized
+			6 => true,  //Transaction captured
+			9 => false, //Transaction cancelled
+			10 => true, //Transaction in authentication
+			12 => false,//Transaction in cancellation
+		);
+
+		if ( isset( $status[ $id ] ) ) {
+			return $status[ $id ];
+		}
+
+		return false;//Transaction failed
+	}
+
+	/**
+	 * Get the status name.
+	 *
+	 * @param  int $id Status ID.
+	 *
+	 * @return string
+	 */
+	public function get_status_name( $id ) {
+
+		$status = array(
+			0 => _x('Transaction created', 'Transaction Status', 'cielo-woocommerce'),
+			1 => _x('Transaction ongoing', 'Transaction Status', 'cielo-woocommerce'),
+			2 => _x('Transaction authenticated', 'Transaction Status', 'cielo-woocommerce'),
+			3 => _x('Transaction not authenticated', 'Transaction Status', 'cielo-woocommerce'),
+			4 => _x('Transaction authorized', 'Transaction Status', 'cielo-woocommerce'),
+			5 => _x('Transaction not authorized', 'Transaction Status', 'cielo-woocommerce'),
+			6 => _x('Transaction captured', 'Transaction Status', 'cielo-woocommerce'),
+			9 => _x('Transaction cancelled', 'Transaction Status', 'cielo-woocommerce'),
+			10 => _x('Transaction in authentication', 'Transaction Status', 'cielo-woocommerce'),
+			12 => _x('Transaction in cancellation', 'Transaction Status', 'cielo-woocommerce'),
+		);
+
+		if ( isset( $status[ $id ] ) ) {
+			return $status[ $id ];
+		}
+
+		return _x( 'Transaction failed', 'Transaction Status', 'cielo-woocommerce' );
+
+	}
+
+	/**
 	 * Get the account data.
 	 *
 	 * @return array
