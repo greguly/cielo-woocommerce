@@ -316,7 +316,16 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
             include_once dirname( __FILE__ ) . '/includes/views/admin/class-wc-cielo-admin-orders.php';
         }
 
-    }
+		/**
+		 * WooCommerce Extra Checkout Fields for Brazil notice.
+		 */
+		public function ecfb_missing_notice() {
+			if ( ! class_exists( 'Extra_Checkout_Fields_For_Brazil' ) ) {
+				include dirname( __FILE__ ) . '/includes/views/notices/html-notice-missing-ecfb.php';
+			}
+		}
+		
+	}
 
 	add_action( 'plugins_loaded', array( 'WC_Cielo', 'get_instance' ), 0 );
 
