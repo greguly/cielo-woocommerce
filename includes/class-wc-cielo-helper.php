@@ -577,25 +577,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	public function process_order_status( $order, $status, $note = '' ) {
 		$status_note = __( 'Cielo', 'cielo-woocommerce' ) . ': ' . $this->api->api->get_status_name( $status );
 
-		// Order cancelled.
-		if ( 9 == $status ) {
-            $order->add_order_note( $status_note . '. ' . $note );
-
-            $order->update_status( 'cancelled', $status_note );
-
-			// Order failed.
-		} elseif ( ( 0 != $status && 1 != $status && 2 != $status && 4 != $status && 6 != $status && 10 != $status ) || -1 == $status ) {
-            $order->add_order_note( $status_note . '. ' . $note );
-
-            $order->update_status( 'failed', $status_note );
-
-			// Order paid.
-		} else {
-			$order->add_order_note( $status_note . '. ' . $note );
-
-			// Complete the payment and reduce stock levels.
-			$order->payment_complete();
-		}
+		$this->api->api->process_order_status( $order, $status, $status_note, $note );
 
 	}
 
@@ -635,8 +617,9 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 
             $response_return = $this->api->api->return_handler($response, $tid);
 
-            $this->log->add( $this->id, __LINE__. ' - $response ' . json_encode($response) );
-            $this->log->add( $this->id, __LINE__. ' - $response_return ' . json_encode($response_return) );
+            if ( 'yes' == $this->gateway->debug ) {
+                $this->log->add( $this->id, 'Return Handler Response - ' . json_encode($response, JSON_PRETTY_PRINT) );
+            }
 
 			$this->process_order_status( $order, $response_return['status'], $response_return['$order_note'] );
 
@@ -646,20 +629,11 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				$return_url = add_query_arg( 'order', $order->id, add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
 			}
 
-            // Order cancelled.
-            if ( 9 == $response_return['status'] ) {
-                $message = __( 'Order canceled successfully.', 'cielo-woocommerce' );
-                if ( function_exists( 'wc_add_notice' ) ) {
-                    wc_add_notice( $message );
-                } else {
-                    $woocommerce->add_message( $message );
-                }
 
-                if ( function_exists( 'wc_get_page_id' ) ) {
-                    $return_url = get_permalink( wc_get_page_id( 'shop' ) );
-                } else {
-                    $return_url = get_permalink( woocommerce_get_page_id( 'shop' ) );
-                }
+            // Order cancelled.
+            $return_url_cancel = $this->api->api->return_handler_cancel( $woocommerce, $response_return['status'] );
+            if ( isset($return_url_cancel) ) {
+                $return_url = $return_url_cancel;
             }
 
 			wp_redirect( esc_url_raw( $return_url ) );
