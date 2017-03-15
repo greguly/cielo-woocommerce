@@ -77,7 +77,6 @@ class WC_Cielo_API extends WC_Settings_API {
 
 		// Get API Class name, selected in General Settings and class in Json file
 		$api_class = WC_Cielo_Version::getVersion('class', $this->api_version);
-        //$this->gateway->log->add( $this->gateway->id, 'Create API ' . $api_class );
 
 		// Instantiate API, according with version selected in General Settings
 		$this->api = new $api_class($this->gateway);
@@ -96,7 +95,6 @@ class WC_Cielo_API extends WC_Settings_API {
         // Check if enabled is using default value
         if ( array_key_exists('admin_sale_capture', $general_settings) ) {
             if ($general_settings['admin_sale_capture'] == 'yes') {
-                $this->gateway->log->add( $this->gateway->id, 'Gateway: ' . $this->gateway->id );
                 return true;
             }
         } else {
@@ -147,8 +145,6 @@ class WC_Cielo_API extends WC_Settings_API {
 	 * @return SimpleXmlElement|StdClass Transaction data.
 	 */
 	public function do_transaction( $order, $id, $card_brand, $installments = 0, $gateway_data = array(), $gateway = '' ) {
-
-        $this->gateway->log->add( $this->gateway->id, 'Gateway ' . $gateway );
 
 		$account_data    = $this->get_account_data();
 		$payment_product = '1';
@@ -218,10 +214,9 @@ class WC_Cielo_API extends WC_Settings_API {
 	 */
 	public function do_sale_capture( $order, $tid, $id, $amount = 0 ) {
 		$account_data = $this->get_account_data();
-		$this->gateway->log->add( $this->gateway->id, 'Começo ' . $this->gateway->number );
 
-		if ( 'yes' == $this->gateway->debug ) {
-			$this->gateway->log->add( $this->gateway->id, 'Capturing ' . $amount . ' from order ' . $order->get_order_number() . '...' );
+        if ( 'yes' == $this->gateway->debug ) {
+            $this->gateway->log->add( $this->gateway->id, 'Capturing ' . $amount . ' from order ' . $order->get_order_number() . '...' );
 		}
 
 		$response_data = $this->api->do_sale_capture(
