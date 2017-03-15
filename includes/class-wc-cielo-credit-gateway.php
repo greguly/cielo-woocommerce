@@ -346,8 +346,6 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 
             $process = $this->api->api->process_webservice_payment($valid, $order, $response);
 
-            $this->log->add($this->id, 'Cielo payment error: ' . json_encode($process) );
-
             $valid = $process['valid'];
             $payment_url = $process['payment_url'];
 
