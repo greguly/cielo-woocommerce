@@ -350,6 +350,35 @@ class WC_Cielo_API_1_5 {
 	}
 
 	/**
+	 * Process the order status.
+	 *
+	 * @param WC_Order $Order  Order data.
+	 * @param int      $status Status ID.
+	 * @param string   $status_note Order status note.
+	 * @param string   $note   Custom order note.
+	 */
+	public function process_order_status( $order, $status, $status_note, $note = '' )	{
+
+        // Order cancelled.
+		if ( 9 == $status ) {
+			$order->add_order_note( $status_note . '. ' . $note );
+
+			$order->update_status( 'cancelled', $status_note );
+			// Order failed.
+		} elseif ( ( 1 != $status && 4 != $status && 6 != $status ) || -1 == $status ) {
+			$order->add_order_note( $status_note . '. ' . $note );
+
+			$order->update_status( 'failed', $status_note );
+			// Order paid.
+		} else {
+			$order->add_order_note( $status_note . '. ' . $note );
+			// Complete the payment and reduce stock levels.
+			$order->payment_complete();
+		}
+
+	}	
+		
+	/**
 	 * Process webservice payment with card brand.
 	 *
 	 * @param  Card_Brand String
@@ -573,6 +602,33 @@ class WC_Cielo_API_1_5 {
     }
 
     /**
+     * Return handler cancel.
+     *
+     * @param $woocommerce $woocommerce Order data.
+     * @param String $status Order status.
+     */
+    public function return_handler_cancel( $woocommerce, $status ) {
+
+        // Order cancelled.
+        if ( 9 == $status ) {
+            $message = __( 'Order canceled successfully.', 'cielo-woocommerce' );
+            if ( function_exists( 'wc_add_notice' ) ) {
+                wc_add_notice( $message );
+            } else {
+                $woocommerce->add_message( $message );
+            }
+            if ( function_exists( 'wc_get_page_id' ) ) {
+                return get_permalink( wc_get_page_id( 'shop' ) );
+            } else {
+                return get_permalink( woocommerce_get_page_id( 'shop' ) );
+            }
+        }
+
+        return null;
+        
+    }
+        
+    /**
      * Do sale capture.
      *
      * @param  WC_Order $order Order data.
@@ -583,8 +639,6 @@ class WC_Cielo_API_1_5 {
      * @return array
      */
     public function do_sale_capture( $order, $tid, $id, $amount = 0 ) {
-        $this->gateway->log->add( $this->gateway->id, 'do_transaction_cancellation');
-
         $account_data = $this->get_account_data();
         $xml          = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-captura id="' . $id . '" versao="' . self::VERSION . '"></requisicao-captura>' );
         $xml->add_tid( $tid );
@@ -643,8 +697,6 @@ class WC_Cielo_API_1_5 {
 	 * @return array
 	 */
 	public function do_transaction_cancellation( $order, $tid, $id, $amount = 0 ) {
-		$this->gateway->log->add( $this->gateway->id, 'do_transaction_cancellation');
-
 		$account_data = $this->get_account_data();
 		$xml          = new WC_Cielo_XML( '<?xml version="1.0" encoding="' . $this->charset . '"?><requisicao-cancelamento id="' . $id . '" versao="' . self::VERSION . '"></requisicao-cancelamento>' );
 		$xml->add_tid( $tid );
