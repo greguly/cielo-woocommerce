@@ -251,8 +251,8 @@ class WC_Cielo_API_3_0 {
         $status = array(
             '00' => 'Transação autorizada com sucesso.',
             '000' => 'Transação autorizada com sucesso.',
-            '01' => 'Transação não autorizada. Transação referida.',
-            '02' => 'Transação não autorizada. Transação referida.',
+            '01' => 'Transação não autorizada.', // 'Transação referida.',
+            '02' => 'Transação não autorizada.', // 'Transação referida.',
             '03' => 'Transação não permitida. Erro no cadastramento do código do estabelecimento no arquivo de configuração do TEF',
             '04' => 'Transação não autorizada. Cartão bloqueado pelo banco emissor.',
             '05' => 'Transação não autorizada.', // 'Cartão inadimplente (Do not honor).'
@@ -574,41 +574,59 @@ class WC_Cielo_API_3_0 {
 
         $status = $response->getPayment()->getStatus();
         $returnCode = $response->getPayment()->getReturnCode();
-        $returnMessage = $response->getPayment()->getReturnMessage();
         $links = ($response->getPayment()->getAuthenticationUrl() != null) ? $response->getPayment()->getAuthenticationUrl() : $response->getPayment()->getUrl();
 
         // Set the error alert.
-//        if ($status == '0' && $this->gateway->id != 'cielo_debit') {
-//            if (isset($status)) {
-                if (!$this->get_status(trim($status, '"'))) {
-                    $this->gateway->add_error((string)$this->get_status_name( $status ));
+        if ( ($response->getPayment()->getAuthenticationUrl() == null) && ($response->getPayment()->getUrl() == null) ) {
 
-                    if ( $this->get_sale_return_message( $returnCode ) != null ) {
-                        $this->gateway->add_error( (string)$this->get_sale_return_message( $returnCode ) );
-                    }
+            if (!$this->get_status(trim($status, '"'))) {
 
-//                    $this->gateway->add_error((string)'Status - Code: ' . $status . ' Message: ' . $this->get_api_error( $status ));
-                    return Array(
-                        'valid' => false,
-                        'payment_url' => '',
-                    );
-                } elseif ($this->get_api_error( $returnCode ) != null) {
-                    $this->gateway->add_error((string)$this->get_api_error( $returnCode ));
-//                    $this->gateway->add_error((string)'API - Code: ' . $status . ' Message: ' . $this->get_api_error( $returnCode ));
-                    return Array(
-                        'valid' => false,
-                        'payment_url' => '',
-                    );
-                } elseif (!$this->get_sale_return_status( $returnCode )) {
-                    $this->gateway->add_error((string)$this->get_sale_return_message( $returnCode ));
-//                    $this->gateway->add_error((string)'Sale - Code: ' . $status . ' Message: ' . $this->get_sale_return_message( $returnCode ));
-                    return Array(
-                        'valid' => false,
-                        'payment_url' => '',
-                    );
+                if ($this->get_api_error( $status ) == null) {
+                    $message_error = (string)$this->get_status_name( $status );
+                } else {
+                    $message_error = (string)$this->get_api_error( $status );
                 }
-//            }
-//        }
+                if ($this->get_sale_return_message( $returnCode ) != null) {
+                    $message_error = $this->get_sale_return_message( $returnCode );
+                }
+
+                $this->gateway->add_error( $message_error );
+
+                if ('yes' == $this->gateway->debug) {
+                    $this->gateway->log->add( $this->gateway->id, 'Status - Code: ' . $status . ' API Message: ' . $this->get_api_error( $status )  . ' Sale Message: ' . $this->get_sale_return_message( $returnCode ) );
+                }
+
+                return Array(
+                    'valid' => false,
+                    'payment_url' => '',
+                );
+            }
+
+            if ($this->get_api_error($returnCode) != null) {
+                $this->gateway->add_error((string)$this->get_api_error($returnCode));
+                if ('yes' == $this->gateway->debug) {
+                    $this->gateway->log->add( $this->gateway->id, 'API - Code: ' . $status . ' Message: ' . $this->get_api_error( $returnCode ) );
+                }
+
+                return Array(
+                    'valid' => false,
+                    'payment_url' => '',
+                );
+            }
+
+            if (!$this->get_sale_return_status($returnCode)) {
+                $this->gateway->add_error((string)$this->get_sale_return_message($returnCode));
+                if ('yes' == $this->gateway->debug) {
+                    $this->gateway->log->add( 'Sale - Code: ' . $status . ' Message: ' . $this->get_sale_return_message($returnCode) );
+                }
+
+                return Array(
+                    'valid' => false,
+                    'payment_url' => '',
+                );
+            }
+
+        }
 
         // Save the tid.
         if (!empty($paymentId)) {
@@ -627,6 +645,35 @@ class WC_Cielo_API_3_0 {
             'payment_url' => $payment_url,
         );
         
+    }
+
+    /**
+     * Process the order status.
+     *
+     * @param WC_Order $Order  Order data.
+     * @param int      $status Status ID.
+     * @param string   $status_note Order status note.
+     * @param string   $note   Custom order note.
+     */
+    public function process_order_status( $order, $status, $status_note, $note = '' )	{
+
+        // Order cancelled.
+        if ( 10 == $status || 11 == $status ) {
+            $order->add_order_note( $status_note . '. ' . $note );
+
+            $order->update_status( 'cancelled', $status_note );
+            // Order failed.
+        } elseif ( ( 1 != $status && 2 != $status && 12 != $status  && 20 != $status ) || -1 == $status ) {
+            $order->add_order_note( $status_note . '. ' . $note );
+
+            $order->update_status( 'failed', $status_note );
+            // Order paid.
+        } else {
+            $order->add_order_note( $status_note . '. ' . $note );
+            // Complete the payment and reduce stock levels.
+            $order->payment_complete();
+        }
+
     }
 
     /**
@@ -696,6 +743,7 @@ class WC_Cielo_API_3_0 {
 
         switch ($gateway) {
             case 'cielo_credit':
+
                 $payment->creditCard($gateway_data['card_cvv'], $card_brand)
                         ->setExpirationDate( str_replace( ' ', '', $gateway_data['card_expiration'] ) )
                         ->setCardNumber( str_replace( ' ', '', $gateway_data['card_number'] ) )
@@ -726,7 +774,9 @@ class WC_Cielo_API_3_0 {
         if ($this->gateway->id == 'cielo_credit') {
             // Check if capture sale is made by Admin Order Page
             if (!$this->gateway->api->admin_sale_capture()) {
-                $this->gateway->log->add($this->gateway->id, 'Automatic sale capture');
+                if ('yes' == $this->gateway->debug) {
+                    $this->gateway->log->add($this->gateway->id, 'Automatic sale capture');
+                }
                 // Automatic Capture Sale
                 $payment->setCapture( true );
             }
@@ -741,7 +791,9 @@ class WC_Cielo_API_3_0 {
         try {
 
             $sale   = (new CieloEcommerce($this->merchant, $this->environment))->createSale($sale);
-//            $status = $sale->getPayment()->getStatus() ;
+            if ('yes' == $this->gateway->debug) {
+                $this->gateway->log->add($this->gateway->id, json_encode($sale->jsonSerialize(), JSON_PRETTY_PRINT));
+            }
 
         } catch (CieloRequestException $e) {
             // Em caso de erros de integração, podemos tratar o erro aqui.
@@ -751,7 +803,9 @@ class WC_Cielo_API_3_0 {
             $sale->getPayment()->setStatus( $error->getCode() );
             $sale->getPayment()->setReturnMessage( $error->getMessage() );
 
-            $this->gateway->log->add( $this->gateway->id, 'Erro - Code: ' . $error->getCode() .  ' - Message: ' . $error->getMessage()  );
+            if ('yes' == $this->gateway->debug) {
+                $this->gateway->log->add($this->gateway->id, 'Error - Code: ' . $error->getCode() . ' - Message: ' . $error->getMessage());
+            }
 
         }
 
@@ -783,7 +837,9 @@ class WC_Cielo_API_3_0 {
 		} catch (CieloRequestException $e) {
 
 			$error = $e->getCieloError();
-            $this->gateway->log->add( $this->gateway->id, 'Error - Code: ' . $error->getCode() . ' Message: ' . $error->getMessage() );
+            if ('yes' == $this->gateway->debug) {
+                $this->gateway->log->add($this->gateway->id, 'Error - Code: ' . $error->getCode() . ' Message: ' . $error->getMessage());
+            }
 
 		}
 
@@ -801,15 +857,23 @@ class WC_Cielo_API_3_0 {
         $status = $response->getPayment()->getStatus() ;
         $returnCode = $response->getPayment()->getReturnCode();
 
-        if (isset($status)) {
+        //if (isset($status)) {
+        if (!$this->get_status(trim($status, '"'))) {
 
             // Set the error alert.
             if (!$this->get_status(trim($status, '"'))) {
                 if ('yes' == $this->gateway->debug) {
                     $this->gateway->log->add($this->gateway->id, 'Cielo payment error: ' . $this->get_status_name( $status ) );
+                    $this->gateway->log->add($this->gateway->id, 'Cielo payment error returnCode: ' . $this->get_status_name( $status ) );
                 }
 
-                $this->gateway->add_error((string)$this->get_sale_return_message( $returnCode ));
+                // Set Sale message error or Status error
+                if ($this->get_sale_return_message($returnCode) != null) {
+                    $this->gateway->add_error( (string) $this->get_sale_return_message( $returnCode ) );
+                } else {
+                    $this->gateway->add_error( (string) $this->get_status_name( $status ) );
+                }
+
             }
 
         }
@@ -820,6 +884,7 @@ class WC_Cielo_API_3_0 {
 
         if ('yes' == $this->gateway->debug) {
             $this->gateway->log->add($this->gateway->id, 'Cielo payment status: ' . $status);
+            $this->gateway->log->add($this->gateway->id, 'Cielo payment returnCode: ' . $returnCode);
         }
 
         // For backward compatibility!
@@ -827,7 +892,9 @@ class WC_Cielo_API_3_0 {
             $order_note = "\n" . 'TID: ' . $tid . '.';
         }
 
-        if (!empty($response->getPayment()->getProofOfSale())) {
+        //if (!empty($response->getPayment()->getProofOfSale())) {
+        if ( $this->get_status( trim($status, '"') ) ) {
+
             $payment_type = $response->getPayment()->getType();
 
             if (method_exists($response->getPayment(), "get" . $payment_type)) {
@@ -866,6 +933,33 @@ class WC_Cielo_API_3_0 {
             'status'     => $status,
             'order_note' => $order_note,
         );
+
+    }
+
+    /**
+     * Return handler cancel.
+     *
+     * @param $woocommerce $woocommerce Order data.
+     * @param String $status Order status.
+     */
+    public function return_handler_cancel( $woocommerce, $status ) {
+
+        // Order cancelled.
+        if ( 10 == $status || 11 == $status ) {
+            $message = __( 'Order canceled successfully.', 'cielo-woocommerce' );
+            if ( function_exists( 'wc_add_notice' ) ) {
+                wc_add_notice( $message );
+            } else {
+                $woocommerce->add_message( $message );
+            }
+            if ( function_exists( 'wc_get_page_id' ) ) {
+                return get_permalink( wc_get_page_id( 'shop' ) );
+            } else {
+                return get_permalink( woocommerce_get_page_id( 'shop' ) );
+            }
+        }
+
+        return null;
 
     }
 
@@ -909,6 +1003,9 @@ class WC_Cielo_API_3_0 {
         } catch (CieloRequestException $e) {
 
             $cieloerror = $e->getCieloError();
+            if ('yes' == $this->gateway->debug) {
+                $this->gateway->log->add($this->gateway->id, 'Error - Code: ' . $cieloerror->getCode() . ' Message: ' . $cieloerror->getMessage());
+            }
 
         }
 
