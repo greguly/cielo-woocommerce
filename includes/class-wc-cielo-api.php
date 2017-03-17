@@ -112,11 +112,24 @@ class WC_Cielo_API extends WC_Settings_API {
 	 */
 	private function get_account_data() {
 
-		return array(
-			'environment' => $this->gateway->environment,
-			'number' => $this->gateway->number,
-			'key'    => $this->gateway->key,
-		);
+        $ver = $this->api->version;
+		if ($ver == '1_5') {
+            return array(
+                'version'     => $ver,
+                'environment' => $this->gateway->environment,
+                'number'      => $this->gateway->number,
+                'key'         => $this->gateway->key,
+            );
+        } else if ($ver == '3_0') {
+            return array(
+                'version'      => $ver,
+                'environment'  => $this->gateway->environment,
+                'merchant_id'  => $this->gateway->merchant_id,
+                'merchant_key' => $this->gateway->merchant_key,
+            );
+        }
+
+        return null;
 
 	}
 

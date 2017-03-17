@@ -10,6 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <div class="error inline">
-	<p><strong><?php _e( 'Cielo WooCommerce Disabled', 'cielo-woocommerce' ); ?></strong>: <?php _e( 'You should inform your Affiliation Number and Key.', 'cielo-woocommerce' ); ?>
+	<p><strong><?php _e( 'Cielo WooCommerce Disabled', 'cielo-woocommerce' ); ?></strong>: <?php ( ("1_5" == $this->api->api->version) ? _e( 'You should inform your Affiliation Number and Key.', 'cielo-woocommerce' ) :  _e( 'You should inform your Merchant ID and Key.', 'cielo-woocommerce' ) ); ?>
 	</p>
 </div>

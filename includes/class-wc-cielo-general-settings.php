@@ -40,7 +40,7 @@ class WC_Cielo_General_Settings_Gateway extends WC_Payment_Gateway {
         // Define user set variables.
         $this->api_version        = $this->get_option( 'api_version' );
         $this->admin_sale_capture = $this->get_option( 'admin_sale_capture' );
-        $this->time_sale_capture = $this->get_option( 'time_sale_capture' );
+        $this->time_sale_capture  = $this->get_option( 'time_sale_capture' );
 
         // Actions.
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -80,10 +80,22 @@ class WC_Cielo_General_Settings_Gateway extends WC_Payment_Gateway {
                 'label'   => __( 'Term in days to Sale Capture in Admin Order Page', 'cielo-woocommerce' ),
                 'description' => __( 'Term in days before exceed Sale Capture time', 'cielo-woocommerce' ),
                 'desc_tip' => true,
-                'default' => 15,
+                'default' => 5,
             ),
         );
 
     }
+
+	/**
+	 * Admin page.
+	 */
+	public function admin_options() {
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		wp_enqueue_script( 'wc-cielo-admin', plugins_url( 'assets/js/admin/admin' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+
+		include dirname( __FILE__ ) . '/views/html-admin-page.php';
+
+	}
 
 }

@@ -46,7 +46,14 @@ class WC_Cielo_API_3_0 {
 	 */
 	protected $charset = 'ISO-8859-1';
 
-	/**
+    /**
+     * Test Cielo Key.
+     *
+     * @var string
+     */
+    public $version = '3_0';
+
+    /**
 	 * Constructor.
 	 *
 	 * @param WC_Cielo_Gateway $gateway
@@ -706,7 +713,7 @@ class WC_Cielo_API_3_0 {
         }
 
         // Configure seu merchant
-        $this->merchant = new Merchant( $account_data['number'], $account_data['key'] );
+        $this->merchant = new Merchant( $account_data['merchant_id'], $account_data['merchant_key'] );
 
     }
 

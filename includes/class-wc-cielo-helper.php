@@ -224,7 +224,11 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		}
 
 		// For production.
-		return ( ! empty( $this->methods ) && ! empty( $this->number ) && ! empty( $this->key ) );
+        if ("1_5" == $this->api->api->version) {
+            return ( !empty($this->methods) && !empty($this->number) && !empty($this->key) );
+        } else if ("3_0" == $this->api->api->version) {
+            return ( !empty($this->methods) && !empty($this->merchant_id) && !empty($this->merchant_key) );
+        }
 	}
 
 	/**
@@ -272,8 +276,60 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		wp_enqueue_script( 'wc-cielo-admin', plugins_url( 'assets/js/admin/admin' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+        // Lightbox script.
+        wc_enqueue_js( '
+            var cielo_direct_debit = $( \'a[href$="cielo_direct_debit"]\' ).closest( \'ul > li\' ),
+				cielo_banking_ticket = $( \'a[href$="cielo_banking_ticket"]\' ).closest( \'ul > li\' );
+            if ( "1_5" ==  "' . $this->api->api->version . '"  ) {
+				cielo_direct_debit.hide();
+                cielo_banking_ticket.hide();
+            } else {
+                cielo_direct_debit.show();
+                cielo_banking_ticket.show();
+			};
+			' .
+            ( ("1_5" == $this->api->api->version) ? '
 
-		include dirname( __FILE__ ) . '/views/html-admin-page.php';
+                /**
+                 * Hide the option for API 3.0.
+                 */
+                var merchant_id  = $( \'input[id$="merchant_id"]\' ).closest( \'tr\' ),
+                    merchant_key = $( \'input[id$="merchant_key"]\' ).closest( \'tr\' );
+
+                merchant_id.hide();
+                merchant_key.hide();
+
+                /**
+                 * Switch the options based on environment.
+                 */
+                $( \'[id^=woocommerce_cielo][id$=environment]\' ).on( \'change\', function() {
+                    console.log(\'Teste\');
+                    var number = $( \'input[id^=woocommerce_cielo][id$=number]\' ).closest( \'tr\' ),
+                        key    = $( \'input[id^=woocommerce_cielo][id$=key]\' ).not(\'input[id^=woocommerce_cielo][id$=merchant_key]\').closest( \'tr\' );
+
+                    if ( "test" === $( this ).val() ) {
+                        number.hide();
+                        key.hide();
+                    } else {
+                        number.show();
+                        key.show();
+                    }
+
+                }).change();
+
+             ' : '
+
+                var number = $( \'input[id^=woocommerce_cielo][id$=number]\' ).closest( \'tr\' ),
+                    key    = $( \'input[id^=woocommerce_cielo][id$=key]\' ).not(\'input[id^=woocommerce_cielo][id$=merchant_key]\').closest( \'tr\' );
+
+                number.hide();
+                key.hide();
+
+             ' ) . '
+
+        ' );
+
+        include dirname( __FILE__ ) . '/views/html-admin-page.php';
 	}
 
 	/**

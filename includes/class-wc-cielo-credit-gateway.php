@@ -23,6 +23,9 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		$this->method_title = __( 'Cielo - Credit Card', 'cielo-woocommerce' );
 		$this->supports     = array( 'products', 'refunds' );
 
+		// Set the API.
+		$this->api = new WC_Cielo_API( $this );
+
 		// Load the form fields.
 		$this->init_form_fields();
 
@@ -36,6 +39,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		$this->environment          = $this->get_option( 'environment' );
 		$this->number               = $this->get_option( 'number' );
 		$this->key                  = $this->get_option( 'key' );
+		$this->merchant_id          = $this->get_option( 'merchant_id' );
+		$this->merchant_key         = $this->get_option( 'merchant_key' );
 		$this->methods              = $this->get_option( 'methods' );
 		$this->authorization        = $this->get_option( 'authorization' );
 		$this->smallest_installment = $this->get_option( 'smallest_installment' );
@@ -50,9 +55,6 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
         if ( 'yes' == $this->debug ) {
             $this->log = $this->get_logger();
         }
-
-        // Set the API.
-		$this->api = new WC_Cielo_API( $this );
 
 		// Actions.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -70,6 +72,11 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function init_form_fields() {
 		$this->form_fields = array(
+			'selected_api' => array(
+				'title'       => __('Current selected API version: ', 'cielo-woocommerce' ). '<code>'.(($this->api->api->version == '1_5' ) ? '1.5' : '3.0' ).'</code>',
+				'type'        => 'title',
+				'description' => '',
+			),
 			'enabled' => array(
 				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
 				'type'    => 'checkbox',
@@ -125,6 +132,20 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'title'       => __( 'Affiliation Key', 'cielo-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Store access key assigned by Cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => '',
+			),
+			'merchant_id' => array(
+				'title'       => __( 'Merchant ID', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Store merchant id number with Cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => '',
+			),
+			'merchant_key' => array(
+				'title'       => __( 'Merchant Key', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Store merchant key assigned by Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '',
 			),

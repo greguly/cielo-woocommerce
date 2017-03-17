@@ -59,6 +59,13 @@ class WC_Cielo_API_1_5 {
 	protected $test_cielo_key = 'e84827130b9837473681c2787007da5914d6359947015a5cdb2b8843db0fa832';
 
 	/**
+	 * Test Cielo Key.
+	 *
+	 * @var string
+	 */
+	public $version = '1_5';
+
+	/**
 	 * Constructor.
 	 *
 	 * @param WC_Cielo_API_1_5 $gateway

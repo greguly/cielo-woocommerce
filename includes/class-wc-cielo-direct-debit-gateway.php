@@ -64,6 +64,11 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function init_form_fields() {
 		$this->form_fields = array(
+			'selected_api' => array(
+				'title'       => __('Only on API 3.0 ', 'cielo-woocommerce' ),
+				'type'        => 'title',
+				'description' => '',
+			),
 			'enabled' => array(
 				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
 				'type'    => 'checkbox',
@@ -108,17 +113,17 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
 					'production' => __( 'Production', 'cielo-woocommerce' ),
 				),
 			),
-			'number' => array(
-				'title'       => __( 'Affiliation Number', 'cielo-woocommerce' ),
+			'merchant_id' => array(
+				'title'       => __( 'Merchant ID', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Store affiliation number with Cielo.', 'cielo-woocommerce' ),
+				'description' => __( 'Store merchant id number with Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '',
 			),
-			'key' => array(
-				'title'       => __( 'Affiliation Key', 'cielo-woocommerce' ),
+			'merchant_key' => array(
+				'title'       => __( 'Merchant Key', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Store access key assigned by Cielo.', 'cielo-woocommerce' ),
+				'description' => __( 'Store merchant key assigned by Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '',
 			),
@@ -137,7 +142,7 @@ class WC_Cielo_Direct_Debit_Gateway extends WC_Cielo_Helper {
             'integration' => array(
                 'title'       => __( 'Integration Settings', 'cielo-woocommerce' ),
                 'type'        => 'title',
-                'description' => sprintf( __( 'For the integration work you need to set the following urls in the %s:', 'cielo-woocommerce' ), '<br /><br /><strong>' . __( 'Notification URL:', 'cielo-woocommerce' ) . '</strong> <code>' . esc_url( WC()->api_request_url( 'WC_Checkout_Cielo_Gateway' ) ) . '</code><br /><strong>' . __( 'Status Change URL:', 'cielo-woocommerce' ) . '</strong> <code>' . esc_url( WC()->api_request_url( 'WC_Checkout_Cielo_Gateway' ) ) . '</code>'),
+                'description' => sprintf( __( 'For the integration work you need to set the following urls in the: %s', 'cielo-woocommerce' ), '<br /><br /><strong>' . __( 'Notification URL:', 'cielo-woocommerce' ) . '</strong> <code>' . esc_url( WC()->api_request_url( 'WC_Checkout_Cielo_Gateway' ) ) . '</code><br /><strong>' . __( 'Status Change URL:', 'cielo-woocommerce' ) . '</strong> <code>' . esc_url( WC()->api_request_url( 'WC_Checkout_Cielo_Gateway' ) ) . '</code>'),
             ),
 			'testing' => array(
 				'title'       => __( 'Gateway Testing', 'cielo-woocommerce' ),

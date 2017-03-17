@@ -67,6 +67,11 @@ class WC_Cielo_Banking_Ticket_Gateway extends WC_Cielo_Helper {
 	 */
 	public function init_form_fields() {
 		$this->form_fields = array(
+			'selected_api' => array(
+				'title'       => __('Only on API 3.0 ', 'cielo-woocommerce' ),
+				'type'        => 'title',
+				'description' => '',
+			),
 			'enabled' => array(
 				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
 				'type'    => 'checkbox',
@@ -128,14 +133,14 @@ class WC_Cielo_Banking_Ticket_Gateway extends WC_Cielo_Helper {
 					'production' => __( 'Production', 'cielo-woocommerce' ),
 				),
 			),
-			'number' => array(
+			'merchant_id' => array(
 				'title'       => __( 'Merchant ID', 'cielo-woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Store merchant id with Cielo.', 'cielo-woocommerce' ),
+				'description' => __( 'Store merchant id number with Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '',
 			),
-			'key' => array(
+			'merchant_key' => array(
 				'title'       => __( 'Merchant Key', 'cielo-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Store merchant key assigned by Cielo.', 'cielo-woocommerce' ),
