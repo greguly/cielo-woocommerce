@@ -68,9 +68,9 @@ class WC_Cielo_Banking_Ticket_Gateway extends WC_Cielo_Helper {
 	public function init_form_fields() {
 		$this->form_fields = array(
 			'selected_api' => array(
-				'title'       => __('Only on API 3.0 ', 'cielo-woocommerce' ),
+				'title'       => __('Only on API 3.0', 'cielo-woocommerce' ),
 				'type'        => 'title',
-				'description' => '',
+                'description' => __( 'Option only available on Cielo WebService 3.0', 'cielo-woocommerce' ),
 			),
 			'enabled' => array(
 				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),

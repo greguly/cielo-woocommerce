@@ -66,7 +66,7 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
                 // Get from General Setting Enabled checkbox, value to show or hide MetaBox Cielo Capture
                 $general_settings = maybe_unserialize(get_option('woocommerce_cielo_general_settings_settings')) ;
                 // Function to show MetaBox Cielo Capture
-                $AdminOrderPage = function($this) {
+                $AdminOrderPage = function() {
                     if (class_exists('WC_Integration')) {
                         if (is_admin()) {
                             $this->admin_sale_capture_includes();
@@ -77,7 +77,7 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
                 // Check if enabled is using default value
                 if ( array_key_exists('admin_sale_capture', $general_settings) ) {
                     if ($general_settings['admin_sale_capture'] == 'yes') {
-                        $AdminOrderPage($this);
+                        $AdminOrderPage();
                     }
                 }
 //                else {

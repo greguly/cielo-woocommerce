@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Cielo WooCommerce - Solução Webservice v4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-13 13:21-0300\n"
+"PO-Revision-Date: 2017-03-17 22:26-0300\n"
 "Last-Translator: Claudio Sanches <contato@claudiosmweb.com>\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -710,3 +710,21 @@ msgstr "Transação cancelada por falha no processamento."
 msgctxt "Transaction Status"
 msgid "Transaction scheduled"
 msgstr "Transação recorrente agendada."
+
+msgid "Current selected API version: "
+msgstr "Versão da API atual selecionada: "
+
+msgid "Selected version must be in accordance with the service contracted with Cielo"
+msgstr "Versão selecionada deve estar de acordo com o serviço contratado com a Cielo"
+
+msgid "Store merchant id number with Cielo."
+msgstr "Código Merchant ID com a Cielo."
+
+msgid "Store merchant key assigned by Cielo."
+msgstr "Código Merchant Key com a Cielo."
+
+msgid "Only on API 3.0"
+msgstr "Somente na API 3.0"
+
+msgid "Option only available on Cielo WebService 3.0"
+msgstr "Opção somente disponível no WebService 3.0 da Cielo"

@@ -75,7 +75,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			'selected_api' => array(
 				'title'       => __('Current selected API version: ', 'cielo-woocommerce' ). '<code>'.(($this->api->api->version == '1_5' ) ? '1.5' : '3.0' ).'</code>',
 				'type'        => 'title',
-				'description' => '',
+                'description' => __( 'Selected version must be in accordance with the service contracted with Cielo', 'cielo-woocommerce' ),
 			),
 			'enabled' => array(
 				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
