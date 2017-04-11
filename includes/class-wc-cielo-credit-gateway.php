@@ -448,11 +448,14 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			$card_brand   = get_post_meta( $order->id, '_wc_cielo_card_brand', true );
 			$card_brand   = $this->get_payment_method_name( $card_brand );
 			$installments = get_post_meta( $order->id, '_wc_cielo_installments', true );
+			
+			if ( $installments > 0 ) {
+				$items['payment_method']['value'] .= '<br />';
+				$items['payment_method']['value'] .= '<small>';
+				$items['payment_method']['value'] .= sprintf( __( '%s in %s.', 'cielo-woocommerce' ), esc_attr( $card_brand ), $this->get_installment_text( $installments, (float) $order->get_total() ) );
+				$items['payment_method']['value'] .= '</small>';	
+			}
 
-			$items['payment_method']['value'] .= '<br />';
-			$items['payment_method']['value'] .= '<small>';
-			$items['payment_method']['value'] .= sprintf( __( '%s in %s.', 'cielo-woocommerce' ), esc_attr( $card_brand ), $this->get_installment_text( $installments, (float) $order->get_total() ) );
-			$items['payment_method']['value'] .= '</small>';
 		}
 
 		return $items;
