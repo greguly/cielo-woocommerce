@@ -444,7 +444,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	public function order_items_payment_details( $items, $order ) {
-		if ( $this->id === $order->payment_method ) {
+		if ( $this->id === $order->payment_method && $order->is_paid()) {
 			$card_brand   = get_post_meta( $order->id, '_wc_cielo_card_brand', true );
 			$card_brand   = $this->get_payment_method_name( $card_brand );
 			$installments = get_post_meta( $order->id, '_wc_cielo_installments', true );
