@@ -65,7 +65,7 @@
 			var interest_rate = $( '#woocommerce_cielo_credit_interest_rate' ).closest( 'tr' ),
 				interest      = $( '#woocommerce_cielo_credit_interest' ).closest( 'tr' );
 
-			if ( 'store' === $( this ).val() ) {
+			if ( 'client' === $( this ).val() ) {
 				interest_rate.hide();
 				interest.hide();
 			} else {
