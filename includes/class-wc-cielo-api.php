@@ -175,7 +175,7 @@ class WC_Cielo_API extends WC_Settings_API {
 //		}
 
 		// Set the order total with interest.
-		if ( isset( $this->gateway->installment_type ) && 'client' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
+		if ( isset( $this->gateway->installment_type ) && 'store' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
 			$interest_rate        = $this->gateway->get_valid_value( $this->gateway->interest_rate ) / 100;
 			$interest_total       = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) ) );
 			$interest_order_total = $interest_total * $installments;
@@ -185,10 +185,16 @@ class WC_Cielo_API extends WC_Settings_API {
 			}
 		}
 
-		// Set the debit values.
+        // Set the credit values.
+        if ( ($gateway == 'cielo_credit') && ($installments == '1') ) {
+            $order_total     = $order_total * ( ( 100 - $this->gateway->get_valid_value( $this->gateway->credit_discount_x1 ) ) / 100 );
+            $payment_product = ($this->gateway->installment_type == 'store') ? 'ByMerchant' : 'ByIssuer';
+        }
+
+        // Set the debit values.
 		if ( $gateway == 'cielo_debit' ) {
 			$order_total     = $order_total * ( ( 100 - $this->gateway->get_valid_value( $this->gateway->debit_discount ) ) / 100 );
-			$payment_product = 'A';
+            $payment_product = '';
 			$installments    = '1';
 		}
 
