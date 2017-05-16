@@ -637,7 +637,7 @@ class WC_Cielo_API_3_0 {
 
         // Save the tid.
         if (!empty($paymentId)) {
-            update_post_meta($order->id, '_transaction_id', $paymentId);
+            update_post_meta( ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), '_transaction_id', $paymentId);
         }
 
         // Set the transaction URL.
@@ -750,6 +750,8 @@ class WC_Cielo_API_3_0 {
 
         switch ($gateway) {
             case 'cielo_credit':
+
+                $payment->setInterest($payment_product);
 
                 $payment->creditCard($gateway_data['card_cvv'], $card_brand)
                         ->setExpirationDate( str_replace( ' ', '', $gateway_data['card_expiration'] ) )
