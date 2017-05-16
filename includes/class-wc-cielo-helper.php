@@ -144,7 +144,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$url = $woocommerce->api_request_url( get_class( $this ) );
 		}
 
-		return urlencode( add_query_arg( array( 'key' => $order->order_key, 'order' => $order->id ), $url ) );
+		return urlencode( add_query_arg( array( 'key' => $order->order_key, 'order' => ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ) ), $url ) );
 	}
 
 	/**
@@ -363,6 +363,19 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Get debit discount.
+	 *
+	 * @param  float $order_total Order total.
+	 *
+	 * @return float
+	 */
+	public function get_credit_discount( $order_total = 0 ) {
+		$debit_total = $order_total * ( ( 100 - $this->get_valid_value( $this->credit_discount_x1 ) ) / 100 );
+
+		return $debit_total;
+	}
+
+	/**
 	 * Get installments HTML.
 	 *
 	 * @param  float  $order_total Order total.
@@ -389,7 +402,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$credit_interest = sprintf( __( 'no interest. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $order_total ) ) );
 			$smallest_value  = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 
-			if ( 'client' == $this->installment_type && $i >= $this->interest && 0 < $interest_rate ) {
+			//if ( 'client' == $this->installment_type && $i >= $this->interest && 0 < $interest_rate ) {
+			if ( 'store' == $this->installment_type && $i >= $this->interest && 0 < $interest_rate ) {
 				$interest_total = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $i ) ) ) );
 				$interest_order_total = $interest_total * $i;
 
@@ -403,7 +417,14 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				continue;
 			}
 
-			$at_sight = ( 1 == $i ) ? 'cielo-at-sight' : '';
+//			$at_sight = ( 1 == $i ) ? 'cielo-at-sight' : '';
+            $at_sight = '';
+            if ( 1 == $i ) {
+                $at_sight = 'cielo-at-sight';
+
+                $credit_total    = (isset($this->credit_discount_x1)) ? ($order_total * ((100 - $this->credit_discount_x1) / 100)) : $order_total;
+                $credit_interest = sprintf( __( 'with discount. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $credit_total ) ) );
+			}
 
 			if ( 'select' == $type ) {
 				$html .= '<option value="' . $i . '" class="' . $at_sight . '">' . sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest ) . '</option>';
@@ -432,7 +453,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		$credit_interest = sprintf( __( 'no interest. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $order_total ) ) );
 		$interest_rate   = $this->get_valid_value( $this->interest_rate ) / 100;
 
-		if ( 'client' == $this->installment_type && $quantity >= $this->interest && 0 < $interest_rate ) {
+		//if ( 'client' == $this->installment_type && $quantity >= $this->interest && 0 < $interest_rate ) {
+		if ( 'store' == $this->installment_type && $quantity >= $this->interest && 0 < $interest_rate ) {
 			$interest_total       = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $quantity ) ) ) );
 			$interest_order_total = $interest_total * $quantity;
 
@@ -441,6 +463,12 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				$credit_interest = sprintf( __( 'with interest of %s%% a.m. Total: %s', 'cielo-woocommerce' ), $this->get_valid_value( $this->interest_rate ), sanitize_text_field( woocommerce_price( $interest_order_total ) ) );
 			}
 		}
+
+        if ( 1 == $quantity ) {
+
+            $credit_total    = (isset($this->credit_discount_x1)) ? ($order_total * ((100 - $this->credit_discount_x1) / 100)) : $order_total;
+            $credit_interest = sprintf( __( 'with discount. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $credit_total ) ) );
+        }
 
 		return sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $quantity, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest );
 	}
@@ -566,7 +594,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$_installments     = apply_filters( 'wc_cielo_max_installments', $this->installments, $order_total );
 			$interest_rate     = $this->get_valid_value( $this->interest_rate ) / 100;
 
-			if ( 'client' == $this->installment_type && $installments >= $this->interest && 0 < $interest_rate ) {
+			//if ( 'client' == $this->installment_type && $installments >= $this->interest && 0 < $interest_rate ) {
+			if ( 'store' == $this->installment_type && $installments >= $this->interest && 0 < $interest_rate ) {
 				$interest_total    = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) ) );
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
 			}
@@ -666,10 +695,10 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 
 		global $woocommerce;
 
-		$tid = get_post_meta( $order->id, '_transaction_id', true );
+		$tid = get_post_meta( ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), '_transaction_id', true );
 
 		if ( '' != $tid ) {
-			$response = $this->api->get_transaction_data( $order, $tid, $order->id . '-' . time() );
+			$response = $this->api->get_transaction_data( $order, $tid, ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ) . '-' . time() );
 
             $response_return = $this->api->api->return_handler($response, $tid);
 
@@ -682,7 +711,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
 				$return_url = $this->get_return_url( $order );
 			} else {
-				$return_url = add_query_arg( 'order', $order->id, add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
+				$return_url = add_query_arg( 'order', ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
 			}
 
 
@@ -729,7 +758,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		if ( $limit > $days ) {
 			$tid      = $order->get_transaction_id();
 			$amount   = wc_format_decimal( $amount );
-			$response = $this->api->do_transaction_cancellation( $order, $tid, $order->id . '-' . time(), $amount );
+			$response = $this->api->do_transaction_cancellation( $order, $tid, ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ) . '-' . time(), $amount );
 
 			// Already canceled.
 			if ( ! empty( $response->mensagem ) ) {
