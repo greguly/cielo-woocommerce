@@ -31,6 +31,18 @@ msgstr "Cartão de crédito"
 msgid "Debit Card"
 msgstr "Cartão de débito"
 
+#: ../cielo-woocommerce.php:167
+#: ../templates/debit-card/default-payment-form.php:17
+#: ../includes/class-wc-cielo-debit-gateway.php:81
+msgid "Direct Debit"
+msgstr "Débito Online"
+
+#: ../cielo-woocommerce.php:167
+#: ../templates/debit-card/default-payment-form.php:17
+#: ../includes/class-wc-cielo-debit-gateway.php:81
+msgid "Banking Ticket"
+msgstr "Boleto Bancário"
+
 #: ../cielo-woocommerce.php:224
 msgid "Credit Card Settings"
 msgstr "Configurações de crédito"
@@ -38,6 +50,14 @@ msgstr "Configurações de crédito"
 #: ../cielo-woocommerce.php:226
 msgid "Debit Card Settings"
 msgstr "Configurações de débito"
+
+#: ../cielo-woocommerce.php:226
+msgid "Direct Debit Settings"
+msgstr "Configurações de debito online"
+
+#: ../cielo-woocommerce.php:226
+msgid "Banking Ticket Settings"
+msgstr "Configurações de boleto bancário"
 
 #: ../templates/credit-card/icons-payment-form.php:26
 msgid "Pay with"
@@ -628,6 +648,82 @@ msgstr "WooCommerce"
 msgid "You should inform your Affiliation Number and Key."
 msgstr "Você deve informar o seu número de número e chave de afiliação."
 
+#: ../includes/class-wc-cielo-banking-ticket-gateway.php:23
+msgid "Cielo - Direct Debit"
+msgstr "Cielo - Débito Online"
+
+#: ../includes/class-wc-cielo-debit-gateway.php:73
+msgid "Enable Cielo Direct Debit"
+msgstr "Ativar Debito Online da Cielo"
+
+#: ../includes/class-wc-cielo-banking-ticket-gateway.php:23
+msgid "Cielo - Banking Ticket"
+msgstr "Cielo - Boleto Bancário"
+
+#: ../includes/class-wc-cielo-debit-gateway.php:73
+msgid "Enable Cielo Banking Ticket"
+msgstr "Ativar Boleto Bancário da Cielo"
+
+#: ../includes/class-wc-cielo-debit-gateway.php:88 ../includes/class-wc-cielo-
+#: credit-gateway.php:92
+msgid "Pay using method Banking Ticket"
+msgstr "Pague usando o método Boleto Bancário"
+
+#: mercadopago/mercadopago-custom-gateway.php:242
+#: mercadopago/mercadopago-gateway.php:264
+msgid "Store Identificator"
+msgstr "Identificador da Loja"
+
+msgid "Stock Reduce"
+msgstr "Redução de Estoque"
+
+msgid "Instruction"
+msgstr "Instrução"
+
+msgid "This message is send with ticket instruction payment."
+msgstr "Esta mensagem é enviada como instrução de pagamento do boleto."
+
+msgid "Accept only on until the date expiration, after expiration date 1% interest per day"
+msgstr "Aceitar somente até a data de vencimento, após essa data juros de 1% ao dia"
+
+msgid "Bradesco Direct Debit"
+msgstr "Bradesco Débito Online"
+
+msgid "Banco do Brasil Direct Debit"
+msgstr "Banco do Brasil Débito Online"
+
+#: templates/transparent-checkout-form.php:78
+msgid "Select your bank:"
+msgstr "Selecione o seu banco:."
+
+#: templates/transparent-checkout-form.php:94
+msgid "The order will be confirmed only after the payment approval."
+msgstr "O pedido será confirmado somente após a confirmação do pagamento."
+
+#: templates/transparent-checkout-form.php:85
+msgid "* After clicking \"Proceed to payment\" you will have access to the link that will take you to your bank's website, so you can make the payment in total security."
+msgstr "* Após clicar em \"Realizar pagamento\" você receberá acesso ao link que o levará ao site do seu banco, assim é possível realizar o pagamento em total segurança."
+
+#: templates/transparent-checkout-form.php:100
+msgid "* After clicking \"Proceed to payment\" you will have access to banking ticket which you can print and pay in your internet banking or in a lottery retailer."
+msgstr "* Após clicar em \"Realizar pagamento\" você receberá o seu boleto bancário, é possível imprimi-lo e pagar pelo site do seu banco ou por uma casa lotérica."
+
+msgid "Reduce Stock in Order Generation"
+msgstr "Reduzir Estoque ao Gerar Pedido"
+
+msgid "Enable this to reduce the stock on order creation. Disable this to reduce <strong>after</strong> the payment approval."
+msgstr "Habilite esta opção para reduzir o estoque ao se criar um pedido. Desabilite para reduzir somente <strong>depois</strong> da aprovação do pagamento."
+
+#: mercadopago/mercadopago-custom-gateway.php:244
+#: mercadopago/mercadopago-gateway.php:266
+msgid "Please, inform a prefix to your store."
+msgstr "Por favor, informe um prefixo para sua loja."
+
+#: mercadopago/mercadopago-custom-gateway.php:244
+#: mercadopago/mercadopago-gateway.php:266
+msgid "If you use your Cielo account on multiple stores, you should make sure that this prefix is unique as Cielo will not allow orders with same identificators."
+msgstr "Se estiver usando sua conta Cielo para múltiplas lojas, então você deverá assegurar-se que este prefixo seja único, pois a Cielo não permitirá pedidos com um mesmo identificador."
+
 msgid "Cielo - General Settings"
 msgstr "Cielo - Configurações Gerais"
 
@@ -731,3 +827,12 @@ msgstr "Somente na API 3.0"
 
 msgid "Option only available on Cielo WebService 3.0"
 msgstr "Opção somente disponível no WebService 3.0 da Cielo"
+
+msgid "CreditCard"
+msgstr "Cartão de Crédito"
+
+msgid "DebitCard"
+msgstr "Cartão de Débito"
+
+msgid "EletronicTransfer"
+msgstr "Transferência Eletrônica"
