@@ -583,6 +583,57 @@ class WC_Cielo_API_3_0 {
         $returnCode = $response->getPayment()->getReturnCode();
         $links = ($response->getPayment()->getAuthenticationUrl() != null) ? $response->getPayment()->getAuthenticationUrl() : $response->getPayment()->getUrl();
 
+        $payment_type = $response->getPayment()->getType();
+
+        if (method_exists($response->getPayment(), "get" . $payment_type)) {
+
+            $payment_method = $response->getPayment()->{"get" . $payment_type}();
+
+            $order_note = __('Paid with', 'cielo-woocommerce') . ' ' . __($payment_type, 'cielo-woocommerce');
+            $order_note .= "\n";
+
+            $card = function ($ord_note, $pay_method) {
+
+                $ord_note .= $pay_method->getCardNumber();
+                $ord_note .= "\n";
+                $ord_note .= $pay_method->getHolder();
+                $ord_note .= "\n";
+                $ord_note .= $pay_method->getExpirationDate();
+                $ord_note .= "\n";
+                $ord_note .= $pay_method->getBrand();
+
+                return $ord_note;
+
+            };
+
+            switch ($payment_type) {
+                case 'CreditCard':
+                    $order_note .= __('Installments', 'cielo-woocommerce') . ' ' . $response->getPayment()->getInstallments();
+                    $order_note .= "\n";
+                    $order_note = $card($order_note, $payment_method);
+                    break;
+                case 'DebitCard':
+                    $order_note = $card($order_note, $payment_method);
+                    break;
+//                case 'EletronicTransfer':
+//                    $order_note .= $payment_method->getCardNumber();
+//                    $order_note .= "\n";
+//                    $order_note .= $payment_method->getBrand();
+//                    break;
+                case 'Boleto':
+                    $order_note .= $response->getPayment()->getBarCodeNumber();
+                    $order_note .= "\n";
+                    $order_note .= $response->getPayment()->getDigitableLine();
+                    $order_note .= "\n";
+                    $order_note .= $response->getPayment()->getProvider();
+                    $order_note .= "\n";
+                    $order_note .= $response->getPayment()->getInstructions();
+                    break;
+            }
+            $order->add_order_note( $order_note );
+
+        }
+
         // Set the error alert.
         if ( ($response->getPayment()->getAuthenticationUrl() == null) && ($response->getPayment()->getUrl() == null) ) {
 
