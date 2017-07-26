@@ -200,7 +200,7 @@ class WC_Cielo_API extends WC_Settings_API {
 
 		// Set the product when has installments.
 		if ( 1 < $installments ) {
-			$payment_product = '2';
+			$payment_product = ($this->gateway->installment_type == 'store') ? 'ByMerchant' : 'ByIssuer';
 		}
 
 		// Execute transaction accordin API
