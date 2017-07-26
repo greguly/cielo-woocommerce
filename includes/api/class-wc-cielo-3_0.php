@@ -592,7 +592,7 @@ class WC_Cielo_API_3_0 {
             $order_note = __('Paid with', 'cielo-woocommerce') . ' ' . __($payment_type, 'cielo-woocommerce');
             $order_note .= "\n";
 
-            $card = function ($ord_note, $pay_method) {
+            $card = function ($ord_note, $pay_method, $retCode) {
 
                 $ord_note .= $pay_method->getCardNumber();
                 $ord_note .= "\n";
@@ -601,6 +601,9 @@ class WC_Cielo_API_3_0 {
                 $ord_note .= $pay_method->getExpirationDate();
                 $ord_note .= "\n";
                 $ord_note .= $pay_method->getBrand();
+                $ord_note .= "\n";
+                $ord_note .= "\n";
+                $ord_note .= $this->get_sale_return_message( $retCode );
 
                 return $ord_note;
 
@@ -610,10 +613,10 @@ class WC_Cielo_API_3_0 {
                 case 'CreditCard':
                     $order_note .= __('Installments', 'cielo-woocommerce') . ' ' . $response->getPayment()->getInstallments();
                     $order_note .= "\n";
-                    $order_note = $card($order_note, $payment_method);
+                    $order_note = $card($order_note, $payment_method, $returnCode);
                     break;
                 case 'DebitCard':
-                    $order_note = $card($order_note, $payment_method);
+                    $order_note = $card($order_note, $payment_method, $returnCode);
                     break;
 //                case 'EletronicTransfer':
 //                    $order_note .= $payment_method->getCardNumber();
@@ -847,6 +850,10 @@ class WC_Cielo_API_3_0 {
             // Automatic Capture Sale
             $payment->setAuthenticate( true );
         }
+
+//        if ('yes' == $this->gateway->debug) {
+//            $this->gateway->log->add($this->gateway->id, json_encode($sale->jsonSerialize(), JSON_PRETTY_PRINT));
+//        }
 
         try {
 
