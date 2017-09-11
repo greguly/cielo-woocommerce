@@ -63,18 +63,36 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 				$this->upgrade();
 				$this->includes();
 
-				// Add the gateway.
+                // Get from General Setting Enabled checkbox, value to show or hide MetaBox Cielo Capture
+                $general_settings = maybe_unserialize(get_option('woocommerce_cielo_general_settings_settings')) ;
+                // Function to show MetaBox Cielo Capture
+                $AdminOrderPage = function() {
+                    if (class_exists('WC_Integration')) {
+                        if (is_admin()) {
+                            $this->admin_sale_capture_includes();
+                        }
+                    }
+                };
+
+                // Check if enabled is using default value
+                if ( array_key_exists('admin_sale_capture', $general_settings) ) {
+                    if ($general_settings['admin_sale_capture'] == 'yes') {
+                        $AdminOrderPage();
+                    }
+                }
+//                else {
+//                    $AdminOrderPage($this);
+//                }
+
+                // Add the gateway.
 				add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateway' ) );
 				add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
 
-				// Admin actions.
-				if ( is_admin() ) {
-					add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
-				}
 			} else {
 				add_action( 'admin_notices', array( $this, 'woocommerce_missing_notice' ) );
 			}
-		}
+
+        }
 
 		/**
 		 * Return an instance of this class.
@@ -110,11 +128,15 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 		 * Includes.
 		 */
 		private function includes() {
+			include_once dirname( __FILE__ ) . '/library/vendor/autoload.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-xml.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-helper.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-api.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-general-settings.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-debit-gateway.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-credit-gateway.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-direct-debit-gateway.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-banking-ticket-gateway.php';
 		}
 
 		/**
@@ -125,7 +147,7 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 		 * @return  array          Payment methods with Cielo.
 		 */
 		public function add_gateway( $methods ) {
-			array_push( $methods, 'WC_Cielo_Debit_Gateway', 'WC_Cielo_Credit_Gateway' );
+			array_push( $methods, 'WC_Cielo_General_Settings_Gateway', 'WC_Cielo_Debit_Gateway', 'WC_Cielo_Credit_Gateway', 'WC_Cielo_Direct_Debit_Gateway', 'WC_Cielo_Banking_Ticket_Gateway' );
 
 			return $methods;
 		}
@@ -187,14 +209,53 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 						'design'         => $options['design'],
 						'debug'          => $options['debug'],
 						);
+						
+						//Direct Debit
+						$direct_debit = array(
+
+							'enabled'                   => $options['enabled'],
+							'title'                     => __( 'Direct Debit', 'cielo-woocommerce' ),
+							'description'               => $options['description'],
+							'invoice_prefix'            => $options['invoice_prefix'],
+							'store_contract'            => 'buypage_cielo',
+							'environment'               => $options['environment'],
+							'number'                    => $options['number'],
+							'key'                       => $options['key'],
+							'design_options'            => $options['design_options'],
+							'design'                    => $options['design'],
+							'debug'                     => $options['debug'],
+
+						);
+
+						//Banking Ticket
+						$ticket_options = array(
+
+							'enabled'                   => $options['enabled'],
+							'title'                     => __( 'Banking Ticket', 'cielo-woocommerce' ),
+							'description'               => $options['description'],
+							'invoice_prefix'            => $options['invoice_prefix'],
+							'reduce_stock_on_order_gen' => $options['reduce_stock_on_order_gen'],
+							'store_contract'            => 'buypage_cielo',
+							'environment'               => $options['environment'],
+							'number'                    => $options['number'],
+							'key'                       => $options['key'],
+							'design_options'            => $options['design_options'],
+							'design'                    => $options['design'],
+							'debug'                     => $options['debug'],
+						);						
 
 						// Save the new options.
 						update_option( 'woocommerce_cielo_credit_settings', $credit_options );
 						update_option( 'woocommerce_cielo_debit_settings', $debit_options );
+						update_option( 'woocommerce_cielo_direct_debit_settings', $direct_debit );
+						update_option( 'woocommerce_cielo_banking_ticket_settings', $ticket_options );
 
 						// Delete old options.
 						delete_option( 'woocommerce_cielo_settings' );
 					}
+
+                    global $wpdb;
+                    $wpdb->query( "UPDATE $wpdb->postmeta SET meta_key = '_cielo_sale_captured_status' WHERE meta_key = 'cielo_sale_captured';" );
 
 					update_option( 'wc_cielo_version', WC_Cielo::VERSION );
 				}
@@ -232,15 +293,38 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 			$plugin_links = array();
 
 			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
+				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=cielo_general_settings' ) ) . '">' . __( 'General Settings', 'cielo-woocommerce' ) . '</a>';
 				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=cielo_credit' ) ) . '">' . __( 'Credit Card Settings', 'cielo-woocommerce' ) . '</a>';
 				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=cielo_debit' ) ) . '">' . __( 'Debit Card Settings', 'cielo-woocommerce' ) . '</a>';
+				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=direct_debit' ) ) . '">' . __( 'Direct Debit Settings', 'cielo-woocommerce' ) . '</a>';
+				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=banking_ticket' ) ) . '">' . __( 'Banking Ticket Settings', 'cielo-woocommerce' ) . '</a>';				
 			} else {
+				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_general_settings_gateway' ) ) . '">' . __( 'General Settings', 'cielo-woocommerce' ) . '</a>';
 				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_credit_gateway' ) ) . '">' . __( 'Credit Card Settings', 'cielo-woocommerce' ) . '</a>';
 				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_debit_gateway' ) ) . '">' . __( 'Debit Card Settings', 'cielo-woocommerce' ) . '</a>';
+				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_direct_debit_gateway' ) ) . '">' . __( 'Direct Debit Settings', 'cielo-woocommerce' ) . '</a>';
+				$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_cielo_banking_ticket_gateway' ) ) . '">' . __( 'Banking Ticket Settings', 'cielo-woocommerce' ) . '</a>';
 			}
 
 			return array_merge( $plugin_links, $links );
 		}
+
+        /**
+         * Admin includes.
+         */
+        private function admin_sale_capture_includes() {
+            include_once dirname( __FILE__ ) . '/includes/views/admin/class-wc-cielo-admin-orders.php';
+        }
+
+		/**
+		 * WooCommerce Extra Checkout Fields for Brazil notice.
+		 */
+		public function ecfb_missing_notice() {
+			if ( ! class_exists( 'Extra_Checkout_Fields_For_Brazil' ) ) {
+				include dirname( __FILE__ ) . '/includes/views/notices/html-notice-missing-ecfb.php';
+			}
+		}
+		
 	}
 
 	add_action( 'plugins_loaded', array( 'WC_Cielo', 'get_instance' ), 0 );

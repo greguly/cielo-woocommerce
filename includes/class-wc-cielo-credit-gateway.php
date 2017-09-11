@@ -18,10 +18,13 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function __construct() {
 		$this->id           = 'cielo_credit';
-		$this->icon         = apply_filters( 'wc_cielo_credit_icon', '' );
+		$this->icon         = apply_filters( 'wc_cielo_credit_icon', plugins_url( 'assets/images/creditcards.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields   = true;
 		$this->method_title = __( 'Cielo - Credit Card', 'cielo-woocommerce' );
 		$this->supports     = array( 'products', 'refunds' );
+
+		// Set the API.
+		$this->api = new WC_Cielo_API( $this );
 
 		// Load the form fields.
 		$this->init_form_fields();
@@ -36,6 +39,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		$this->environment          = $this->get_option( 'environment' );
 		$this->number               = $this->get_option( 'number' );
 		$this->key                  = $this->get_option( 'key' );
+		$this->merchant_id          = $this->get_option( 'merchant_id' );
+		$this->merchant_key         = $this->get_option( 'merchant_key' );
 		$this->methods              = $this->get_option( 'methods' );
 		$this->authorization        = $this->get_option( 'authorization' );
 		$this->smallest_installment = $this->get_option( 'smallest_installment' );
@@ -43,16 +48,14 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 		$this->installments         = $this->get_option( 'installments' );
 		$this->interest             = $this->get_option( 'interest' );
 		$this->installment_type     = $this->get_option( 'installment_type' );
+		$this->credit_discount_x1   = $this->get_option( 'credit_discount_x1' );
 		$this->design               = $this->get_option( 'design' );
 		$this->debug                = $this->get_option( 'debug' );
 
-		// Active logs.
-		if ( 'yes' == $this->debug ) {
-			$this->log = $this->get_logger();
-		}
-
-		// Set the API.
-		$this->api = new WC_Cielo_API( $this );
+        // Active logs.
+        if ( 'yes' == $this->debug ) {
+            $this->log = $this->get_logger();
+        }
 
 		// Actions.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -70,6 +73,11 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function init_form_fields() {
 		$this->form_fields = array(
+			'selected_api' => array(
+				'title'       => __('Current selected API version: ', 'cielo-woocommerce' ). '<code>'.(($this->api->api->version == '1_5' ) ? '1.5' : '3.0' ).'</code>',
+				'type'        => 'title',
+                'description' => __( 'Selected version must be in accordance with the service contracted with Cielo', 'cielo-woocommerce' ),
+			),
 			'enabled' => array(
 				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
 				'type'    => 'checkbox',
@@ -125,6 +133,20 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				'title'       => __( 'Affiliation Key', 'cielo-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Store access key assigned by Cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => '',
+			),
+			'merchant_id' => array(
+				'title'       => __( 'Merchant ID', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Store merchant id number with Cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => '',
+			),
+			'merchant_key' => array(
+				'title'       => __( 'Merchant Key', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Store merchant key assigned by Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '',
 			),
@@ -230,6 +252,13 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 					'12' => '12x',
 				),
 			),
+            'credit_discount_x1' => array(
+                'title'       => __( 'Credit Discount (%) at sight', 'cielo-woocommerce' ),
+                'type'        => 'text',
+                'description' => __( 'Percentage discount for payments made ​​by credit card in 1 portion.', 'cielo-woocommerce' ),
+                'desc_tip'    => true,
+                'default'     => '0',
+            ),
 			'design_options' => array(
 				'title'       => __( 'Design', 'cielo-woocommerce' ),
 				'type'        => 'title',
@@ -269,7 +298,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	protected function get_checkout_form( $model = 'default', $order_total = 0 ) {
 		$installments_type = ( 'icons' == $model ) ? 'radio' : 'select';
 
-		woocommerce_get_template(
+		wc_get_template(
 			'credit-card/' . $model . '-payment-form.php',
 			array(
 				'methods'      => $this->get_available_methods_options(),
@@ -277,8 +306,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 			),
 			'woocommerce/cielo/',
 			WC_Cielo::get_templates_path()
-		);
-	}
+        );
+    }
 
 	/**
 	 * Checkout scripts.
@@ -315,14 +344,15 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_webservice_payment( $order ) {
+
 		$payment_url = '';
 		$card_number = isset( $_POST['cielo_credit_number'] ) ? sanitize_text_field( $_POST['cielo_credit_number'] ) : '';
-		$card_brand  = $this->api->get_card_brand( $card_number );
+		$card_brand  = $this->api->api->get_card_brand( $card_number );
 
-		// Validate credit card brand.
-		$valid = $this->validate_credit_brand( $card_brand );
+        // Validate credit card brand.
+        $valid = $this->validate_credit_brand( $card_brand );
 
-		// Test the card fields.
+        // Test the card fields.
 		if ( $valid ) {
 			$valid = $this->validate_card_fields( $_POST );
 		}
@@ -334,36 +364,24 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 
 		if ( $valid ) {
 			$installments = isset( $_POST['cielo_credit_installments'] ) ? absint( $_POST['cielo_credit_installments'] ) : 1;
-			$card_data    = array(
+
+			$gateway_data    = array(
 				'name_on_card'    => $_POST['cielo_credit_holder_name'],
 				'card_number'     => $_POST['cielo_credit_number'],
-				'card_expiration' => $_POST['cielo_credit_expiry'],
+				'card_expiration' => $_POST['cielo_credit_expiry_month'] .'/'. $_POST['cielo_credit_expiry_year'],
 				'card_cvv'        => $_POST['cielo_credit_cvc'],
 			);
 
-			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments, $card_data );
+			$response = $this->api->do_transaction( $order, ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ) . '-' . time(), $card_brand, $installments, $gateway_data, $this->id );
 
-			// Set the error alert.
-			if ( ! empty( $response->mensagem ) ) {
-				$this->add_error( (string) $response->mensagem );
-				$valid = false;
-			}
+            $process = $this->api->api->process_webservice_payment($valid, $order, $response);
 
-			// Save the tid.
-			if ( ! empty( $response->tid ) ) {
-				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
-			}
-
-			// Set the transaction URL.
-			if ( ! empty( $response->{'url-autenticacao'} ) ) {
-				$payment_url = (string) $response->{'url-autenticacao'};
-			} else {
-				$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
-			}
+            $valid = $process['valid'];
+            $payment_url = $process['payment_url'];
 
 			// Save payment data.
-			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
-			update_post_meta( $order->id, '_wc_cielo_installments', $installments );
+			update_post_meta( ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), '_wc_cielo_card_brand', $card_brand );
+			update_post_meta( ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), '_wc_cielo_installments', $installments );
 		}
 
 		if ( $valid && $payment_url ) {
@@ -387,6 +405,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	protected function process_buypage_cielo_payment( $order ) {
+		
 		$payment_url = '';
 		$card_brand  = isset( $_POST['cielo_credit_card'] ) ? sanitize_text_field( $_POST['cielo_credit_card'] ) : '';
 
@@ -400,7 +419,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 
 		if ( $valid ) {
 			$installments = isset( $_POST['cielo_credit_installments'] ) ? absint( $_POST['cielo_credit_installments'] ) : 1;
-			$response     = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, $installments );
+			$response     = $this->api->do_transaction( $order, ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ) . '-' . time(), $card_brand, $installments );
 
 			// Set the error alert.
 			if ( ! empty( $response->mensagem ) ) {
@@ -410,7 +429,7 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 
 			// Save the tid.
 			if ( ! empty( $response->tid ) ) {
-				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
+				update_post_meta( ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), '_transaction_id', (string) $response->tid );
 			}
 
 			// Set the transaction URL.
@@ -418,8 +437,8 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 				$payment_url = (string) $response->{'url-autenticacao'};
 			}
 
-			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
-			update_post_meta( $order->id, '_wc_cielo_installments', $installments );
+			update_post_meta( ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), '_wc_cielo_card_brand', $card_brand );
+			update_post_meta( ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), '_wc_cielo_installments', $installments );
 		}
 
 		if ( $valid && $payment_url ) {
@@ -444,15 +463,25 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	 * @return array
 	 */
 	public function order_items_payment_details( $items, $order ) {
+		
 		if ( $this->id === $order->payment_method ) {
-			$card_brand   = get_post_meta( $order->id, '_wc_cielo_card_brand', true );
+			$card_brand   = get_post_meta( ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), '_wc_cielo_card_brand', true );
 			$card_brand   = $this->get_payment_method_name( $card_brand );
-			$installments = get_post_meta( $order->id, '_wc_cielo_installments', true );
+			$installments = get_post_meta( ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), '_wc_cielo_installments', true );
+			$installments = ($installments <= 0) ? 1 : $installments;
 
 			$items['payment_method']['value'] .= '<br />';
 			$items['payment_method']['value'] .= '<small>';
 			$items['payment_method']['value'] .= sprintf( __( '%s in %s.', 'cielo-woocommerce' ), esc_attr( $card_brand ), $this->get_installment_text( $installments, (float) $order->get_total() ) );
-			$items['payment_method']['value'] .= '</small>';
+
+            if ( 0 < $this->credit_discount_x1 ) {
+                $discount_total = $this->get_credit_discount( (float) $order->get_total() );
+
+                $items['payment_method']['value'] .= ' ';
+                $items['payment_method']['value'] .= sprintf( __( 'with discount of %s. Order Total: %s.', 'cielo-woocommerce' ), $this->credit_discount_x1 . '%', sanitize_text_field( woocommerce_price( $discount_total ) ) );
+            }
+
+            $items['payment_method']['value'] .= '</small>';
 		}
 
 		return $items;

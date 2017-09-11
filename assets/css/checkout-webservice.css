@@ -1,7 +1,44 @@
-#payment .payment_methods li .payment_box #cielo-card-number.elo {
-	background-image: url("../images/elo.png") !important;
+/*#payment .payment_methods li .payment_box #cielo-card-number.mastercard input[name=cielo_credit_number] {*/
+#payment .payment_methods li .payment_box input[name=cielo_credit_number].mastercard {
+	background: url("../images/mastercard.png") 98.5% 50% no-repeat;
 }
 
-#payment .payment_methods li .payment_box #cielo-card-number.aura {
-	background-image: url("../images/aura.png") !important;
+#payment .payment_methods li .payment_box input[name=cielo_credit_number].visa {
+	background: url("../images/visa.png") 98.5% 50% no-repeat;
+}
+
+#payment .payment_methods li .payment_box input[name=cielo_credit_number].elo {
+	background: url("../images/elo.png") 98.5% 50% no-repeat;
+}
+
+#payment .payment_methods li .payment_box input[name=cielo_credit_number].amex {
+	background: url("../images/amex.png") 98.5% 50% no-repeat;
+}
+
+#payment .payment_methods li .payment_box input[name=cielo_credit_number].aura {
+	background: url("../images/aura.png") 98.5% 50% no-repeat;
+}
+
+#payment .payment_methods li .payment_box input[name=cielo_credit_number].dinersclub {
+	background: url("../images/dinersclub.png") 98.5% 50% no-repeat;
+}
+
+#payment .payment_methods li .payment_box input[name=cielo_credit_number].discover {
+	background: url("../images/discover.png") 98.5% 50% no-repeat;
+}
+
+#payment .payment_methods li .payment_box input[name=cielo_credit_number].jcb {
+	background: url("../images/jcb.png") 98.5% 50% no-repeat;
+}
+
+#payment .payment_methods li .payment_box input[name=cielo_debit_number].mastercard {
+	background: url("../images/maestro.png") 98.5% 50% no-repeat;
+}
+
+#payment .payment_methods li .payment_box input[name=cielo_debit_number].visa {
+	background: url("../images/visaelectron.png") 98.5% 50% no-repeat;
+}
+
+#payment .payment_methods li .payment_box input[name=cielo_debit_number].elo {
+	background: url("../images/elodebito.png") 98.5% 50% no-repeat;
 }

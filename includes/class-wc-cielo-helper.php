@@ -4,7 +4,7 @@
  */
 abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 
-	/**
+    /**
 	 * Get payment methods.
 	 *
 	 * @return array
@@ -14,6 +14,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			// Credit.
 			'visa'         => __( 'Visa', 'cielo-woocommerce' ),
 			'mastercard'   => __( 'MasterCard', 'cielo-woocommerce' ),
+            // API 3.0
+			'master'       => __( 'MasterCard', 'cielo-woocommerce' ),
 			'diners'       => __( 'Diners', 'cielo-woocommerce' ),
 			'discover'     => __( 'Discover', 'cielo-woocommerce' ),
 			'elo'          => __( 'Elo', 'cielo-woocommerce' ),
@@ -24,6 +26,13 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			// Debit
 			'visaelectron' => __( 'Visa Electron', 'cielo-woocommerce' ),
 			'maestro'      => __( 'Maestro', 'cielo-woocommerce' ),
+
+			// Direct Debit
+			'bradescodebit'    => __( 'Bradesco Direct Debit', 'cielo-woocommerce' ),
+			'bancodobrasildebit' => __( 'Banco do Brasil Direct Debit', 'cielo-woocommerce' ),
+
+			// Banking Ticket
+			'bankingticket'    => __( 'Banking Ticket', 'cielo-woocommerce' ),			
 		);
 	}
 
@@ -35,6 +44,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @return string       Payment method name.
 	 */
 	public function get_payment_method_name( $slug ) {
+		
 		$methods = $this->get_payment_methods();
 
 		if ( isset( $methods[ $slug ] ) ) {
@@ -50,9 +60,11 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	public function get_available_methods_options() {
+		
 		$methods = array();
 
-		foreach ( $this->methods as $method ) {
+//		foreach ( $this->methods as $method ) {
+		foreach ( $methods as $method ) {	
 			$methods[ $method ] = $this->get_payment_method_name( $method );
 		}
 
@@ -67,6 +79,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_accepted_brands_list( $methods ) {
+		
 		$total = count( $methods );
 		$count = 1;
 		$list  = '';
@@ -131,35 +144,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$url = $woocommerce->api_request_url( get_class( $this ) );
 		}
 
-		return urlencode( add_query_arg( array( 'key' => $order->order_key, 'order' => $order->id ), $url ) );
-	}
-
-	/**
-	 * Get the status name.
-	 *
-	 * @param  int $id Status ID.
-	 *
-	 * @return string
-	 */
-	public function get_status_name( $id ) {
-		$status = array(
-			0  => _x( 'Transaction created', 'Transaction Status', 'cielo-woocommerce' ),
-			1  => _x( 'Transaction ongoing', 'Transaction Status', 'cielo-woocommerce' ),
-			2  => _x( 'Transaction authenticated', 'Transaction Status', 'cielo-woocommerce' ),
-			3  => _x( 'Transaction not authenticated', 'Transaction Status', 'cielo-woocommerce' ),
-			4  => _x( 'Transaction authorized', 'Transaction Status', 'cielo-woocommerce' ),
-			5  => _x( 'Transaction not authorized', 'Transaction Status', 'cielo-woocommerce' ),
-			6  => _x( 'Transaction captured', 'Transaction Status', 'cielo-woocommerce' ),
-			9  => _x( 'Transaction cancelled', 'Transaction Status', 'cielo-woocommerce' ),
-			10 => _x( 'Transaction in authentication', 'Transaction Status', 'cielo-woocommerce' ),
-			12 => _x( 'Transaction in cancellation', 'Transaction Status', 'cielo-woocommerce' ),
-		);
-
-		if ( isset( $status[ $id ] ) ) {
-			return $status[ $id ];
-		}
-
-		return _x( 'Transaction failed', 'Transaction Status', 'cielo-woocommerce' );
+		return urlencode( add_query_arg( array( 'key' => $order->order_key, 'order' => ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ) ), $url ) );
 	}
 
 	/**
@@ -168,6 +153,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @return float
 	 */
 	public function get_order_total() {
+		
 		global $woocommerce;
 
 		$order_total = 0;
@@ -183,9 +169,12 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$order_total = (float) $order->get_total();
 
 			// Gets order total from cart/checkout.
-		} elseif ( 0 < $woocommerce->cart->total ) {
-			$order_total = (float) $woocommerce->cart->total;
-		}
+		} elseif ( 0 < WC()->cart->total ) {
+			$order_total = (float) WC()->cart->total;//$woocommerce->cart->total;
+
+            //echo 'cart->total: ' . $order_total . ' / ID: ' . $order_id;
+            //echo 'cart->total: ' . WC()->cart->total;
+        }
 
 		return $order_total;
 	}
@@ -196,6 +185,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @return WC_Logger instance.
 	 */
 	public function get_logger() {
+		
 		if ( class_exists( 'WC_Logger' ) ) {
 			return new WC_Logger();
 		} else {
@@ -237,7 +227,11 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		}
 
 		// For production.
-		return ( ! empty( $this->methods ) && ! empty( $this->number ) && ! empty( $this->key ) );
+        if ("1_5" == $this->api->api->version) {
+            return ( !empty($this->methods) && !empty($this->number) && !empty($this->key) );
+        } else if ("3_0" == $this->api->api->version) {
+            return ( !empty($this->methods) && !empty($this->merchant_id) && !empty($this->merchant_key) );
+        }
 	}
 
 	/**
@@ -271,9 +265,9 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	public function is_available() {
 		// Test if is valid for use.
 		$available = parent::is_available() &&
-					$this->check_environment() &&
-					$this->using_supported_currency() &&
-					$this->checks_for_webservice();
+            $this->check_environment() &&
+            $this->using_supported_currency() &&
+            $this->checks_for_webservice();
 
 		return $available;
 	}
@@ -285,8 +279,60 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		wp_enqueue_script( 'wc-cielo-admin', plugins_url( 'assets/js/admin/admin' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery' ), WC_Cielo::VERSION, true );
+        // Lightbox script.
+        wc_enqueue_js( '
+            var cielo_direct_debit = $( \'a[href$="cielo_direct_debit"]\' ).closest( \'ul > li\' ),
+				cielo_banking_ticket = $( \'a[href$="cielo_banking_ticket"]\' ).closest( \'ul > li\' );
+            if ( "1_5" ==  "' . $this->api->api->version . '"  ) {
+				cielo_direct_debit.hide();
+                cielo_banking_ticket.hide();
+            } else {
+                cielo_direct_debit.show();
+                cielo_banking_ticket.show();
+			};
+			' .
+            ( ("1_5" == $this->api->api->version) ? '
 
-		include dirname( __FILE__ ) . '/views/html-admin-page.php';
+                /**
+                 * Hide the option for API 3.0.
+                 */
+                var merchant_id  = $( \'input[id$="merchant_id"]\' ).closest( \'tr\' ),
+                    merchant_key = $( \'input[id$="merchant_key"]\' ).closest( \'tr\' );
+
+                merchant_id.hide();
+                merchant_key.hide();
+
+                /**
+                 * Switch the options based on environment.
+                 */
+                $( \'[id^=woocommerce_cielo][id$=environment]\' ).on( \'change\', function() {
+                    console.log(\'Teste\');
+                    var number = $( \'input[id^=woocommerce_cielo][id$=number]\' ).closest( \'tr\' ),
+                        key    = $( \'input[id^=woocommerce_cielo][id$=key]\' ).not(\'input[id^=woocommerce_cielo][id$=merchant_key]\').closest( \'tr\' );
+
+                    if ( "test" === $( this ).val() ) {
+                        number.hide();
+                        key.hide();
+                    } else {
+                        number.show();
+                        key.show();
+                    }
+
+                }).change();
+
+             ' : '
+
+                var number = $( \'input[id^=woocommerce_cielo][id$=number]\' ).closest( \'tr\' ),
+                    key    = $( \'input[id^=woocommerce_cielo][id$=key]\' ).not(\'input[id^=woocommerce_cielo][id$=merchant_key]\').closest( \'tr\' );
+
+                number.hide();
+                key.hide();
+
+             ' ) . '
+
+        ' );
+
+        include dirname( __FILE__ ) . '/views/html-admin-page.php';
 	}
 
 	/**
@@ -320,6 +366,19 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Get debit discount.
+	 *
+	 * @param  float $order_total Order total.
+	 *
+	 * @return float
+	 */
+	public function get_credit_discount( $order_total = 0 ) {
+		$debit_total = $order_total * ( ( 100 - $this->get_valid_value( $this->credit_discount_x1 ) ) / 100 );
+
+		return $debit_total;
+	}
+
+	/**
 	 * Get installments HTML.
 	 *
 	 * @param  float  $order_total Order total.
@@ -328,6 +387,9 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_installments_html( $order_total = 0, $type = 'select' ) {
+        //$order_total = WC()->cart->total;
+        //$this->log->add( $this->id, 'Cart Total - ' .  $order_total ); //WC()->cart->total);
+
 		$html         = '';
 		$installments = apply_filters( 'wc_cielo_max_installments', $this->installments, $order_total );
 
@@ -346,7 +408,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$credit_interest = sprintf( __( 'no interest. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $order_total ) ) );
 			$smallest_value  = ( 5 <= $this->smallest_installment ) ? $this->smallest_installment : 5;
 
-			if ( 'client' == $this->installment_type && $i >= $this->interest && 0 < $interest_rate ) {
+			//if ( 'client' == $this->installment_type && $i >= $this->interest && 0 < $interest_rate ) {
+			if ( 'store' == $this->installment_type && $i >= $this->interest && 0 < $interest_rate ) {
 				$interest_total = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $i ) ) ) );
 				$interest_order_total = $interest_total * $i;
 
@@ -360,7 +423,14 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				continue;
 			}
 
-			$at_sight = ( 1 == $i ) ? 'cielo-at-sight' : '';
+//			$at_sight = ( 1 == $i ) ? 'cielo-at-sight' : '';
+            $at_sight = '';
+            if ( 1 == $i ) {
+                $at_sight = 'cielo-at-sight';
+
+                $credit_total    = (isset($this->credit_discount_x1)) ? ($order_total * ((100 - $this->credit_discount_x1) / 100)) : $order_total;
+                $credit_interest = sprintf( __( 'with discount. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $credit_total ) ) );
+			}
 
 			if ( 'select' == $type ) {
 				$html .= '<option value="' . $i . '" class="' . $at_sight . '">' . sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $i, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest ) . '</option>';
@@ -369,11 +439,13 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			}
 		}
 
-		if ( 'select' == $type ) {
+        if ( 'select' == $type ) {
 			$html .= '</select>';
 		}
 
-		return $html;
+        //$this->log->add( $this->id, $html ); //WC()->cart->total);
+
+        return $html;
 	}
 
 	/**
@@ -389,7 +461,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		$credit_interest = sprintf( __( 'no interest. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $order_total ) ) );
 		$interest_rate   = $this->get_valid_value( $this->interest_rate ) / 100;
 
-		if ( 'client' == $this->installment_type && $quantity >= $this->interest && 0 < $interest_rate ) {
+		//if ( 'client' == $this->installment_type && $quantity >= $this->interest && 0 < $interest_rate ) {
+		if ( 'store' == $this->installment_type && $quantity >= $this->interest && 0 < $interest_rate ) {
 			$interest_total       = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $quantity ) ) ) );
 			$interest_order_total = $interest_total * $quantity;
 
@@ -398,6 +471,12 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 				$credit_interest = sprintf( __( 'with interest of %s%% a.m. Total: %s', 'cielo-woocommerce' ), $this->get_valid_value( $this->interest_rate ), sanitize_text_field( woocommerce_price( $interest_order_total ) ) );
 			}
 		}
+
+        if ( 1 == $quantity ) {
+
+            $credit_total    = (isset($this->credit_discount_x1)) ? ($order_total * ((100 - $this->credit_discount_x1) / 100)) : $order_total;
+            $credit_interest = sprintf( __( 'with discount. Total: %s', 'cielo-woocommerce' ), sanitize_text_field( woocommerce_price( $credit_total ) ) );
+        }
 
 		return sprintf( __( '%sx of %s %s', 'cielo-woocommerce' ), $quantity, sanitize_text_field( woocommerce_price( $credit_total ) ), $credit_interest );
 	}
@@ -449,15 +528,17 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @return bool
 	 */
 	protected function validate_credit_brand( $card_brand ) {
-		try {
-			// Validate the card brand.
-			if ( ! in_array( $card_brand, $this->methods ) ) {
-				throw new Exception( sprintf( __( 'Please enter with a valid card brand. The following cards are accepted: %s.', 'cielo-woocommerce' ), $this->get_accepted_brands_list( $this->methods ) ) );
-			}
-		} catch ( Exception $e ) {
-			$this->add_error( $e->getMessage() );
+		if (!$this->check_environment()) {
+			try {
+				// Validate the card brand.
+				if ( ! in_array( $card_brand, $this->methods ) ) {
+					throw new Exception( sprintf( __( 'Please enter with a valid card brand. The following cards are accepted: %s.', 'cielo-woocommerce' ), $this->get_accepted_brands_list( $this->methods ) ) );
+				}
+			} catch ( Exception $e ) {
+				$this->add_error( $e->getMessage() );
 
-			return false;
+				return false;
+			}
 		}
 
 		return true;
@@ -478,7 +559,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			}
 
 			// Validate the expiration date.
-			if ( ! isset( $posted[ $this->id . '_expiry' ] ) || '' === $posted[ $this->id . '_expiry' ] ) {
+			if (( ! isset( $posted[ $this->id . '_expiry_month' ] ) || '' === $posted[ $this->id . '_expiry_month' ] ) ||
+                ( ! isset( $posted[ $this->id . '_expiry_year' ] ) || '' === $posted[ $this->id . '_expiry_year' ] )) {
 				throw new Exception( __( 'Please type the card expiry date.', 'cielo-woocommerce' ) );
 			}
 
@@ -521,7 +603,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$_installments     = apply_filters( 'wc_cielo_max_installments', $this->installments, $order_total );
 			$interest_rate     = $this->get_valid_value( $this->interest_rate ) / 100;
 
-			if ( 'client' == $this->installment_type && $installments >= $this->interest && 0 < $interest_rate ) {
+			//if ( 'client' == $this->installment_type && $installments >= $this->interest && 0 < $interest_rate ) {
+			if ( 'store' == $this->installment_type && $installments >= $this->interest && 0 < $interest_rate ) {
 				$interest_total    = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) ) );
 				$installment_total = ( $installment_total < $interest_total ) ? $interest_total : $installment_total;
 			}
@@ -586,23 +669,10 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @param string   $note   Custom order note.
 	 */
 	public function process_order_status( $order, $status, $note = '' ) {
-		$status_note = __( 'Cielo', 'cielo-woocommerce' ) . ': ' . $this->get_status_name( $status );
+		$status_note = __( 'Cielo', 'cielo-woocommerce' ) . ': ' . $this->api->api->get_status_name( $status );
 
-		// Order cancelled.
-		if ( 9 == $status ) {
-			$order->update_status( 'cancelled', $status_note );
+		$this->api->api->process_order_status( $order, $status, $status_note, $note );
 
-			// Order failed.
-		} elseif ( ( 1 != $status && 4 != $status && 6 != $status ) || -1 == $status ) {
-			$order->update_status( 'failed', $status_note );
-
-			// Order paid.
-		} else {
-			$order->add_order_note( $status_note . '. ' . $note );
-
-			// Complete the payment and reduce stock levels.
-			$order->payment_complete();
-		}
 	}
 
 	/**
@@ -631,77 +701,34 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @param WC_Order $order Order data.
 	 */
 	public function return_handler( $order ) {
+
 		global $woocommerce;
 
-		$tid = get_post_meta( $order->id, '_transaction_id', true );
+		$tid = get_post_meta( ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), '_transaction_id', true );
 
 		if ( '' != $tid ) {
-			$response = $this->api->get_transaction_data( $order, $tid, $order->id . '-' . time() );
+			$response = $this->api->get_transaction_data( $order, $tid, ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ) . '-' . time() );
 
-			// Set the error alert.
-			if ( ! empty( $response->mensagem ) ) {
-				if ( 'yes' == $this->debug ) {
-					$this->log->add( $this->id, 'Cielo payment error: ' . print_r( $response->mensagem, true ) );
-				}
+            $response_return = $this->api->api->return_handler($response, $tid);
 
-				$this->helper->add_error( (string) $response->mensagem );
-			}
+            if ( 'yes' == $this->gateway->debug ) {
+                $this->log->add( $this->id, 'Return Handler Response - ' . json_encode($response, JSON_PRETTY_PRINT) );
+            }
 
-			// Update the order status.
-			$status     = ! empty( $response->status ) ? intval( $response->status ) : -1;
-			$order_note = "\n";
-
-			if ( 'yes' == $this->debug ) {
-				$this->log->add( $this->id, 'Cielo payment status: ' . $status );
-			}
-
-			// For backward compatibility!
-			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1.12', '<=' ) ) {
-				$order_note = "\n" . 'TID: ' . $tid . '.';
-			}
-
-			if ( ! empty( $response->{'forma-pagamento'} ) ) {
-				$payment_method = $response->{'forma-pagamento'};
-
-				$order_note .= "\n";
-				$order_note .= __( 'Paid with', 'cielo-woocommerce' );
-				$order_note .= ' ';
-				$order_note .= $this->get_payment_method_name( (string) $payment_method->bandeira );
-				$order_note .= ' ';
-
-				if ( 'A' == $payment_method->produto ) {
-					$order_note .= __( 'debit', 'cielo-woocommerce' );
-				} elseif ( '1' == $payment_method->produto ) {
-					$order_note .= __( 'credit at sight', 'cielo-woocommerce' );
-				} else {
-					$order_note .= sprintf( __( 'credit %dx', 'cielo-woocommerce' ), $payment_method->parcelas );
-				}
-
-				$order_note .= '.';
-			}
-			$this->process_order_status( $order, $status, $order_note );
+			$this->process_order_status( $order, $response_return['status'], $response_return['$order_note'] );
 
 			if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.1', '>=' ) ) {
 				$return_url = $this->get_return_url( $order );
 			} else {
-				$return_url = add_query_arg( 'order', $order->id, add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
+				$return_url = add_query_arg( 'order', ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ), add_query_arg( 'key', $order->order_key, get_permalink( woocommerce_get_page_id( 'thanks' ) ) ) );
 			}
 
-			// Order cancelled.
-			if ( 9 == $status ) {
-				$message = __( 'Order canceled successfully.', 'cielo-woocommerce' );
-				if ( function_exists( 'wc_add_notice' ) ) {
-					wc_add_notice( $message );
-				} else {
-					$woocommerce->add_message( $message );
-				}
 
-				if ( function_exists( 'wc_get_page_id' ) ) {
-					$return_url = get_permalink( wc_get_page_id( 'shop' ) );
-				} else {
-					$return_url = get_permalink( woocommerce_get_page_id( 'shop' ) );
-				}
-			}
+            // Order cancelled.
+            $return_url_cancel = $this->api->api->return_handler_cancel( $woocommerce, $response_return['status'] );
+            if ( isset($return_url_cancel) ) {
+                $return_url = $return_url_cancel;
+            }
 
 			wp_redirect( esc_url_raw( $return_url ) );
 			exit;
@@ -740,7 +767,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 		if ( $limit > $days ) {
 			$tid      = $order->get_transaction_id();
 			$amount   = wc_format_decimal( $amount );
-			$response = $this->api->do_transaction_cancellation( $order, $tid, $order->id . '-' . time(), $amount );
+			$response = $this->api->do_transaction_cancellation( $order, $tid, ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ) . '-' . time(), $amount );
 
 			// Already canceled.
 			if ( ! empty( $response->mensagem ) ) {
@@ -758,7 +785,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			return new WP_Error( 'cielo_refund_error', sprintf( __( 'This transaction has been made ​​more than %s days and therefore it can not be canceled', 'cielo-woocommerce' ), $limit ) );
 		}
 
-		return false;
+		//return false;
 	}
 
 	/**

@@ -16,9 +16,15 @@ if ( 'yes' == $this->get_option( 'enabled' ) ) {
 		include dirname( __FILE__ ) . '/notices/html-notice-currency-not-supported.php';
 	}
 
-	if ( 'test' != $this->environment && ( empty( $this->number ) || empty( $this->key ) ) ) {
-		include dirname( __FILE__ ) . '/notices/html-notice-not-configured.php';
-	}
+	if ( '1_5' == $this->api->api->version ) {
+        if ('test' != $this->environment && (empty($this->number) || empty($this->key))) {
+            include dirname(__FILE__) . '/notices/html-notice-not-configured.php';
+        }
+    } else {
+        if ('test' != $this->environment && (empty($this->merchant_id) || empty($this->merchant_key))) {
+            include dirname(__FILE__) . '/notices/html-notice-not-configured.php';
+        }
+    }
 
 	if ( 'webservice' == $this->store_contract ) {
 		if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.2.11', '<=' ) ) {

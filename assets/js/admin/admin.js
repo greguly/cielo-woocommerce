@@ -20,18 +20,41 @@
 		}).change();
 
 		/**
-		 * Switch the options based on environment.
+		 * Switch the options based on Enable Sale Capture.
 		 */
-		$( '[id^=woocommerce_cielo][id$=environment]' ).on( 'change', function() {
-			var number = $( '[id^=woocommerce_cielo][id$=number]' ).closest( 'tr' ),
-				key    = $( '[id^=woocommerce_cielo][id$=key]' ).closest( 'tr' );
+		$( '#woocommerce_cielo_general_settings_api_version' ).on( 'change', function() {
+            var admin_sale_capture = $( '#woocommerce_cielo_general_settings_admin_sale_capture' ).closest( 'tr' ),
+				time_sale_capture = $( '#woocommerce_cielo_general_settings_time_sale_capture' ).closest( 'tr' ),
+				cielo_direct_debit = $( 'a[href$="cielo_direct_debit"]' ).closest( 'ul > li' ),
+				cielo_banking_ticket = $( 'a[href$="cielo_banking_ticket"]' ).closest( 'ul > li' );
 
-			if ( 'test' === $( this ).val() ) {
-				number.hide();
-				key.hide();
+			if ( 'version_1_5' === $( this ).val() ) {
+				admin_sale_capture.hide();
+				time_sale_capture.hide();
+
+                cielo_direct_debit.hide();
+                cielo_banking_ticket.hide();
 			} else {
-				number.show();
-				key.show();
+				admin_sale_capture.show();
+				if ( admin_sale_capture.is(":checked") ) {
+					time_sale_capture.show();
+				}
+
+                cielo_direct_debit.show();
+                cielo_banking_ticket.show();
+			}
+		}).change();
+
+		/**
+		 * Switch the options based on Enable Sale Capture.
+		 */
+		$( '#woocommerce_cielo_general_settings_admin_sale_capture' ).on( 'change', function() {
+            var time_sale_capture = $( '#woocommerce_cielo_general_settings_time_sale_capture' ).closest( 'tr' );
+
+			if ( $( this ).is(":checked") ) {
+				time_sale_capture.show();
+			} else {
+				time_sale_capture.hide();
 			}
 		}).change();
 
@@ -42,7 +65,7 @@
 			var interest_rate = $( '#woocommerce_cielo_credit_interest_rate' ).closest( 'tr' ),
 				interest      = $( '#woocommerce_cielo_credit_interest' ).closest( 'tr' );
 
-			if ( 'store' === $( this ).val() ) {
+			if ( 'client' === $( this ).val() ) {
 				interest_rate.hide();
 				interest.hide();
 			} else {

@@ -18,10 +18,13 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function __construct() {
 		$this->id           = 'cielo_debit';
-		$this->icon         = apply_filters( 'wc_cielo_debit_icon', '' );
+		$this->icon         = apply_filters( 'wc_cielo_debit_icon', plugins_url( 'assets/images/debitcards.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields   = true;
 		$this->method_title = __( 'Cielo - Debit Card', 'cielo-woocommerce' );
 		$this->supports     = array( 'products', 'refunds' );
+
+		// Set the API.
+		$this->api = new WC_Cielo_API( $this );
 
 		// Load the form fields.
 		$this->init_form_fields();
@@ -36,7 +39,9 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		$this->environment      = $this->get_option( 'environment' );
 		$this->number           = $this->get_option( 'number' );
 		$this->key              = $this->get_option( 'key' );
-		$this->methods          = $this->get_option( 'methods', 'visa' );
+		$this->merchant_id      = $this->get_option( 'merchant_id' );
+		$this->merchant_key     = $this->get_option( 'merchant_key' );
+		$this->methods          = $this->get_option( 'methods', 'visaelectron' );
 		$this->authorization    = $this->get_option( 'authorization' );
 		$this->debit_discount   = $this->get_option( 'debit_discount' );
 		$this->design           = $this->get_option( 'design' );
@@ -46,9 +51,6 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 		if ( 'yes' == $this->debug ) {
 			$this->log = $this->get_logger();
 		}
-
-		// Set the API.
-		$this->api = new WC_Cielo_API( $this );
 
 		// Actions.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -66,6 +68,11 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 	 */
 	public function init_form_fields() {
 		$this->form_fields = array(
+			'selected_api' => array(
+				'title'       => __('Current selected API version: ', 'cielo-woocommerce' ). '<code>'.(($this->api->api->version == '1_5' ) ? '1.5' : '3.0' ).'</code>',
+				'type'        => 'title',
+                'description' => __( 'Selected version must be in accordance with the service contracted with Cielo', 'cielo-woocommerce' ),
+			),
 			'enabled' => array(
 				'title'   => __( 'Enable/Disable', 'cielo-woocommerce' ),
 				'type'    => 'checkbox',
@@ -121,6 +128,20 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 				'title'       => __( 'Affiliation Key', 'cielo-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Store access key assigned by Cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => '',
+			),
+			'merchant_id' => array(
+				'title'       => __( 'Merchant ID', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Store merchant id number with Cielo.', 'cielo-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => '',
+			),
+			'merchant_key' => array(
+				'title'       => __( 'Merchant Key', 'cielo-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Store merchant key assigned by Cielo.', 'cielo-woocommerce' ),
 				'desc_tip'    => true,
 				'default'     => '',
 			),
@@ -229,61 +250,47 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 	 *
 	 * @return array
 	 */
-	protected function process_webservice_payment( $order ) {
+	protected function process_webservice_payment( $order )
+	{
+		$valid = false;
 		$payment_url = '';
-		$card_number = isset( $_POST['cielo_debit_number'] ) ? sanitize_text_field( $_POST['cielo_debit_number'] ) : '';
-		$card_brand  = $this->api->get_card_brand( $card_number );
+		$card_number = isset($_POST['cielo_debit_number']) ? sanitize_text_field($_POST['cielo_debit_number']) : '';
+		$card_brand = $this->api->api->get_card_brand($card_number);
 
-		// Validate credit card brand.
-		if ( 'mastercard' === $card_brand ) {
-			$_card_brand = 'maestro';
-		} else if ( 'visa' === $card_brand ) {
-			$_card_brand = 'visaelectron';
-		} else {
-			$_card_brand = $card_brand;
+        // Validate credit card brand.
+		$_card_brand = $this->api->api->process_webservice_payment_card_brand($card_brand);
+        
+		if (isset( $_card_brand )) {
+			$valid = $this->validate_credit_brand($_card_brand);
 		}
-		$valid = $this->validate_credit_brand( $_card_brand );
-
+		
 		// Test the card fields.
 		if ( $valid ) {
 			$valid = $this->validate_card_fields( $_POST );
 		}
 
-		if ( $valid ) {
+        if ( $valid ) {
 			$card_brand = ( 'maestro' === $card_brand ) ? 'mastercard' : $card_brand;
-			$card_data  = array(
+			$gateway_data  = array(
 				'name_on_card'    => $_POST['cielo_debit_holder_name'],
 				'card_number'     => $_POST['cielo_debit_number'],
-				'card_expiration' => $_POST['cielo_debit_expiry'],
+                'card_expiration' => $_POST['cielo_debit_expiry_month'] .'/'. $_POST['cielo_debit_expiry_year'],
 				'card_cvv'        => $_POST['cielo_debit_cvc'],
 			);
 
-			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 0, $card_data, true );
+			$response = $this->api->do_transaction( $order, $order->id . '-' . time(), $card_brand, 1, $gateway_data, $this->id );
 
-			// Set the error alert.
-			if ( ! empty( $response->mensagem ) ) {
-				$this->add_error( (string) $response->mensagem );
-				$valid = false;
-			}
+            $process = $this->api->api->process_webservice_payment($valid, $order, $response);
+            $valid = $process['valid'];
+            $payment_url = $process['payment_url'];
 
-			// Save the tid.
-			if ( ! empty( $response->tid ) ) {
-				update_post_meta( $order->id, '_transaction_id', (string) $response->tid );
-			}
-
-			// Set the transaction URL.
-			if ( ! empty( $response->{'url-autenticacao'} ) ) {
-				$payment_url = (string) $response->{'url-autenticacao'};
-			} else {
-				$payment_url = str_replace( '&amp;', '&', urldecode( $this->get_api_return_url( $order ) ) );
-			}
-
-			// Save payment data.
-			update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
+            // Save payment data.
+            update_post_meta( $order->id, '_wc_cielo_card_brand', $card_brand );
+            
 		}
 
 		if ( $valid && $payment_url ) {
-			return array(
+            return array(
 				'result'   => 'success',
 				'redirect' => $payment_url,
 			);

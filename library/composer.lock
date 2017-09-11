@@ -1,0 +1,50 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "4a7b870c0c9fb306829c13bd1b2413a4",
+    "content-hash": "95466914c3c86febee5cbb142b44edc9",
+    "packages": [
+        {
+            "name": "developercielo/api-3.0-php",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DeveloperCielo/API-3.0-PHP.git",
+                "reference": "f1abef92d1eb9e39229a7345206e709aeb275c24"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DeveloperCielo/API-3.0-PHP/zipball/f1abef92d1eb9e39229a7345206e709aeb275c24",
+                "reference": "f1abef92d1eb9e39229a7345206e709aeb275c24",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Cielo": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Integração com a API 3.0 da Cielo",
+            "homepage": "https://github.com/DeveloperCielo/API-3.0-PHP",
+            "time": "2017-01-18 12:07:32"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

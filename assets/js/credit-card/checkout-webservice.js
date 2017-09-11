@@ -73,7 +73,7 @@
 
 		// Set on change the card brand.
 		$( document.body ).on( 'change', '#cielo-credit-payment-form #cielo-card-number', function() {
-			setInstallmentsFields( $.payment.cardType( $( this ).val() ) );
+			//setInstallmentsFields( $.payment.cardType( $( this ).val() ) );
 		});
 
 		// Empty all card fields.
