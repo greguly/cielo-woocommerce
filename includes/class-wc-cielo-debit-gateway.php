@@ -274,7 +274,7 @@ class WC_Cielo_Debit_Gateway extends WC_Cielo_Helper {
 			$gateway_data  = array(
 				'name_on_card'    => $_POST['cielo_debit_holder_name'],
 				'card_number'     => $_POST['cielo_debit_number'],
-				'card_expiration' => $_POST['cielo_debit_expiry'],
+                'card_expiration' => $_POST['cielo_debit_expiry_month'] .'/'. $_POST['cielo_debit_expiry_year'],
 				'card_cvv'        => $_POST['cielo_debit_cvc'],
 			);
 

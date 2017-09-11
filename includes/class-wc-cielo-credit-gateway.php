@@ -298,18 +298,16 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 	protected function get_checkout_form( $model = 'default', $order_total = 0 ) {
 		$installments_type = ( 'icons' == $model ) ? 'radio' : 'select';
 
-		woocommerce_get_template(
+		wc_get_template(
 			'credit-card/' . $model . '-payment-form.php',
 			array(
 				'methods'      => $this->get_available_methods_options(),
 				'installments' => $this->get_installments_html( $order_total, $installments_type ),
-                'discount'     => $this->credit_discount_x1,
-                'discount_total' => $this->get_credit_discount( $order_total ),
 			),
 			'woocommerce/cielo/',
 			WC_Cielo::get_templates_path()
-		);
-	}
+        );
+    }
 
 	/**
 	 * Checkout scripts.
@@ -366,10 +364,11 @@ class WC_Cielo_Credit_Gateway extends WC_Cielo_Helper {
 
 		if ( $valid ) {
 			$installments = isset( $_POST['cielo_credit_installments'] ) ? absint( $_POST['cielo_credit_installments'] ) : 1;
+
 			$gateway_data    = array(
 				'name_on_card'    => $_POST['cielo_credit_holder_name'],
 				'card_number'     => $_POST['cielo_credit_number'],
-				'card_expiration' => $_POST['cielo_credit_expiry'],
+				'card_expiration' => $_POST['cielo_credit_expiry_month'] .'/'. $_POST['cielo_credit_expiry_year'],
 				'card_cvv'        => $_POST['cielo_credit_cvc'],
 			);
 
