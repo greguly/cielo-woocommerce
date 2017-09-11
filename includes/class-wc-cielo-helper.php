@@ -169,9 +169,12 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$order_total = (float) $order->get_total();
 
 			// Gets order total from cart/checkout.
-		} elseif ( 0 < $woocommerce->cart->total ) {
-			$order_total = (float) $woocommerce->cart->total;
-		}
+		} elseif ( 0 < WC()->cart->total ) {
+			$order_total = (float) WC()->cart->total;//$woocommerce->cart->total;
+
+            //echo 'cart->total: ' . $order_total . ' / ID: ' . $order_id;
+            //echo 'cart->total: ' . WC()->cart->total;
+        }
 
 		return $order_total;
 	}
@@ -384,6 +387,9 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_installments_html( $order_total = 0, $type = 'select' ) {
+        //$order_total = WC()->cart->total;
+        //$this->log->add( $this->id, 'Cart Total - ' .  $order_total ); //WC()->cart->total);
+
 		$html         = '';
 		$installments = apply_filters( 'wc_cielo_max_installments', $this->installments, $order_total );
 
@@ -433,11 +439,13 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			}
 		}
 
-		if ( 'select' == $type ) {
+        if ( 'select' == $type ) {
 			$html .= '</select>';
 		}
 
-		return $html;
+        //$this->log->add( $this->id, $html ); //WC()->cart->total);
+
+        return $html;
 	}
 
 	/**
@@ -551,7 +559,8 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			}
 
 			// Validate the expiration date.
-			if ( ! isset( $posted[ $this->id . '_expiry' ] ) || '' === $posted[ $this->id . '_expiry' ] ) {
+			if (( ! isset( $posted[ $this->id . '_expiry_month' ] ) || '' === $posted[ $this->id . '_expiry_month' ] ) ||
+                ( ! isset( $posted[ $this->id . '_expiry_year' ] ) || '' === $posted[ $this->id . '_expiry_year' ] )) {
 				throw new Exception( __( 'Please type the card expiry date.', 'cielo-woocommerce' ) );
 			}
 
