@@ -792,7 +792,9 @@ class WC_Cielo_API_3_0 {
 
         $sale = new Sale($id);
 
-        $customer = $sale->customer( trim($order->billing_first_name) . ' ' . trim($order->billing_last_name) );
+        //$customer = $sale->customer( trim($order->billing_first_name) . ' ' . trim($order->billing_last_name) );
+        $customer = $sale->customer('');
+        $name =  trim($order->billing_first_name) . ' ' . trim($order->billing_last_name);
 
         if ($installments > 0) {
             $payment = $sale->payment(number_format($order_total, 2, '', ''), $installments);
@@ -807,10 +809,12 @@ class WC_Cielo_API_3_0 {
 
                 $payment->setInterest($payment_product);
 
-                $payment->creditCard($gateway_data['card_cvv'], $card_brand)
-                        ->setExpirationDate( str_replace( ' ', '', $gateway_data['card_expiration'] ) )
-                        ->setCardNumber( str_replace( ' ', '', $gateway_data['card_number'] ) )
-                        ->setHolder( $gateway_data['name_on_card'] );
+                $payment
+                    ->creditCard($gateway_data['card_cvv'], $card_brand)
+                    ->setExpirationDate( str_replace( ' ', '', $gateway_data['card_expiration'] ) )
+                    ->setCardNumber( str_replace( ' ', '', $gateway_data['card_number'] ) )
+                    ->setHolder( $gateway_data['name_on_card'] )
+                ;
 
                 break;
             case 'cielo_debit':
@@ -835,6 +839,61 @@ class WC_Cielo_API_3_0 {
 
         // Verify is Credit Gateway only
         if ($this->gateway->id == 'cielo_credit') {
+
+            $wcbcf_settings = get_option( 'wcbcf_settings' );
+            $wcbcf_settings = isset( $wcbcf_settings['person_type'] ) ? intval( $wcbcf_settings['person_type'] ) : 0;
+
+            if ( ( 0 === $wcbcf_settings || 2 === $wcbcf_settings ) && ! empty( $order->billing_cpf ) ) {
+
+                $customer->setIdentity( str_replace('-', '', str_replace('.', '', $order->billing_cpf)) );
+                $customer->setIdentityType( 'CPF' );
+
+            } else if ( ( 0 === $wcbcf_settings || 3 === $wcbcf_settings ) && ! empty( $order->billing_cnpj ) ) {
+
+                $name = $order->billing_company;
+                $customer->setIdentity( str_replace('/', '', str_replace('-', '', str_replace('.', '', $order->billing_cnpj ))) );
+                $customer->setIdentityType( 'CNPJ' );
+
+            } else if ( ! empty( $order->billing_persontype ) ) {
+
+                if ( 1 == $order->billing_persontype && ! empty( $order->billing_cpf ) ) {
+
+                    $customer->setIdentity( str_replace('-', '', str_replace('.', '', $order->billing_cpf)) );
+                    $customer->setIdentityType( 'CPF' );
+
+                } else if ( 2 == $order->billing_persontype && ! empty( $order->billing_cnpj ) ) {
+
+                    $name = $order->billing_company;
+                    $customer->setIdentity( str_replace('/', '', str_replace('-', '', str_replace('.', '', $order->billing_cnpj ))) );
+                    $customer->setIdentityType( 'CNPJ' );
+
+                }
+            }
+
+            $customer->setEmail( trim($order->get_billing_email()) );
+            $date = DateTime::createFromFormat('d/m/Y', $gateway_data['birth_date']);
+            $customer->setBirthDate( $date->format("Y-m-d") );
+
+            $address = $customer->address();
+
+            $address->setStreet( $order->billing_address_1 );
+            $address->setNumber( $order->billing_number );
+            $address->setComplement( $order->billing_address_2 );
+            $address->setZipCode( $order->billing_postcode );
+            $address->setCity( $order->billing_city );
+            $address->setState( $order->billing_state );
+            $address->setCountry( $order->billing_country );
+
+            $deliveryAddress = $customer->deliveryAddress();
+
+            $deliveryAddress->setStreet( $order->shipping_address_1 );
+            $deliveryAddress->setNumber( $order->shipping_number );
+            $deliveryAddress->setComplement( $order->shipping_address_2 );
+            $deliveryAddress->setZipCode( $order->shipping_postcode );
+            $deliveryAddress->setCity( $order->shipping_city );
+            $deliveryAddress->setState( $order->shipping_state );
+            $deliveryAddress->setCountry( $order->shipping_country );
+
             // Check if capture sale is made by Admin Order Page
             if (!$this->gateway->api->admin_sale_capture()) {
                 if ('yes' == $this->gateway->debug) {
@@ -844,6 +903,8 @@ class WC_Cielo_API_3_0 {
                 $payment->setCapture( true );
             }
         }
+
+        $customer->setName( $name );
 
         // Verify is Credit Gateway only
         if ($this->gateway->id == 'cielo_debit') {
