@@ -161,7 +161,7 @@ class WC_Cielo_API extends WC_Settings_API {
 
 		$account_data    = $this->get_account_data();
 		$payment_product = '1';
-		$order_total     = (float) $order->get_total();
+		$order_total     = (float) $order->get_subtotal() + (float) $order->get_shipping_total();
         $authorization = false;
 //		if ($gateway != 'cielo_direct_debit') {
 //            $authorization = $this->gateway->authorization;
@@ -176,14 +176,28 @@ class WC_Cielo_API extends WC_Settings_API {
 
 		// Set the order total with interest.
 		if ( isset( $this->gateway->installment_type ) && 'store' == $this->gateway->installment_type && $installments >= $this->gateway->interest ) {
+
 			$interest_rate        = $this->gateway->get_valid_value( $this->gateway->interest_rate ) / 100;
-			$interest_total       = $order_total * ( $interest_rate / ( 1 - ( 1 / pow( 1 + $interest_rate, $installments ) ) ) );
-			$interest_order_total = $interest_total * $installments;
+
+            $interest_subtotal = $order_total / $installments;
+
+            if ( $installments < $this->gateway->installments) {
+
+                $interest_total = $interest_subtotal * ( ( $interest_rate + 1 ) - ( 2 / 100) );
+
+            } else {
+
+                $interest_total = $interest_subtotal * ( ( $interest_rate + 1 ) + ( 2 / 100) );
+
+            }
+
+            $interest_order_total = $interest_total * $installments;
 
 			if ( $order_total < $interest_order_total ) {
 				$order_total = round( $interest_order_total, 2 );
 			}
-		}
+
+        }
 
         // Set the credit values.
         if ( ($gateway == 'cielo_credit') && ($installments == '1') ) {
