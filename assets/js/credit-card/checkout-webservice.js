@@ -2,8 +2,10 @@
 	'use strict';
 
 	$( function() {
+		// var installments_update = false;
+
 		// Store the installment options.
-		$.data( document.body, 'cielo_credit_installments', $( '#cielo-credit-payment-form #cielo-installments' ).html() );
+		//$.data( document.body, 'cielo_credit_installments', $( '#cielo-credit-payment-form #cielo-installments' ).html() );
 
 		// Add jQuery.Payment support for Elo and Aura.
 		if ( $.payment.cards ) {
@@ -54,25 +56,32 @@
 		 *
 		 * @param {String} card
 		 */
-		function setInstallmentsFields( card ) {
-			var installments = $( '#cielo-credit-payment-form #cielo-installments' );
-
-			$( '#cielo-credit-payment-form #cielo-installments' ).empty();
-			$( '#cielo-credit-payment-form #cielo-installments' ).prepend( $.data( document.body, 'cielo_credit_installments' ) );
-
-			if ( 'discover' === card ) {
-				$( 'option', installments ).not( '.cielo-at-sight' ).remove();
-			}
-		}
+		// function setInstallmentsFields( card ) {
+		// 	var installments = $( '#cielo-credit-payment-form #cielo-installments' );
+        //
+		// 	$( '#cielo-credit-payment-form #cielo-installments' ).empty();
+		// 	$( '#cielo-credit-payment-form #cielo-installments' ).prepend( $.data( document.body, 'cielo_credit_installments' ) );
+        //
+		// 	if ( 'discover' === card ) {
+		// 		$( 'option', installments ).not( '.cielo-at-sight' ).remove();
+		// 	}
+		// }
 
 		// Set on update the checkout fields.
-		$( document.body ).on( 'ajaxComplete', function() {
-			$.data( document.body, 'cielo_credit_installments', $( '#cielo-credit-payment-form #cielo-installments' ).html() );
-			setInstallmentsFields( $( 'body #cielo-credit-payment-form #cielo-card-brand option' ).first().val() );
+		$( document.body ).on( 'ajaxStart', function() {
+
+            // console.log( 'as' );
+
+        }).on( 'ajaxComplete', function() {
+
+			// $.data(document.body, 'cielo_credit_installments', $('#cielo-credit-payment-form #cielo-installments').html());
+			// setInstallmentsFields( $( 'body #cielo-credit-payment-form #cielo-card-brand option' ).first().val() );
+
 		});
 
 		// Set on change the card brand.
 		$( document.body ).on( 'change', '#cielo-credit-payment-form #cielo-card-number', function() {
+            //console.log( 'Begin' );
 			//setInstallmentsFields( $.payment.cardType( $( this ).val() ) );
 		});
 
