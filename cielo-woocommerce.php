@@ -135,6 +135,7 @@ if ( ! class_exists( 'WC_Cielo' ) ) :
 			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-general-settings.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-debit-gateway.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-credit-gateway.php';
+            include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-credit-installment-change.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-direct-debit-gateway.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-cielo-banking-ticket-gateway.php';
 		}
