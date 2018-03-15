@@ -6,4 +6,21 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Cielo\\API30\\Ecommerce\\Address' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Address.php',
+    'Cielo\\API30\\Ecommerce\\CieloEcommerce' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/CieloEcommerce.php',
+    'Cielo\\API30\\Ecommerce\\CieloSerializable' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/CieloSerializable.php',
+    'Cielo\\API30\\Ecommerce\\CreditCard' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/CreditCard.php',
+    'Cielo\\API30\\Ecommerce\\Customer' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Customer.php',
+    'Cielo\\API30\\Ecommerce\\Environment' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Environment.php',
+    'Cielo\\API30\\Ecommerce\\Payment' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Payment.php',
+    'Cielo\\API30\\Ecommerce\\RecurrentPayment' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/RecurrentPayment.php',
+    'Cielo\\API30\\Ecommerce\\Request\\AbstractSaleRequest' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/AbstractSaleRequest.php',
+    'Cielo\\API30\\Ecommerce\\Request\\CieloError' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/CieloError.php',
+    'Cielo\\API30\\Ecommerce\\Request\\CieloRequestException' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/CieloRequestException.php',
+    'Cielo\\API30\\Ecommerce\\Request\\CreateSaleRequest' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/CreateSaleRequest.php',
+    'Cielo\\API30\\Ecommerce\\Request\\QuerySaleRequest' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/QuerySaleRequest.php',
+    'Cielo\\API30\\Ecommerce\\Request\\UpdateSaleRequest' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/UpdateSaleRequest.php',
+    'Cielo\\API30\\Ecommerce\\Sale' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Sale.php',
+    'Cielo\\API30\\Environment' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Environment.php',
+    'Cielo\\API30\\Merchant' => $vendorDir . '/developercielo/api-3.0-php/src/Cielo/API30/Merchant.php',
 );

@@ -16,10 +16,31 @@ class ComposerStaticInitd545d95f545fd748a5c525f3f8aa2227
         ),
     );
 
+    public static $classMap = array (
+        'Cielo\\API30\\Ecommerce\\Address' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Address.php',
+        'Cielo\\API30\\Ecommerce\\CieloEcommerce' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/CieloEcommerce.php',
+        'Cielo\\API30\\Ecommerce\\CieloSerializable' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/CieloSerializable.php',
+        'Cielo\\API30\\Ecommerce\\CreditCard' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/CreditCard.php',
+        'Cielo\\API30\\Ecommerce\\Customer' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Customer.php',
+        'Cielo\\API30\\Ecommerce\\Environment' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Environment.php',
+        'Cielo\\API30\\Ecommerce\\Payment' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Payment.php',
+        'Cielo\\API30\\Ecommerce\\RecurrentPayment' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/RecurrentPayment.php',
+        'Cielo\\API30\\Ecommerce\\Request\\AbstractSaleRequest' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/AbstractSaleRequest.php',
+        'Cielo\\API30\\Ecommerce\\Request\\CieloError' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/CieloError.php',
+        'Cielo\\API30\\Ecommerce\\Request\\CieloRequestException' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/CieloRequestException.php',
+        'Cielo\\API30\\Ecommerce\\Request\\CreateSaleRequest' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/CreateSaleRequest.php',
+        'Cielo\\API30\\Ecommerce\\Request\\QuerySaleRequest' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/QuerySaleRequest.php',
+        'Cielo\\API30\\Ecommerce\\Request\\UpdateSaleRequest' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Request/UpdateSaleRequest.php',
+        'Cielo\\API30\\Ecommerce\\Sale' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Ecommerce/Sale.php',
+        'Cielo\\API30\\Environment' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Environment.php',
+        'Cielo\\API30\\Merchant' => __DIR__ . '/..' . '/developercielo/api-3.0-php/src/Cielo/API30/Merchant.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixesPsr0 = ComposerStaticInitd545d95f545fd748a5c525f3f8aa2227::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitd545d95f545fd748a5c525f3f8aa2227::$classMap;
 
         }, null, ClassLoader::class);
     }
