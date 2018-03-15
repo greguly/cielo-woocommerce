@@ -842,3 +842,6 @@ msgstr "Com desconto de %s no cartão de crédito a vista"
 
 msgid "With addition of about %s per interest a.m."
 msgstr "Com acréscimo de aproximadamente %s por parcela a.m."
+
+msgid "With discount of %s at debit card"
+msgstr "Com desconto de %s no cartão de débito"
