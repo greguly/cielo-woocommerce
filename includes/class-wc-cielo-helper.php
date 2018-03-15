@@ -783,6 +783,7 @@ abstract class WC_Cielo_Helper extends WC_Payment_Gateway {
 			$tid      = $order->get_transaction_id();
 			$amount   = wc_format_decimal( $amount );
 			$response = $this->api->do_transaction_cancellation( $order, $tid, ( method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id ) . '-' . time(), $amount );
+//			$response = $this->api->do_transaction_cancellation( $order, $tid, $order_id, 0 );
 
 			// Already canceled.
 			if ( ! empty( $response->mensagem ) ) {
