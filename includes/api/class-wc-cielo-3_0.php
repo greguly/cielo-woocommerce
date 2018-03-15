@@ -616,6 +616,8 @@ class WC_Cielo_API_3_0 {
                     $order_note = $card($order_note, $payment_method, $returnCode);
                     break;
                 case 'DebitCard':
+                    $order_note .= __('Installments', 'cielo-woocommerce') . ' 1';
+                    $order_note .= "\n";
                     $order_note = $card($order_note, $payment_method, $returnCode);
                     break;
 //                case 'EletronicTransfer':
@@ -732,7 +734,8 @@ class WC_Cielo_API_3_0 {
         } else {
             $order->add_order_note( $status_note . '. ' . $note );
             // Complete the payment and reduce stock levels.
-            $order->payment_complete();
+            //$order->payment_complete();
+            $order->update_status( 'in-analysis', $status_note );
         }
 
     }
@@ -803,6 +806,8 @@ class WC_Cielo_API_3_0 {
         }
 
         $payment->setAuthenticate($authorization);
+        //$payment->setSoftDescriptor( get_bloginfo( 'blogname' ) );
+        $payment->setSoftDescriptor( 'FranComp'.$order->get_id() );
 
         switch ($gateway) {
             case 'cielo_credit':
@@ -1103,7 +1108,11 @@ class WC_Cielo_API_3_0 {
      */
     public function do_sale_capture_internal( $order, $tid, $id, $amount = 0, $account_data ) {
 
-        return (new CieloEcommerce($this->merchant, $this->environment))->captureSale(str_replace('"', '', $id), number_format( $amount, 2, '', '' ), 0, true);
+        if ($amount == 0) {
+            return (new CieloEcommerce($this->merchant, $this->environment))->captureSale(str_replace('"', '', $id));
+        } else {
+            return (new CieloEcommerce($this->merchant, $this->environment))->captureSale(str_replace('"', '', $id), number_format($amount, 2, '', ''), 0, true);
+        }
 
     }
 
@@ -1183,8 +1192,11 @@ class WC_Cielo_API_3_0 {
         $this->do_request($account_data);
 
         try {
-
-            $sale = (new CieloEcommerce($this->merchant, $this->environment))->cancelSale(trim($tid, '"'), number_format( $amount, 2, '', '' ));
+            if ($amount == 0) {
+                $sale = (new CieloEcommerce($this->merchant, $this->environment))->cancelSale( str_replace('"', '', $tid) );
+            } else {
+                $sale = (new CieloEcommerce($this->merchant, $this->environment))->cancelSale( str_replace('"', '', $tid), number_format($amount, 2, '', ''));
+            }
 
         } catch (CieloRequestException $e) {
 
