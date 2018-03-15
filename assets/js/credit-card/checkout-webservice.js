@@ -85,7 +85,11 @@
 			//setInstallmentsFields( $.payment.cardType( $( this ).val() ) );
 		});
 
-		// Empty all card fields.
+        $( document.body ).on("change", "form[name='checkout'] input[name='payment_method']", function(){
+            $('body').trigger('update_checkout');
+        });
+
+        // Empty all card fields.
 		$( document.body ).on( 'checkout_error', function() {
 			$( 'body .cielo-payment-form input' ).val( '' );
 		});
